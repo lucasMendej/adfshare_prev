@@ -1,0 +1,338 @@
+{
+	"name": "DL_idas_carveh",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStoreYGROUP",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureDataLakeStoreLocation",
+				"fileName": "carveh.parquet",
+				"folderPath": "sternData/dataFactoryLandingZone/idas"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "BDELCD",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BBRNCH",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BCUSNO",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BREGNO",
+				"type": "UTF8"
+			},
+			{
+				"name": "BFILL1",
+				"type": "UTF8"
+			},
+			{
+				"name": "BCHAVA",
+				"type": "UTF8"
+			},
+			{
+				"name": "BMODYR",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BCHANO",
+				"type": "UTF8"
+			},
+			{
+				"name": "BVINUM",
+				"type": "UTF8"
+			},
+			{
+				"name": "BENGNO",
+				"type": "UTF8"
+			},
+			{
+				"name": "BMRKCD",
+				"type": "UTF8"
+			},
+			{
+				"name": "BCOL",
+				"type": "UTF8"
+			},
+			{
+				"name": "BINT",
+				"type": "UTF8"
+			},
+			{
+				"name": "BOPT",
+				"type": "UTF8"
+			},
+			{
+				"name": "BSCODE",
+				"type": "UTF8"
+			},
+			{
+				"name": "BDKEY",
+				"type": "UTF8"
+			},
+			{
+				"name": "BIKEY",
+				"type": "UTF8"
+			},
+			{
+				"name": "BVOPER",
+				"type": "UTF8"
+			},
+			{
+				"name": "BWARMO",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BREDAT",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BLSDAT",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BNEWUS",
+				"type": "UTF8"
+			},
+			{
+				"name": "BAFMIL",
+				"type": "UTF8"
+			},
+			{
+				"name": "BLMILE",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BLVDAT",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BLVCD",
+				"type": "UTF8"
+			},
+			{
+				"name": "BNVDAT",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BCREMD",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BLCALL",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BINACT",
+				"type": "UTF8"
+			},
+			{
+				"name": "BCAMP",
+				"type": "UTF8"
+			},
+			{
+				"name": "BNSDAT",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BLU",
+				"type": "UTF8"
+			},
+			{
+				"name": "BUSER",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BPRCDE",
+				"type": "UTF8"
+			},
+			{
+				"name": "BLBEE",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BOWDIC",
+				"type": "UTF8"
+			},
+			{
+				"name": "BSALM",
+				"type": "UTF8"
+			},
+			{
+				"name": "BFILL3",
+				"type": "UTF8"
+			},
+			{
+				"name": "BINCAR",
+				"type": "UTF8"
+			},
+			{
+				"name": "BINMYR",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BINMIL",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BINTYP",
+				"type": "UTF8"
+			},
+			{
+				"name": "BINCHA",
+				"type": "UTF8"
+			},
+			{
+				"name": "BINCD",
+				"type": "UTF8"
+			},
+			{
+				"name": "BNCFIN",
+				"type": "UTF8"
+			},
+			{
+				"name": "BLSMIL",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BPRMIL",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BFILL5",
+				"type": "UTF8"
+			},
+			{
+				"name": "BCOCD",
+				"type": "UTF8"
+			},
+			{
+				"name": "BCOFDT",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BCOTAR",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BCOMXM",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BCOMXA",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BYEINS",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BINDT1",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BINAP1",
+				"type": "UTF8"
+			},
+			{
+				"name": "BINDT2",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BINAP2",
+				"type": "UTF8"
+			},
+			{
+				"name": "BGRDAT",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BGRMIL",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BAPMIL",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BWSNO",
+				"type": "UTF8"
+			},
+			{
+				"name": "BPUSR",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,646 @@
+{
+	"name": "Copy idas tables deel 2",
+	"properties": {
+		"description": "Wordt gebruikt voor alleen dagelijkse kopie slag",
+		"activities": [
+			{
+				"name": "Copy dsa",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "OdbcSource",
+						"query": "SELECT  * FROM  DASFPA.DSA WHERE SAUSER <> ''"
+					},
+					"sink": {
+						"type": "AzureSqlSink"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "SARCPT",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SARCPT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SANAME",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SANAME",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SATELN",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SATELN",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SAFAXN",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SAFAXN",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SAUSER",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SAUSER",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SAPRT",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SAPRT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SAWKST",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SAWKST",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SAMEDW",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "SAMEDW",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "SAAFSA",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SAAFSA",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SAMAILB",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SAMAILB",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SAQVJN",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SAQVJN",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SACLJN",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SACLJN",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SADATI",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "SADATI",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SADATU",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "SADATU",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SANOD0",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SANOD0",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SANOD1",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SANOD1",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SANOD2",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SANOD2",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SANOD3",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SANOD3",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SANOD4",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SANOD4",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SANOD5",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SANOD5",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SANOD6",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SANOD6",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SANOD7",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SANOD7",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SANOD8",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SANOD8",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SANOD9",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SANOD9",
+									"type": "String"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "idas_tables_prod_srv_apps06",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQL_Doorgangen_idas_dsa",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy filma",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "OdbcSource",
+						"query": "SELECT  * FROM DASFPA.FILMA "
+					},
+					"sink": {
+						"type": "AzureSqlSink"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "FIBRNO",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "FIBRNO",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "FIADRS",
+									"type": "String"
+								},
+								"sink": {
+									"name": "FIADRS",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FIHSNR",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "FIHSNR",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "FIHSNT",
+									"type": "String"
+								},
+								"sink": {
+									"name": "FIHSNT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FIPOCO",
+									"type": "String"
+								},
+								"sink": {
+									"name": "FIPOCO",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FICITY",
+									"type": "String"
+								},
+								"sink": {
+									"name": "FICITY",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FITELO",
+									"type": "String"
+								},
+								"sink": {
+									"name": "FITELO",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FIBTWN",
+									"type": "String"
+								},
+								"sink": {
+									"name": "FIBTWN",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FIBNKR",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "FIBNKR",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "FICTCP",
+									"type": "String"
+								},
+								"sink": {
+									"name": "FICTCP",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FIROBE",
+									"type": "String"
+								},
+								"sink": {
+									"name": "FIROBE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FIRDCN",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "FIRDCN",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "FIRDCK",
+									"type": "String"
+								},
+								"sink": {
+									"name": "FIRDCK",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FIRDCP",
+									"type": "String"
+								},
+								"sink": {
+									"name": "FIRDCP",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FIONDP",
+									"type": "String"
+								},
+								"sink": {
+									"name": "FIONDP",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FIIBAN",
+									"type": "String"
+								},
+								"sink": {
+									"name": "FIIBAN",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FIBIC",
+									"type": "String"
+								},
+								"sink": {
+									"name": "FIBIC",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FIRDWN",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "FIRDWN",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "FIDQST",
+									"type": "String"
+								},
+								"sink": {
+									"name": "FIDQST",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FIROBK",
+									"type": "String"
+								},
+								"sink": {
+									"name": "FIROBK",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FIROBP",
+									"type": "String"
+								},
+								"sink": {
+									"name": "FIROBP",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FIKVK",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "FIKVK",
+									"type": "Decimal"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "idas_tables_prod_srv_apps06",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQL_Doorgangen_idas_filma",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy ursdia",
+				"description": "",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "OdbcSource",
+						"query": "SELECT  * FROM DASFPA.URSDIA ",
+						"queryTimeout": "02:00:00"
+					},
+					"sink": {
+						"type": "AzureSqlSink"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "IADOCN",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "IADOCN",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "IAOMSC",
+									"type": "String"
+								},
+								"sink": {
+									"name": "IAOMSC",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "IAHGRP",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "IAHGRP",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "IASGRP",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "IASGRP",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "IAACTV",
+									"type": "String"
+								},
+								"sink": {
+									"name": "IAACTV",
+									"type": "String"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "idas_tables_prod_srv_apps06",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQL_Doorgangen_idas_ursdia",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "Doorgangen"
+		},
+		"annotations": [],
+		"lastPublishTime": "2020-05-05T14:25:00Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

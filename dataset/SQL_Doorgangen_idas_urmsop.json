@@ -1,0 +1,52 @@
+{
+	"name": "SQL_Doorgangen_idas_urmsop",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DOORGANGEN_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "GMBRAN",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "GMSDOC",
+				"type": "decimal",
+				"precision": 7,
+				"scale": 0
+			},
+			{
+				"name": "GMMONT",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "GMDATE",
+				"type": "char"
+			},
+			{
+				"name": "GMBTIM",
+				"type": "char"
+			},
+			{
+				"name": "GMETIM",
+				"type": "char"
+			},
+			{
+				"name": "GMSTAT",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "idas_urmsop"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

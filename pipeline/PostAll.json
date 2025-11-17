@@ -1,0 +1,285 @@
+{
+	"name": "PostAll",
+	"properties": {
+		"activities": [
+			{
+				"name": "Loop Pages",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@range(0,3)",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Post 1M paging",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Post_to_Vendorlink",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"Set": "Autoline1",
+									"Company": "00",
+									"CompanyReference": "Hedin 1M",
+									"CompanyCode": "1M",
+									"Archief": false,
+									"Offset": {
+										"value": "@item()",
+										"type": "Expression"
+									}
+								}
+							}
+						},
+						{
+							"name": "Post 2 paging",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Post 1M paging",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Post_to_Vendorlink",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"Set": "Autoline4",
+									"Company": "80",
+									"CompanyReference": "Hedin 2",
+									"CompanyCode": "2",
+									"Archief": false,
+									"Offset": {
+										"value": "@item()",
+										"type": "Expression"
+									}
+								}
+							}
+						},
+						{
+							"name": "Post 3 paging",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Post 2 paging",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Post_to_Vendorlink",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"Set": "Autoline3",
+									"Company": "00",
+									"CompanyReference": "Hedin 3F",
+									"CompanyCode": "3F",
+									"Archief": false,
+									"Offset": {
+										"value": "@item()",
+										"type": "Expression"
+									}
+								}
+							}
+						},
+						{
+							"name": "Post 4F paging",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Post 3 paging",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Post_to_Vendorlink",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"Set": "Autoline6",
+									"Company": "70",
+									"CompanyReference": "Hedin 4F",
+									"CompanyCode": "4F",
+									"Archief": false,
+									"Offset": {
+										"value": "@item()",
+										"type": "Expression"
+									}
+								}
+							}
+						},
+						{
+							"name": "Post 4j paging",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Post 4F paging",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Post_to_Vendorlink",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"Set": "Autoline6",
+									"Company": "80",
+									"CompanyReference": "Hedin 4J",
+									"CompanyCode": "4J",
+									"Archief": false,
+									"Offset": {
+										"value": "@item()",
+										"type": "Expression"
+									}
+								}
+							}
+						},
+						{
+							"name": "Post 5 paging",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Post 4j paging",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Post_to_Vendorlink",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"Set": "Autoline2",
+									"Company": "00",
+									"CompanyReference": "Hedin 5",
+									"CompanyCode": "5",
+									"Archief": false,
+									"Offset": {
+										"value": "@item()",
+										"type": "Expression"
+									}
+								}
+							}
+						},
+						{
+							"name": "Post BE paging",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Post_to_Vendorlink_BE",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"user": "Connector_spend_HedinBE",
+									"pwrd": "2N5vk4D3yo$@#y",
+									"customercode": "4fd4b2d4-2636-4076-b0cd-80d9d6e4e2af",
+									"Set": "AUTOLINE_HEDIN_LIVE",
+									"Company": "00",
+									"CompanyReference": "Hedin NV",
+									"CompanyCode": "BE_00",
+									"Archief": false,
+									"Offset": {
+										"value": "@item()",
+										"type": "Expression"
+									}
+								}
+							}
+						},
+						{
+							"name": "Post Renova Paging",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Post_to_Vendorlink_BMW",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"user": "Connector_spend_HedinNL",
+									"pwrd": "e6*G8L2y3$6Jw@",
+									"customercode": "66D32FE8-1E03-4603-A34F-9BB792C1FF2E",
+									"Set": "AUTOLINE_LIVERENOVA",
+									"Company": "00",
+									"CompanyReference": "Hedin 7B",
+									"CompanyCode": "7B_00",
+									"Archief": false,
+									"Offset": {
+										"value": "@item()",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"folder": {
+			"name": "Vendorlink"
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-09-29T09:35:31Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

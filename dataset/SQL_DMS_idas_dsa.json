@@ -1,0 +1,116 @@
+{
+	"name": "SQL_DMS_idas_dsa",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "SARCPT",
+				"type": "varchar"
+			},
+			{
+				"name": "SANAME",
+				"type": "varchar"
+			},
+			{
+				"name": "SATELN",
+				"type": "varchar"
+			},
+			{
+				"name": "SAFAXN",
+				"type": "varchar"
+			},
+			{
+				"name": "SAUSER",
+				"type": "varchar"
+			},
+			{
+				"name": "SAPRT",
+				"type": "varchar"
+			},
+			{
+				"name": "SAWKST",
+				"type": "varchar"
+			},
+			{
+				"name": "SAMEDW",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "SAAFSA",
+				"type": "varchar"
+			},
+			{
+				"name": "SAMAILB",
+				"type": "varchar"
+			},
+			{
+				"name": "SAQVJN",
+				"type": "varchar"
+			},
+			{
+				"name": "SACLJN",
+				"type": "varchar"
+			},
+			{
+				"name": "SADATI",
+				"type": "varchar"
+			},
+			{
+				"name": "SADATU",
+				"type": "varchar"
+			},
+			{
+				"name": "SANOD0",
+				"type": "varchar"
+			},
+			{
+				"name": "SANOD1",
+				"type": "varchar"
+			},
+			{
+				"name": "SANOD2",
+				"type": "varchar"
+			},
+			{
+				"name": "SANOD3",
+				"type": "varchar"
+			},
+			{
+				"name": "SANOD4",
+				"type": "varchar"
+			},
+			{
+				"name": "SANOD5",
+				"type": "varchar"
+			},
+			{
+				"name": "SANOD6",
+				"type": "varchar"
+			},
+			{
+				"name": "SANOD7",
+				"type": "varchar"
+			},
+			{
+				"name": "SANOD8",
+				"type": "varchar"
+			},
+			{
+				"name": "SANOD9",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "idas_dsa"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,1284 @@
+{
+	"name": "SQL_DMS_autoline_vehiclerecords",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "_SET",
+				"type": "varchar"
+			},
+			{
+				"name": "_COMPANY",
+				"type": "char"
+			},
+			{
+				"name": "_LTSTUPDATE",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "_LTSTCHECK",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "REGNO",
+				"type": "char"
+			},
+			{
+				"name": "MAGIC",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "MODELVAR",
+				"type": "char"
+			},
+			{
+				"name": "FRAN",
+				"type": "char"
+			},
+			{
+				"name": "MODEL",
+				"type": "char"
+			},
+			{
+				"name": "VARIANT",
+				"type": "char"
+			},
+			{
+				"name": "STYLE",
+				"type": "char"
+			},
+			{
+				"name": "CC",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "FUEL",
+				"type": "char"
+			},
+			{
+				"name": "INSGROUP",
+				"type": "decimal",
+				"precision": 1,
+				"scale": 0
+			},
+			{
+				"name": "COLOUR",
+				"type": "char"
+			},
+			{
+				"name": "TRIM_",
+				"type": "char"
+			},
+			{
+				"name": "NU",
+				"type": "char"
+			},
+			{
+				"name": "REGMONTH",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "DELETE_",
+				"type": "char"
+			},
+			{
+				"name": "REGDATE",
+				"type": "date"
+			},
+			{
+				"name": "ENGINE",
+				"type": "char"
+			},
+			{
+				"name": "BY018800",
+				"type": "char"
+			},
+			{
+				"name": "CONREF",
+				"type": "char"
+			},
+			{
+				"name": "VSBREF",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 0
+			},
+			{
+				"name": "DELDATE",
+				"type": "date"
+			},
+			{
+				"name": "LTC",
+				"type": "bit"
+			},
+			{
+				"name": "DESC_",
+				"type": "char"
+			},
+			{
+				"name": "SALEDATE",
+				"type": "date"
+			},
+			{
+				"name": "SALEDISC",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "SALEEXEC",
+				"type": "char"
+			},
+			{
+				"name": "SALEGP",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 0
+			},
+			{
+				"name": "SALENET",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 0
+			},
+			{
+				"name": "STATUS",
+				"type": "char"
+			},
+			{
+				"name": "RADIO",
+				"type": "char"
+			},
+			{
+				"name": "FINCODE",
+				"type": "char"
+			},
+			{
+				"name": "FINEXPD",
+				"type": "date"
+			},
+			{
+				"name": "FINRATE",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 2
+			},
+			{
+				"name": "COMMAGIC001",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "COMMAGIC002",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "COMMAGIC003",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "COMMAGIC004",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "TARMAGIC001",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "TARMAGIC002",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "TARMAGIC003",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "TARMAGIC004",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "SALMAGIC",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "AFTMAGIC",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "DRVMAGIC",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "EXEC_",
+				"type": "char"
+			},
+			{
+				"name": "CHASSIS",
+				"type": "char"
+			},
+			{
+				"name": "CHPREFIX",
+				"type": "char"
+			},
+			{
+				"name": "CHSERIAL",
+				"type": "char"
+			},
+			{
+				"name": "CHASSWS2",
+				"type": "char"
+			},
+			{
+				"name": "CHASSWS",
+				"type": "char"
+			},
+			{
+				"name": "TYPE_",
+				"type": "char"
+			},
+			{
+				"name": "CREATED",
+				"type": "date"
+			},
+			{
+				"name": "EDITED",
+				"type": "date"
+			},
+			{
+				"name": "FINCOMP",
+				"type": "char"
+			},
+			{
+				"name": "FINREF",
+				"type": "char"
+			},
+			{
+				"name": "APRDATE",
+				"type": "date"
+			},
+			{
+				"name": "APREXEC",
+				"type": "char"
+			},
+			{
+				"name": "APRREF",
+				"type": "char"
+			},
+			{
+				"name": "APRVALUE",
+				"type": "decimal",
+				"precision": 15,
+				"scale": 2
+			},
+			{
+				"name": "SELLDEAL",
+				"type": "char"
+			},
+			{
+				"name": "FLEETNO",
+				"type": "char"
+			},
+			{
+				"name": "SECURENO",
+				"type": "char"
+			},
+			{
+				"name": "WAREXPDT",
+				"type": "date"
+			},
+			{
+				"name": "WAREXTDT",
+				"type": "date"
+			},
+			{
+				"name": "MILEAGE",
+				"type": "decimal",
+				"precision": 8,
+				"scale": 0
+			},
+			{
+				"name": "LASTSERV",
+				"type": "date"
+			},
+			{
+				"name": "OTHERMLG",
+				"type": "decimal",
+				"precision": 8,
+				"scale": 0
+			},
+			{
+				"name": "NEXTSERV",
+				"type": "date"
+			},
+			{
+				"name": "MOTDATE",
+				"type": "date"
+			},
+			{
+				"name": "LOCN",
+				"type": "char"
+			},
+			{
+				"name": "LOCN001",
+				"type": "char"
+			},
+			{
+				"name": "LOCN002",
+				"type": "char"
+			},
+			{
+				"name": "LOCN003",
+				"type": "char"
+			},
+			{
+				"name": "SALELOCN",
+				"type": "char"
+			},
+			{
+				"name": "AFTLOCN",
+				"type": "char"
+			},
+			{
+				"name": "BY057900",
+				"type": "char"
+			},
+			{
+				"name": "SERVIVLM",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "MTDVALUE",
+				"type": "decimal",
+				"precision": 15,
+				"scale": 2
+			},
+			{
+				"name": "YTDVALUE",
+				"type": "decimal",
+				"precision": 15,
+				"scale": 2
+			},
+			{
+				"name": "OWNER",
+				"type": "char"
+			},
+			{
+				"name": "ACCNO",
+				"type": "char"
+			},
+			{
+				"name": "LASTWORK",
+				"type": "date"
+			},
+			{
+				"name": "MODELGRP",
+				"type": "char"
+			},
+			{
+				"name": "BY062600",
+				"type": "char"
+			},
+			{
+				"name": "OPTIONS",
+				"type": "char"
+			},
+			{
+				"name": "WARRANTY",
+				"type": "char"
+			},
+			{
+				"name": "SALETYPE",
+				"type": "char"
+			},
+			{
+				"name": "TRUCK",
+				"type": "bit"
+			},
+			{
+				"name": "CVAX1REF",
+				"type": "char"
+			},
+			{
+				"name": "USERID",
+				"type": "char"
+			},
+			{
+				"name": "BACKCHAS",
+				"type": "char"
+			},
+			{
+				"name": "CVAX1EXP",
+				"type": "date"
+			},
+			{
+				"name": "CVAX2REF",
+				"type": "char"
+			},
+			{
+				"name": "CVAX2EXP",
+				"type": "date"
+			},
+			{
+				"name": "CVBODREF",
+				"type": "char"
+			},
+			{
+				"name": "CVBODEXP",
+				"type": "date"
+			},
+			{
+				"name": "CVENGREF",
+				"type": "char"
+			},
+			{
+				"name": "CVENGEXP",
+				"type": "date"
+			},
+			{
+				"name": "CVTRAREF",
+				"type": "char"
+			},
+			{
+				"name": "CVTRAEXP",
+				"type": "date"
+			},
+			{
+				"name": "CVHAZARD",
+				"type": "char"
+			},
+			{
+				"name": "CVNXTSAF",
+				"type": "date"
+			},
+			{
+				"name": "CVNXTB",
+				"type": "date"
+			},
+			{
+				"name": "CVNXTC",
+				"type": "date"
+			},
+			{
+				"name": "CVNXTTAC",
+				"type": "date"
+			},
+			{
+				"name": "CVNXTREC",
+				"type": "date"
+			},
+			{
+				"name": "CVDATE001",
+				"type": "date"
+			},
+			{
+				"name": "CVDATE002",
+				"type": "date"
+			},
+			{
+				"name": "CVDATE003",
+				"type": "date"
+			},
+			{
+				"name": "CVDATE004",
+				"type": "date"
+			},
+			{
+				"name": "CVDATE005",
+				"type": "date"
+			},
+			{
+				"name": "CVTEXT",
+				"type": "char"
+			},
+			{
+				"name": "CVTEXT001",
+				"type": "char"
+			},
+			{
+				"name": "CVTEXT002",
+				"type": "char"
+			},
+			{
+				"name": "CVTEXT003",
+				"type": "char"
+			},
+			{
+				"name": "CVTEXT004",
+				"type": "char"
+			},
+			{
+				"name": "CVTEXT005",
+				"type": "char"
+			},
+			{
+				"name": "CVINTVAL",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OTHLINKT001",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "OTHLINKT002",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "OTHLINKT003",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "OTHLINKT004",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "OTHLINKT005",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "OTHLINKT006",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "OTHLINKT007",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "OTHLINKC001",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "OTHLINKC002",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "OTHLINKC003",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "OTHLINKC004",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "OTHLINKC005",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "OTHLINKC006",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "OTHLINKC007",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "PTSYTD",
+				"type": "decimal",
+				"precision": 15,
+				"scale": 2
+			},
+			{
+				"name": "PTSLTD",
+				"type": "decimal",
+				"precision": 15,
+				"scale": 2
+			},
+			{
+				"name": "CPSYTD",
+				"type": "decimal",
+				"precision": 15,
+				"scale": 2
+			},
+			{
+				"name": "CPSLTD",
+				"type": "decimal",
+				"precision": 15,
+				"scale": 2
+			},
+			{
+				"name": "LABYTD",
+				"type": "decimal",
+				"precision": 15,
+				"scale": 2
+			},
+			{
+				"name": "LABLTD",
+				"type": "decimal",
+				"precision": 15,
+				"scale": 2
+			},
+			{
+				"name": "SUBYTD",
+				"type": "decimal",
+				"precision": 15,
+				"scale": 2
+			},
+			{
+				"name": "SUBLTD",
+				"type": "decimal",
+				"precision": 15,
+				"scale": 2
+			},
+			{
+				"name": "VSBCOMP",
+				"type": "char"
+			},
+			{
+				"name": "PSFACTOR",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 2
+			},
+			{
+				"name": "EDUSERID",
+				"type": "char"
+			},
+			{
+				"name": "LASTMLG",
+				"type": "decimal",
+				"precision": 8,
+				"scale": 0
+			},
+			{
+				"name": "FMVMAGIC",
+				"type": "decimal",
+				"precision": 8,
+				"scale": 0
+			},
+			{
+				"name": "TANKCAP",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "CVINT001",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "CVINT002",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "CVINT003",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "CVINT004",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "CVINT005",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "CVRECINT",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "CVSAFINT",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "CVTACINT",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "CVCYCLE",
+				"type": "char"
+			},
+			{
+				"name": "PROGRESS",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "PREVPROG",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "SPEC",
+				"type": "char"
+			},
+			{
+				"name": "CAPCODE",
+				"type": "char"
+			},
+			{
+				"name": "GLASCODE",
+				"type": "char"
+			},
+			{
+				"name": "FLEETNET",
+				"type": "char"
+			},
+			{
+				"name": "GENCOL",
+				"type": "char"
+			},
+			{
+				"name": "GENTRIM",
+				"type": "char"
+			},
+			{
+				"name": "MODELYR",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "MODANAL",
+				"type": "char"
+			},
+			{
+				"name": "DLRCODE",
+				"type": "char"
+			},
+			{
+				"name": "OLOCN",
+				"type": "char"
+			},
+			{
+				"name": "OLOCN001",
+				"type": "char"
+			},
+			{
+				"name": "OLOCN002",
+				"type": "char"
+			},
+			{
+				"name": "OLOCN003",
+				"type": "char"
+			},
+			{
+				"name": "WARSTOP",
+				"type": "date"
+			},
+			{
+				"name": "REPDUE",
+				"type": "date"
+			},
+			{
+				"name": "INSREF",
+				"type": "char"
+			},
+			{
+				"name": "BUYBMILE",
+				"type": "decimal",
+				"precision": 8,
+				"scale": 0
+			},
+			{
+				"name": "BUYBEXCE",
+				"type": "decimal",
+				"precision": 15,
+				"scale": 2
+			},
+			{
+				"name": "INSEXP",
+				"type": "date"
+			},
+			{
+				"name": "BUYBDATE",
+				"type": "date"
+			},
+			{
+				"name": "EICOLOUR",
+				"type": "char"
+			},
+			{
+				"name": "BUYBVAL",
+				"type": "decimal",
+				"precision": 15,
+				"scale": 2
+			},
+			{
+				"name": "TXSTATUS",
+				"type": "char"
+			},
+			{
+				"name": "SERMODEL",
+				"type": "char"
+			},
+			{
+				"name": "CHGTIME",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "LOTIME",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "INVDATE",
+				"type": "date"
+			},
+			{
+				"name": "INVNO",
+				"type": "decimal",
+				"precision": 8,
+				"scale": 0
+			},
+			{
+				"name": "DEALER",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "VPURDATE",
+				"type": "date"
+			},
+			{
+				"name": "VPURPRIC",
+				"type": "decimal",
+				"precision": 15,
+				"scale": 2
+			},
+			{
+				"name": "CTSTART",
+				"type": "date"
+			},
+			{
+				"name": "CTATNEW",
+				"type": "decimal",
+				"precision": 16,
+				"scale": 2
+			},
+			{
+				"name": "PCODE",
+				"type": "char"
+			},
+			{
+				"name": "AVMPG",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 1
+			},
+			{
+				"name": "WAREXPML",
+				"type": "decimal",
+				"precision": 8,
+				"scale": 0
+			},
+			{
+				"name": "WAREXTML",
+				"type": "decimal",
+				"precision": 8,
+				"scale": 0
+			},
+			{
+				"name": "WARBODDT",
+				"type": "date"
+			},
+			{
+				"name": "WARBODML",
+				"type": "decimal",
+				"precision": 8,
+				"scale": 0
+			},
+			{
+				"name": "VEHSUP",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "PREVREGN",
+				"type": "char"
+			},
+			{
+				"name": "PREVREGD",
+				"type": "date"
+			},
+			{
+				"name": "PREVREGL",
+				"type": "char"
+			},
+			{
+				"name": "VEHPURP",
+				"type": "char"
+			},
+			{
+				"name": "GEARS",
+				"type": "char"
+			},
+			{
+				"name": "RFLEXP",
+				"type": "date"
+			},
+			{
+				"name": "CREDIT",
+				"type": "char"
+			},
+			{
+				"name": "FROZEN",
+				"type": "char"
+			},
+			{
+				"name": "CREDNUM",
+				"type": "decimal",
+				"precision": 8,
+				"scale": 0
+			},
+			{
+				"name": "CREDDATE",
+				"type": "date"
+			},
+			{
+				"name": "LASTMOT",
+				"type": "date"
+			},
+			{
+				"name": "DESCLETT",
+				"type": "char"
+			},
+			{
+				"name": "PICTURE",
+				"type": "char"
+			},
+			{
+				"name": "REGYEAR",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "MANUFACT",
+				"type": "char"
+			},
+			{
+				"name": "WARRSTAT",
+				"type": "char"
+			},
+			{
+				"name": "NEXTSMIL",
+				"type": "decimal",
+				"precision": 8,
+				"scale": 0
+			},
+			{
+				"name": "SERVICEC",
+				"type": "char"
+			},
+			{
+				"name": "TBELTML",
+				"type": "decimal",
+				"precision": 8,
+				"scale": 0
+			},
+			{
+				"name": "BY162600",
+				"type": "char"
+			},
+			{
+				"name": "MSCO",
+				"type": "char"
+			},
+			{
+				"name": "RTNPARTS",
+				"type": "bit"
+			},
+			{
+				"name": "CMISALES",
+				"type": "char"
+			},
+			{
+				"name": "KARDEX",
+				"type": "char"
+			},
+			{
+				"name": "PROGMON",
+				"type": "char"
+			},
+			{
+				"name": "WAREXTST",
+				"type": "date"
+			},
+			{
+				"name": "WAREXTLN",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "WAREXTCD",
+				"type": "char"
+			},
+			{
+				"name": "MNTSTART",
+				"type": "date"
+			},
+			{
+				"name": "MNTLEN",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "MNTEND",
+				"type": "date"
+			},
+			{
+				"name": "MNTCODE",
+				"type": "char"
+			},
+			{
+				"name": "MNTMILE",
+				"type": "decimal",
+				"precision": 8,
+				"scale": 0
+			},
+			{
+				"name": "MNTREF",
+				"type": "char"
+			},
+			{
+				"name": "MSINFO",
+				"type": "char"
+			},
+			{
+				"name": "MSINFO001",
+				"type": "char"
+			},
+			{
+				"name": "MSINFO002",
+				"type": "char"
+			},
+			{
+				"name": "ECHECK",
+				"type": "date"
+			},
+			{
+				"name": "MILETYPE",
+				"type": "char"
+			},
+			{
+				"name": "FRANCOMP",
+				"type": "char"
+			},
+			{
+				"name": "COMPDATE",
+				"type": "date"
+			},
+			{
+				"name": "BHP",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "CO2",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 1
+			},
+			{
+				"name": "DDCO",
+				"type": "char"
+			},
+			{
+				"name": "COMM",
+				"type": "char"
+			},
+			{
+				"name": "ACCIDENT",
+				"type": "char"
+			},
+			{
+				"name": "GOVTNUM",
+				"type": "char"
+			},
+			{
+				"name": "ASSOCVEH",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "MNTSMILE",
+				"type": "decimal",
+				"precision": 8,
+				"scale": 0
+			},
+			{
+				"name": "LOYALCOD",
+				"type": "char"
+			},
+			{
+				"name": "LOYALNUM",
+				"type": "char"
+			},
+			{
+				"name": "LOYALEXP",
+				"type": "date"
+			},
+			{
+				"name": "IMMOBIL",
+				"type": "char"
+			},
+			{
+				"name": "DRIVSIDE",
+				"type": "char"
+			},
+			{
+				"name": "WRITEOFF",
+				"type": "bit"
+			},
+			{
+				"name": "SALVVAL",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "TALLWGHT",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "ABTANKC",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "TBELTDT",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "KEY_",
+				"type": "char"
+			},
+			{
+				"name": "KEY001",
+				"type": "char"
+			},
+			{
+				"name": "KEY002",
+				"type": "char"
+			},
+			{
+				"name": "SERVIVL",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "COLCODE",
+				"type": "char"
+			},
+			{
+				"name": "TRIMCODE",
+				"type": "char"
+			},
+			{
+				"name": "CTATUSED",
+				"type": "decimal",
+				"precision": 16,
+				"scale": 2
+			},
+			{
+				"name": "CTSTUSED",
+				"type": "date"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "autoline_vehiclerecords"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,304 @@
+{
+	"name": "SQL_DMS_autoline_mktargetcsfields",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "_SET",
+				"type": "varchar"
+			},
+			{
+				"name": "_COMPANY",
+				"type": "varchar"
+			},
+			{
+				"name": "_LTSTUPDATE",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "_LTSTCHECK",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "MAGIC",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "RDCMAGIC",
+				"type": "char"
+			},
+			{
+				"name": "AIRMILES",
+				"type": "char"
+			},
+			{
+				"name": "HOBBY",
+				"type": "char"
+			},
+			{
+				"name": "HOBBY001",
+				"type": "char"
+			},
+			{
+				"name": "HOBBY002",
+				"type": "char"
+			},
+			{
+				"name": "HOBBY003",
+				"type": "char"
+			},
+			{
+				"name": "HOBBY004",
+				"type": "char"
+			},
+			{
+				"name": "HOBBY005",
+				"type": "char"
+			},
+			{
+				"name": "SPORT",
+				"type": "char"
+			},
+			{
+				"name": "SPORT001",
+				"type": "char"
+			},
+			{
+				"name": "SPORT002",
+				"type": "char"
+			},
+			{
+				"name": "SPORT003",
+				"type": "char"
+			},
+			{
+				"name": "SPORT004",
+				"type": "char"
+			},
+			{
+				"name": "SPORT005",
+				"type": "char"
+			},
+			{
+				"name": "DEAMAG",
+				"type": "char"
+			},
+			{
+				"name": "DEAMAG001",
+				"type": "char"
+			},
+			{
+				"name": "DEAMAG002",
+				"type": "char"
+			},
+			{
+				"name": "DEAMAG003",
+				"type": "char"
+			},
+			{
+				"name": "DEAMAG004",
+				"type": "char"
+			},
+			{
+				"name": "DEAMAG005",
+				"type": "char"
+			},
+			{
+				"name": "CONTACT",
+				"type": "char"
+			},
+			{
+				"name": "CONTACT001",
+				"type": "char"
+			},
+			{
+				"name": "CONTACT002",
+				"type": "char"
+			},
+			{
+				"name": "CONTACT003",
+				"type": "char"
+			},
+			{
+				"name": "CONTACT004",
+				"type": "char"
+			},
+			{
+				"name": "CONTACT005",
+				"type": "char"
+			},
+			{
+				"name": "CREDCRD",
+				"type": "char"
+			},
+			{
+				"name": "CREDCRD001",
+				"type": "char"
+			},
+			{
+				"name": "CREDCRD002",
+				"type": "char"
+			},
+			{
+				"name": "CREDCRD003",
+				"type": "char"
+			},
+			{
+				"name": "FAMILY",
+				"type": "char"
+			},
+			{
+				"name": "PURCRIT",
+				"type": "char"
+			},
+			{
+				"name": "PURCRIT001",
+				"type": "char"
+			},
+			{
+				"name": "PURCRIT002",
+				"type": "char"
+			},
+			{
+				"name": "STATUS",
+				"type": "char"
+			},
+			{
+				"name": "CURTYPE",
+				"type": "char"
+			},
+			{
+				"name": "CURMAKE",
+				"type": "char"
+			},
+			{
+				"name": "CURMODEL",
+				"type": "char"
+			},
+			{
+				"name": "CURBODY",
+				"type": "char"
+			},
+			{
+				"name": "CURYEAR",
+				"type": "char"
+			},
+			{
+				"name": "CURENGIN",
+				"type": "char"
+			},
+			{
+				"name": "INTGRP",
+				"type": "char"
+			},
+			{
+				"name": "INTGRP001",
+				"type": "char"
+			},
+			{
+				"name": "INTGRP002",
+				"type": "char"
+			},
+			{
+				"name": "INTEREST",
+				"type": "char"
+			},
+			{
+				"name": "INTMAKE",
+				"type": "char"
+			},
+			{
+				"name": "INTMODEL",
+				"type": "char"
+			},
+			{
+				"name": "INTBODY",
+				"type": "char"
+			},
+			{
+				"name": "INTPRICE",
+				"type": "decimal",
+				"precision": 14,
+				"scale": 2
+			},
+			{
+				"name": "INTAXLE",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "INTENGIN",
+				"type": "char"
+			},
+			{
+				"name": "INTGVW",
+				"type": "char"
+			},
+			{
+				"name": "VATOBLIG",
+				"type": "bit"
+			},
+			{
+				"name": "VATREG",
+				"type": "char"
+			},
+			{
+				"name": "CNTRYCOD",
+				"type": "char"
+			},
+			{
+				"name": "CPSKIP",
+				"type": "bit"
+			},
+			{
+				"name": "INVCLAUS",
+				"type": "char"
+			},
+			{
+				"name": "BOATADDR",
+				"type": "bit"
+			},
+			{
+				"name": "BEMAIL",
+				"type": "char"
+			},
+			{
+				"name": "GENERAT",
+				"type": "char"
+			},
+			{
+				"name": "TITLEAFT",
+				"type": "char"
+			},
+			{
+				"name": "ISDECEAS",
+				"type": "bit"
+			},
+			{
+				"name": "TITLE",
+				"type": "char"
+			},
+			{
+				"name": "GENDER",
+				"type": "char"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "autoline_mktargetcsfields"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

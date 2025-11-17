@@ -1,0 +1,16 @@
+{
+	"name": "DOORGANGEN_PROD_SRV_APPS06",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=False;data source=prod-srv-apps72;initial catalog=Doorgangen;user id=SQL_DOORGANGEN_Reader",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJjMTY3NjkyMi1jYjRiLTRjOWEtODdiYy1mNWQyOTY1YTQ1NjIiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "APPS72",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

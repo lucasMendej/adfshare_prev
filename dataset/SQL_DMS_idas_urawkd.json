@@ -1,0 +1,36 @@
+{
+	"name": "SQL_DMS_idas_urawkd",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "AWBRAN",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "AWKODE",
+				"type": "varchar"
+			},
+			{
+				"name": "AWOMSC",
+				"type": "varchar"
+			},
+			{
+				"name": "AWVKJN",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "idas_urawkd"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

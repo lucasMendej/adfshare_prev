@@ -1,0 +1,38 @@
+{
+	"name": "SQL_DMS_autoline_salesledgeraccounts",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "DMS",
+				"type": "varchar"
+			},
+			{
+				"name": "CATEGORY",
+				"type": "char"
+			},
+			{
+				"name": "ACCOUNT",
+				"type": "char"
+			},
+			{
+				"name": "EDITDATE",
+				"type": "date"
+			},
+			{
+				"name": "NAME_",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "autoline_salesledgeraccounts"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

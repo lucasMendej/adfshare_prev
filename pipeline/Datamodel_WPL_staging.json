@@ -1,0 +1,701 @@
+{
+	"name": "Datamodel_WPL_staging",
+	"properties": {
+		"activities": [
+			{
+				"name": "Create Dim Tables",
+				"type": "DatabricksNotebook",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/yanmingt@sterngroep.onmicrosoft.com/WPL/Staging/DimTables"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks_PROD_BNL_DATABRICKS_01",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Fact Orders",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Create Dim Tables",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/yanmingt@sterngroep.onmicrosoft.com/WPL/Staging/Fact_Orders_staging"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks_PROD_BNL_DATABRICKS_01",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Fact Klokuren Rooster",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Create Dim Tables",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/yanmingt@sterngroep.onmicrosoft.com/WPL/Staging/Fact_Klokuren_Rooster_staging"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks_PROD_BNL_DATABRICKS_01",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Fact Orders Uren Monteur",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Fact Orders",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/yanmingt@sterngroep.onmicrosoft.com/WPL/Staging/Fact_Orders_Uren_Monteur_staging"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks_PROD_BNL_DATABRICKS_01",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Fact Orders Uren",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Fact Orders Uren Monteur_idas",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/yanmingt@sterngroep.onmicrosoft.com/WPL/Staging/Fact_Orders_Uren_staging"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks_PROD_BNL_DATABRICKS_01",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Fact Orders Run Fail",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Fact Orders",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "INSERT INTO History_ETL_WPL\n           ( TableName,Success,TimeStamp)\n     VALUES\n           ('Fact_Orders_WPL', 0, Getdate())"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Fact Orders Uren Monteur Run Fail",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Fact Orders Uren Monteur",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "INSERT INTO History_ETL_WPL\n           ( TableName,Success,TimeStamp)\n     VALUES\n           ('Fact Orders Uren Monteur_WPL', 0, Getdate())"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Fact Orders Uren Run Fail",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Fact Orders Uren",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "INSERT INTO History_ETL_WPL\n           ( TableName,Success,TimeStamp)\n     VALUES\n           ('Fact_Orders_Uren_WPL', 0, Getdate())"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Fact Klokuren Rooster Run Fail",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Fact Klokuren Rooster",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "INSERT INTO History_ETL_WPL\n           ( TableName,Success,TimeStamp)\n     VALUES\n           ('Fact_Klokuren_Rooster_WPL', 0, Getdate())"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Fact Orders Onderdelen",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Fact Orders Uren_idas",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/yanmingt@sterngroep.onmicrosoft.com/WPL/Staging/Fact_Orders_Onderdelen_staging"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks_PROD_BNL_DATABRICKS_01",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Fact Orders Onderdelen Run Fail",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Fact Orders Onderdelen",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "INSERT INTO History_ETL_WPL\n           ( TableName,Success,TimeStamp)\n     VALUES\n           ('Fact_Orders_Onderdelen_WPL', 0, Getdate())"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Update Fact Orders",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Fact Finance",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/yanmingt@sterngroep.onmicrosoft.com/WPL/Staging/Update_Fact_Orders_staging"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks_PROD_BNL_DATABRICKS_01",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Update Fact Orders Run Fail",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Update Fact Orders",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "INSERT INTO History_ETL_WPL\n           ( TableName,Success,TimeStamp)\n     VALUES\n           ('Update_Fact_Orders_WPL', 0, Getdate())"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Update Fact Tables",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Fact Orders_idas",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/yanmingt@sterngroep.onmicrosoft.com/WPL/Staging/Update_Fact_Tabellen_staging"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks_PROD_BNL_DATABRICKS_01",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Update Fact Tables Run Fail",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Update Fact Tables",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "INSERT INTO History_ETL_WPL\n           ( TableName,Success,TimeStamp)\n     VALUES\n           ('Update_Fact_Tables_WPL', 0, Getdate())"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Fact Finance",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Fact Orders Onderdelen_idas",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/yanmingt@sterngroep.onmicrosoft.com/WPL/Staging/Fact_Finance_staging"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks_PROD_BNL_DATABRICKS_01",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Fact Finance Run Fail",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Fact Finance",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "INSERT INTO History_ETL_WPL\n           ( TableName,Success,TimeStamp)\n     VALUES\n           ('Fact_Finance_WPL', 0, Getdate())"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Fact Orders_idas",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Update Fact Orders",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/yanmingt@sterngroep.onmicrosoft.com/WPL/Staging/Fact_Orders_idas_staging"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks_PROD_BNL_DATABRICKS_01",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Fact Klokuren Rooster_idas",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Fact Klokuren Rooster",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/yanmingt@sterngroep.onmicrosoft.com/WPL/Staging/Fact_Klokuren_Rooster_idas_staging"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks_PROD_BNL_DATABRICKS_01",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Fact Orders Uren Monteur_idas",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Fact Orders Uren Monteur",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/yanmingt@sterngroep.onmicrosoft.com/WPL/Staging/Fact_Orders_Uren _Monteur_idas_staging"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks_PROD_BNL_DATABRICKS_01",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Fact Orders Uren_idas",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Fact Orders Uren",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/yanmingt@sterngroep.onmicrosoft.com/WPL/Staging/Fact_Orders_Uren_idas_staging"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks_PROD_BNL_DATABRICKS_01",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Fact Orders Onderdelen_idas",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Fact Orders Onderdelen",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/yanmingt@sterngroep.onmicrosoft.com/WPL/Staging/Fact_Orders_Onderdelen_idas_staging"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks_PROD_BNL_DATABRICKS_01",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Fact Orders idas_Run Fail",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Fact Orders_idas",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "INSERT INTO History_ETL_WPL\n           ( TableName,Success,TimeStamp)\n     VALUES\n           ('Fact_Orders_idas_WPL', 0, Getdate())"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "ReadMe",
+				"description": "Pipeline is executed from the Datamodel WPL run \nTaken out of trigger \"Daily run Datamodel_WPL\" 25-7-25",
+				"type": "Script",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"scripts": [],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			}
+		],
+		"folder": {
+			"name": "Dashboard/WPL"
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-07-25T07:54:42Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

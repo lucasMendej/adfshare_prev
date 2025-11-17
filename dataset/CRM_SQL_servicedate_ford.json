@@ -1,0 +1,127 @@
+{
+	"name": "CRM_SQL_servicedate_ford",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CRM_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "kenteken",
+				"type": "nvarchar"
+			},
+			{
+				"name": "chassisnummer",
+				"type": "nvarchar"
+			},
+			{
+				"name": "omschrijving",
+				"type": "nvarchar"
+			},
+			{
+				"name": "datumeerstetoelating",
+				"type": "date"
+			},
+			{
+				"name": "datumaanvangtenaamstelling",
+				"type": "date"
+			},
+			{
+				"name": "datum_deel1_dms",
+				"type": "date"
+			},
+			{
+				"name": "datum_deel2_dms",
+				"type": "date"
+			},
+			{
+				"name": "bouwjaar",
+				"type": "date"
+			},
+			{
+				"name": "laatste_service",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "MainService",
+				"type": "nvarchar"
+			},
+			{
+				"name": "InterimService",
+				"type": "nvarchar"
+			},
+			{
+				"name": "AnnualInspection",
+				"type": "nvarchar"
+			},
+			{
+				"name": "OilService",
+				"type": "nvarchar"
+			},
+			{
+				"name": "KMperDay",
+				"type": "decimal",
+				"precision": 14,
+				"scale": 1
+			},
+			{
+				"name": "MainService_Month",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "MainService_KM",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "InterimService_Month",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "InterimService_KM",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "OilService_KM",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "datum_deel1_combine",
+				"type": "date"
+			},
+			{
+				"name": "datum_deel2_combine",
+				"type": "date"
+			},
+			{
+				"name": "ONDERHOUD_TYPE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ONDERHOUD_DT_Y",
+				"type": "date"
+			},
+			{
+				"name": "ONDERHOUD_DT_KM",
+				"type": "date"
+			},
+			{
+				"name": "ONDERHOUD_DT",
+				"type": "date"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "servicedate_ford"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,71 @@
+{
+	"name": "CRM_SQL_Bedrijven",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CRM_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "dms",
+				"type": "varchar"
+			},
+			{
+				"name": "bedrijfsnummer",
+				"type": "varchar"
+			},
+			{
+				"name": "bedrijfsnaam",
+				"type": "varchar"
+			},
+			{
+				"name": "adres",
+				"type": "varchar"
+			},
+			{
+				"name": "woonplaats",
+				"type": "varchar"
+			},
+			{
+				"name": "land",
+				"type": "varchar"
+			},
+			{
+				"name": "postcode",
+				"type": "varchar"
+			},
+			{
+				"name": "debiteurnr",
+				"type": "varchar"
+			},
+			{
+				"name": "telefoon",
+				"type": "varchar"
+			},
+			{
+				"name": "teloverig",
+				"type": "varchar"
+			},
+			{
+				"name": "fax",
+				"type": "varchar"
+			},
+			{
+				"name": "status",
+				"type": "varchar"
+			},
+			{
+				"name": "edited",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"tableName": "[dbo].[bedrijven]"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

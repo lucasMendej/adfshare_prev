@@ -1,0 +1,192 @@
+{
+	"name": "upload to JLR",
+	"properties": {
+		"activities": [
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Create dataset",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "filenames",
+					"value": [
+						"XML_HEADER",
+						"BUSINESS_PARTNER",
+						"EMPLOYEE",
+						"VEHICLE",
+						"INVOICE_HEADER",
+						"WORK_ORDER_HEADER",
+						"INVOICE_LINE",
+						"WORK_ORDER_LINE",
+						"LOCATION",
+						"PART",
+						"REPAIR_CATEGORY",
+						"TIME_EMP_ACT",
+						"TIME_EMP_ORDER",
+						"TIME_EMP_SCHED",
+						"TIME_HOURTYPES",
+						"WORKSHOP_CAPACITY",
+						"WPS_TIMESTAMPS"
+					]
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Set variable1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@variables('filenames')",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"activities": [
+						{
+							"name": "Execute Pipeline1",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "POST_in_XML_to_JLR",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"run_Filename": {
+										"value": "@item()",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Create dataset",
+				"type": "DatabricksNotebook",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/yanmingt@sterngroep.onmicrosoft.com/JLR_data/Create_Dataset_full"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks_PROD_BNL_DATABRICKS_01",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Notification on failure",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Create dataset",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "NOTIFY_TEAMS_CHANNEL",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"subscription": "4493f696-c268-4dbc-82a0-12f2f2e0083d",
+						"resourceGroup": "PROD-WE-RSG-DATALAKE",
+						"runId": {
+							"value": "@pipeline().RunId",
+							"type": "Expression"
+						},
+						"name": {
+							"value": "@pipeline().Pipeline",
+							"type": "Expression"
+						},
+						"triggerTime": {
+							"value": "@pipeline().TriggerTime",
+							"type": "Expression"
+						},
+						"message": {
+							"value": "@activity('Create dataset').Error['message']",
+							"type": "Expression"
+						},
+						"company": "Jaguar Land Rover"
+					}
+				}
+			},
+			{
+				"name": "Backup dataset",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "ForEach1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/yanmingt@sterngroep.onmicrosoft.com/JLR_data/Backup_Dataset_full"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks_PROD_BNL_DATABRICKS_01",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"variables": {
+			"filenames": {
+				"type": "Array"
+			}
+		},
+		"folder": {
+			"name": "Supply to OEM"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-07-24T12:08:26Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

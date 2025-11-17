@@ -1,0 +1,21 @@
+{
+	"name": "Autoline BMW NL",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "Odbc",
+		"typeProperties": {
+			"connectionString": {
+				"type": "SecureString",
+				"value": "**********"
+			},
+			"authenticationType": "Basic",
+			"userName": "renodbc4",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJkYzNiOTUzZS1kZGFkLTRiMTEtOGFmNy0wYzlhODFhMDI3MWMiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "clntap149",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

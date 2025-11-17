@@ -1,0 +1,58 @@
+{
+	"name": "SQL_Doorgangen_autoline_workshopresources",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DOORGANGEN_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "DMS",
+				"type": "varchar"
+			},
+			{
+				"name": "BEDRIJF",
+				"type": "varchar"
+			},
+			{
+				"name": "ANALYSIS",
+				"type": "char"
+			},
+			{
+				"name": "AVAILABL",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 1
+			},
+			{
+				"name": "CODE",
+				"type": "char"
+			},
+			{
+				"name": "DESC_",
+				"type": "char"
+			},
+			{
+				"name": "EMPLOYNO",
+				"type": "decimal",
+				"precision": 8,
+				"scale": 0
+			},
+			{
+				"name": "IDLE",
+				"type": "char"
+			},
+			{
+				"name": "TYPE_",
+				"type": "char"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "autoline_workshopresources"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,15 @@
+{
+	"name": "Autoline4_Table",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Autoline4",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "RelationalTable",
+		"typeProperties": {
+			"tableName": "\"GB_00_ODBCCatalogue\""
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

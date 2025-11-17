@@ -1,0 +1,53 @@
+{
+	"name": "SQL_Doorgangen_autoline_headerlog_temp",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DOORGANGEN_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "DMS",
+				"type": "varchar"
+			},
+			{
+				"name": "bedrijf",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "magiclh",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "wipno",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "doctype",
+				"type": "varchar"
+			},
+			{
+				"name": "postdate",
+				"type": "date"
+			},
+			{
+				"name": "time_",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 2
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "autoline_headerlog_temp"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

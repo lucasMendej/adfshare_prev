@@ -1,0 +1,19 @@
+{
+	"name": "AzureBlobStorageCareMailCustomerXML",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorageLogicAppStorageAccount01",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "customers",
+				"container": "caremail"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

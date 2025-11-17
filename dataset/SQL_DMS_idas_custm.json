@@ -1,0 +1,320 @@
+{
+	"name": "SQL_DMS_idas_custm",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "_SET",
+				"type": "varchar"
+			},
+			{
+				"name": "_COMPANY",
+				"type": "varchar"
+			},
+			{
+				"name": "_LTSTUPDATE",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "_LTSTCHECK",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "CBRCO",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "CCUSNO",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 0
+			},
+			{
+				"name": "CPBX",
+				"type": "varchar"
+			},
+			{
+				"name": "CAANH",
+				"type": "varchar"
+			},
+			{
+				"name": "CTITL",
+				"type": "varchar"
+			},
+			{
+				"name": "CVLET",
+				"type": "varchar"
+			},
+			{
+				"name": "CVOEG",
+				"type": "varchar"
+			},
+			{
+				"name": "CNAAM1",
+				"type": "varchar"
+			},
+			{
+				"name": "CNAAM2",
+				"type": "varchar"
+			},
+			{
+				"name": "CADRES",
+				"type": "varchar"
+			},
+			{
+				"name": "CHUISN",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 0
+			},
+			{
+				"name": "CHUIST",
+				"type": "varchar"
+			},
+			{
+				"name": "CPOCO",
+				"type": "varchar"
+			},
+			{
+				"name": "CCITY",
+				"type": "varchar"
+			},
+			{
+				"name": "CLANDK",
+				"type": "varchar"
+			},
+			{
+				"name": "CTAALK",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "CFICAT",
+				"type": "varchar"
+			},
+			{
+				"name": "CAROB",
+				"type": "varchar"
+			},
+			{
+				"name": "CGESL",
+				"type": "varchar"
+			},
+			{
+				"name": "CFILL5",
+				"type": "varchar"
+			},
+			{
+				"name": "CDCAT",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "COWDI",
+				"type": "varchar"
+			},
+			{
+				"name": "CCACR",
+				"type": "decimal",
+				"precision": 1,
+				"scale": 0
+			},
+			{
+				"name": "CINVC",
+				"type": "decimal",
+				"precision": 1,
+				"scale": 0
+			},
+			{
+				"name": "CVAT",
+				"type": "decimal",
+				"precision": 1,
+				"scale": 0
+			},
+			{
+				"name": "CPROF",
+				"type": "varchar"
+			},
+			{
+				"name": "CTIT",
+				"type": "varchar"
+			},
+			{
+				"name": "CCAT",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "CSTAT",
+				"type": "decimal",
+				"precision": 1,
+				"scale": 0
+			},
+			{
+				"name": "CFILL4",
+				"type": "decimal",
+				"precision": 14,
+				"scale": 0
+			},
+			{
+				"name": "CFAKT",
+				"type": "decimal",
+				"precision": 1,
+				"scale": 0
+			},
+			{
+				"name": "CSALEM",
+				"type": "varchar"
+			},
+			{
+				"name": "CBGKD",
+				"type": "varchar"
+			},
+			{
+				"name": "CBGNR",
+				"type": "decimal",
+				"precision": 9,
+				"scale": 0
+			},
+			{
+				"name": "CCSP",
+				"type": "varchar"
+			},
+			{
+				"name": "CCSPA",
+				"type": "decimal",
+				"precision": 8,
+				"scale": 0
+			},
+			{
+				"name": "CDMAIL",
+				"type": "varchar"
+			},
+			{
+				"name": "CFIL",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "CNAWN1",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 0
+			},
+			{
+				"name": "CNAWN2",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 0
+			},
+			{
+				"name": "CCWNEW",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "CCWNER",
+				"type": "varchar"
+			},
+			{
+				"name": "CCSINT",
+				"type": "decimal",
+				"precision": 3,
+				"scale": 0
+			},
+			{
+				"name": "CCSLAW",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "CCSNEW",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "CCSNER",
+				"type": "varchar"
+			},
+			{
+				"name": "CSEGKD",
+				"type": "varchar"
+			},
+			{
+				"name": "CCDGE",
+				"type": "varchar"
+			},
+			{
+				"name": "CWSNO",
+				"type": "varchar"
+			},
+			{
+				"name": "CTELO",
+				"type": "varchar"
+			},
+			{
+				"name": "CTELR",
+				"type": "varchar"
+			},
+			{
+				"name": "CFAXNR",
+				"type": "varchar"
+			},
+			{
+				"name": "CBTWNR",
+				"type": "varchar"
+			},
+			{
+				"name": "CLIM",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 0
+			},
+			{
+				"name": "CCOINV",
+				"type": "varchar"
+			},
+			{
+				"name": "CBRUPR",
+				"type": "varchar"
+			},
+			{
+				"name": "CRELT",
+				"type": "varchar"
+			},
+			{
+				"name": "CSDX",
+				"type": "varchar"
+			},
+			{
+				"name": "CPST",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "idas_custm"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

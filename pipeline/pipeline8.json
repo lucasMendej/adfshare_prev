@@ -1,0 +1,90 @@
+{
+	"name": "pipeline8",
+	"properties": {
+		"activities": [
+			{
+				"name": "If Condition1",
+				"type": "IfCondition",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@less('2019-10-24',string(formatDateTime(utcnow(),'yyyy-MM-dd')))",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "Set variable2",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "kleiner",
+								"value": "false"
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "Set variable1",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "kleiner",
+								"value": "true"
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Get DATEI_",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "@concat('SELECT cast(DATEI_ as varchar) as DATEI_, case when DATEI_ <> cast(getdate() as date) then 0.01 else isnull(TIMEI_, 1.00) end as TIMEI_ FROM autoline_sync_status where tablename_ = ''wl_38_clockentries'' and dms =''autoline3''')",
+							"type": "Expression"
+						},
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SQL_Doorgangen_autoline_sync_status",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			}
+		],
+		"variables": {
+			"kleiner": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Z_Samples"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-03-22T16:17:52Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

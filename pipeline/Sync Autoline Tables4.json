@@ -1,0 +1,2079 @@
+{
+	"name": "Sync Autoline Tables4",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get lowest MAGICLH_",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "@concat('SELECT MAGICLH_ FROM autoline_sync_status where tablename_ = ''',pipeline().parameters.headerlogTable, ''' and dms =''',pipeline().parameters.dms,'''')",
+							"type": "Expression"
+						},
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SQL_Doorgangen_autoline_sync_status",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "If MAGICLH_ is not empty",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Get lowest MAGICLH_",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@and(not(equals(activity('Get lowest MAGICLH_').output.count,0)),not(equals(activity('Get lowest MAGICLH_').output.value[0].MAGICLH_,null)))",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "SetVariable MAGICLH_",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Check if syncStatus contains data from yesterday",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "magiclh_",
+								"value": {
+									"value": "@string(activity('Check if syncStatus contains data from yesterday').output.value[0].MAGICLH_)\n\n",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Check if syncStatus contains data from yesterday",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@concat('if (select count(*) FROM dbo.autoline_sync_status WHERE cast(timestamp_ as date) <> cast(getdate() as date) and dms = ''',pipeline().parameters.dms,''') <> 0 \n\t\tdelete from [dbo].[autoline_headerlog] where postdate < cast(getdate() as date) and dms = ''',pipeline().parameters.dms,'''\n\nselect min(magiclh) as [MAGICLH_] from (\n\t\tselect min(magiclh) as magiclh from [dbo].[autoline_headerlog] where bedrijf = ''',pipeline().parameters.bedrijf,''' and doctype = ''''  and dms = ''',pipeline().parameters.dms,''' and time_ > cast( DATEPART(HOUR, GETDATE()) - 1 as numeric(4,2))\n\t\tunion select [MAGICLH_] + 1 from dbo.autoline_sync_status WHERE tablename_ = ''', pipeline().parameters.headerlogTable,'''  and dms = ''',pipeline().parameters.dms,''') a')",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "SQL_Doorgangen_autoline_sync_status",
+									"type": "DatasetReference"
+								},
+								"firstRowOnly": false
+							}
+						},
+						{
+							"name": "Get new Headerlog records",
+							"type": "Lookup",
+							"dependsOn": [
+								{
+									"activity": "SetVariable MAGICLH_",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"sqlReaderQuery": {
+										"value": "@concat('SELECT  ''',pipeline().parameters.dms,''' as DMS, ''',pipeline().parameters.bedrijf,''' as BEDRIJF,*\nFROM OPENQUERY(', pipeline().parameters.dms,', ''SELECT  magiclh, wipno, doctype, postdate, time_  FROM ',pipeline().parameters.headerlogTable,' where magiclh >= ', variables('magiclh_'), ''')')",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "PROD_SRV_APPS06",
+									"type": "DatasetReference"
+								},
+								"firstRowOnly": false
+							}
+						},
+						{
+							"name": "Get werkorders",
+							"type": "Lookup",
+							"dependsOn": [
+								{
+									"activity": "Get new Headerlog records",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@concat('DECLARE @json NVARCHAR(MAX)\nset @json = N''',string(activity('Get new Headerlog records').output.value),'''\n\n    SELECT new.* FROM  \n OPENJSON ( @json ) \nWITH (   \n              DMS   varchar(200) ''$.DMS'' ,  \n              bedrijf     varchar(20)     ''$.BEDRIJF'',  \n              magiclh numeric(20,0) ''$.MAGICLH'',  \n              wipno numeric(20,0)    ''$.WIPNO'',\n\t\t    doctype varchar(5) ''$.DOCTYPE'',\n\t\t    postdate date ''$.POSTDATE'',\n\t\t    time_ numeric(4,2) ''$.TIME_''\n ) new\n     LEFT JOIN autoline_headerlog prev ON prev.bedrijf = ''', pipeline().parameters.bedrijf,''' \n                                      AND prev.dms = new.dms\n                                      AND prev.Magiclh = new.magiclh\n                                      AND prev.doctype = new.doctype\nWHERE prev.Magiclh IS NULL\n      AND new.dms = ''',pipeline().parameters.dms,''' and new.bedrijf = ''',pipeline().parameters.bedrijf, ''''\t )",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "SQL_Doorgangen_autoline_headerlog",
+									"type": "DatasetReference"
+								},
+								"firstRowOnly": false
+							}
+						},
+						{
+							"name": "Set Variable werkorders",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "select werkorders",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "werkorders",
+								"value": {
+									"value": "@string(activity('select werkorders').output.value[0].werkorders)",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "select werkorders",
+							"type": "Lookup",
+							"dependsOn": [
+								{
+									"activity": "Get werkorders",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@concat('DECLARE @json NVARCHAR(MAX)\nset @json = N''',string(activity('Get werkorders').output.value),'''\n\nSELECT DISTINCT STUFF(\n(\n    SELECT '','' + CAST(wipno AS VARCHAR)\n    FROM\n    (\nSELECT DISTINCT wipno FROM  \n OPENJSON ( @json ) \nWITH (   \n              DMS   varchar(200) ''$.DMS'' ,  \n              bedrijf     varchar(20)     ''$.bedrijf'',  \n              magiclh numeric(20,0) ''$.magiclh'',  \n              wipno numeric(20,0)    ''$.wipno'',\n\t\t    doctype varchar(5) ''$.doctype'',\n\t\t    postdate date ''$.postdate'',\n\t\t    time_ numeric(4,2) ''$.time_''\n )  where doctype <> ''''\n) sub FOR XML PATH('''')\n), 1, 1, '''') as werkorders\n\t \n\t \n\t ')",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "SQL_Doorgangen_autoline_headerlog_temp",
+									"type": "DatasetReference"
+								},
+								"firstRowOnly": false
+							}
+						},
+						{
+							"name": "Select magiclh",
+							"type": "Lookup",
+							"dependsOn": [
+								{
+									"activity": "Get werkorders",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@concat('DECLARE @json NVARCHAR(MAX)\nset @json = N''',string(activity('Get werkorders').output.value),'''\n\nDECLARE @magiclh VARCHAR(MAX)\n\nSELECT DISTINCT STUFF(\n(\n    SELECT '','' + CAST(magiclh AS VARCHAR)\n    FROM\n    (\nSELECT DISTINCT magiclh FROM  \n OPENJSON ( @json ) \nWITH (   \n              magiclh numeric(10,0) ''$.magiclh''\n             \n )  \n) sub FOR XML PATH('''')\n), 1, 1, '''') as magiclh\n\n\n\n\t ')",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "SQL_Doorgangen_autoline_headerlog_temp",
+									"type": "DatasetReference"
+								},
+								"firstRowOnly": false
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Get DATEI_",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "@concat('SELECT cast(DATEI_ as varchar) as DATEI_, case when DATEI_ <> cast(getdate() as date) then 0.01 else isnull(TIMEI_, 1.00) end as TIMEI_ FROM autoline_sync_status where tablename_ = ''',pipeline().parameters.clockentriesTable, ''' and dms =''',pipeline().parameters.dms,'''')",
+							"type": "Expression"
+						},
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SQL_Doorgangen_autoline_sync_status",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "If DATEI_ is smaller then today",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Get DATEI_",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@less(activity('Get DATEI_').output.value[0].DATEI_,string(formatDateTime(utcnow(),'yyyy-MM-dd')))",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "SetVariable2",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "date",
+								"value": {
+									"value": "@formatDateTime(utcnow(),'yyyy-MM-dd')",
+									"type": "Expression"
+								}
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "SqlServerStoredProcedure1",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[autoline_update_sync_status]",
+								"storedProcedureParameters": {
+									"DATEI_": {
+										"value": {
+											"value": "@formatDateTime(utcnow(),'yyyy-MM-dd')",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"DMS": {
+										"value": {
+											"value": "@pipeline().parameters.dms",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"MAGICLH_": {
+										"value": null,
+										"type": "String"
+									},
+									"tablename_": {
+										"value": {
+											"value": "@pipeline().parameters.clockentriesTable",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TIMEI_": {
+										"value": "0.1",
+										"type": "Double"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "DOORGANGEN_PROD_SRV_SQL_00",
+								"type": "LinkedServiceReference"
+							}
+						},
+						{
+							"name": "SetVariable1",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "SqlServerStoredProcedure1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "date",
+								"value": {
+									"value": "@formatDateTime(utcnow(),'yyyy-MM-dd')",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "If Get Clockentries has rows",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "If DATEI_ is not NULL",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@greater(activity('Get Clockentries').output.count,0)",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Copy to CLOCKENTRIES",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@concat('DECLARE @jsontemp NVARCHAR(MAX)\nset @jsontemp = N''',string(activity('Get clockentries').output.value),'''\n\nDECLARE @json NVARCHAR(MAX)\nset @json = N''',string(activity('Get clockentries today').output.value),'''\n\nSELECT DISTINCT * FROM  \n OPENJSON ( @json ) \nWITH (   \n\tDMS varchar(50) ''$.DMS'',\n\tBEDRIJF int ''$.BEDRIJF'',\n\tADJDATE date ''$.ADJDATE'',\n\tADJDESC char(30) ''$.ADJDESC'',\n\tADJMODE char(1) ''$.ADJMODE'',\n\tADJTIME numeric(4, 2) ''$.ADJTIME'',\n\tADJUSER char(8) ''$.ADJUSER'',\n\tALLOWED numeric(11, 2) ''$.ALLOWED'',\n\tANALYSIS char(8) ''$.ANALYSIS'',\n\tDATEI datetime ''$.DATEI'',\n\tDATEO date ''$.DATEO'',\n\tFACTOR numeric(6, 3) ''$.FACTOR'',\n\tIDLE char(1) ''$.IDLE'',\n\tREASON char(1) ''$.REASON'',\n\tRESOURCE varchar(10) ''$.RESOURCE'',\n\tSEQ numeric(10, 0) ''$.SEQ'',\n\tSHIFT char(1) ''$.SHIFT'',\n\tSTATE numeric(2, 0) ''$.STATE'',\n\tTAKEN numeric(11, 2) ''$.TAKEN'',\n\tTEAM char(1) ''$.TEAM'',\n\tTERMID numeric(4, 0) ''$.TERMID'',\n\tTIMEI numeric(4, 2) ''$.TIMEI'',\n\tTIMEO numeric(4, 2) ''$.TIMEO'',\n\tWIPLINE numeric(4, 0) ''$.WIPLINE'',\n\tWIPNO numeric(5, 0) ''$.WIPNO''\n ) bron where bron.DATEI >= ''',variables('date'), '''\nand not exists(SELECT * FROM OPENJSON ( @jsontemp ) \nWITH (   \n\tDMS varchar(50) ''$.DMS'',\n\tBEDRIJF int ''$.BEDRIJF'',\n\tADJDATE date ''$.ADJDATE'',\n\tADJDESC char(30) ''$.ADJDESC'',\n\tADJMODE char(1) ''$.ADJMODE'',\n\tADJTIME numeric(4, 2) ''$.ADJTIME'',\n\tADJUSER char(8) ''$.ADJUSER'',\n\tALLOWED numeric(11, 2) ''$.ALLOWED'',\n\tANALYSIS char(8) ''$.ANALYSIS'',\n\tDATEI datetime ''$.DATEI'',\n\tDATEO date ''$.DATEO'',\n\tFACTOR numeric(6, 3) ''$.FACTOR'',\n\tIDLE char(1) ''$.IDLE'',\n\tREASON char(1) ''$.REASON'',\n\tRESOURCE varchar(10) ''$.RESOURCE'',\n\tSEQ numeric(10, 0) ''$.SEQ'',\n\tSHIFT char(1) ''$.SHIFT'',\n\tSTATE numeric(2, 0) ''$.STATE'',\n\tTAKEN numeric(11, 2) ''$.TAKEN'',\n\tTEAM char(1) ''$.TEAM'',\n\tTERMID numeric(4, 0) ''$.TERMID'',\n\tTIMEI numeric(4, 2) ''$.TIMEI'',\n\tTIMEO numeric(4, 2) ''$.TIMEO'',\n\tWIPLINE numeric(4, 0) ''$.WIPLINE'',\n\tWIPNO numeric(5, 0) ''$.WIPNO''\n ) temp where temp.resource = bron.resource and \n                  temp.[DATEI] = bron.datei and temp.timei = bron.timei and temp.seq = bron.seq  and temp.DMS = bron.DMS and temp.bedrijf = bron.bedrijf) \n \n\t \n\t \n\t' )",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@{concat('delete from autoline_clockentries where DMS =''',pipeline().parameters.dms,''' and BEDRIJF = ',pipeline().parameters.bedrijf, ' and DATEI>= ''',variables('date') ,'''')}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_clockentries",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_clockentries",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "SqlServerStoredProcedure2",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Get Max DATEI and TIMEI",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[autoline_update_sync_status]",
+								"storedProcedureParameters": {
+									"DATEI_": {
+										"value": {
+											"value": "@activity('Get Max DATEI and TIMEI').output.value[0].DATEI",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"DMS": {
+										"value": {
+											"value": "@pipeline().parameters.dms",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"MAGICLH_": {
+										"value": null,
+										"type": "String"
+									},
+									"tablename_": {
+										"value": {
+											"value": "@pipeline().parameters.clockentriesTable",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TIMEI_": {
+										"value": {
+											"value": "@activity('Get Max DATEI and TIMEI').output.value[0].TIMEI",
+											"type": "Expression"
+										},
+										"type": "Double"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "DOORGANGEN_PROD_SRV_SQL_00",
+								"type": "LinkedServiceReference"
+							}
+						},
+						{
+							"name": "Get Max DATEI and TIMEI",
+							"type": "Lookup",
+							"dependsOn": [
+								{
+									"activity": "Copy to CLOCKENTRIES",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@concat('\n    SELECT ISNULL(MAX(cast(cast(DATEI as date) as varchar)), ''',variables('date'),''') as DATEI,\ncast( DATEPART(HOUR, dateadd(minute,-45,getdate())) as numeric(4,2)) + cast(datepart(minute, dateadd(minute,-45,getdate())) as numeric(4,2)) / 100 as TIMEI\n    FROM autoline_clockentries WHERE DMS = ''',pipeline().parameters.dms,''' and BEDRIJF = ''',pipeline().parameters.bedrijf,'''')",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "SQL_Doorgangen_autoline_clockentries",
+									"type": "DatasetReference"
+								},
+								"firstRowOnly": false
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "If DATEI_ is not NULL",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Set Variable Time",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@not(equals(activity('Get DATEI_').output.value[0].DATEI_,null))",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Get VTIME",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@concat('select min(timei) as vtime  from autoline_clockentries where timeo = 0 and wipno <> 0 and datei >= getdate()-1 and dms = ''',pipeline().parameters.dms, ''' and bedrijf = ''',pipeline().parameters.bedrijf,'''')",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "SQL_Doorgangen_autoline_clockentries",
+									"type": "DatasetReference"
+								},
+								"firstRowOnly": false
+							}
+						},
+						{
+							"name": "Get Clockentries",
+							"type": "Lookup",
+							"dependsOn": [
+								{
+									"activity": "Get clockentries today",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"sqlReaderQuery": {
+										"value": "@concat('\nIF OBJECT_ID(''tempdb..#temp_clockentries',pipeline().parameters.bedrijf,pipeline().parameters.dms,''') IS NOT NULL DROP Table #temp_clockentries',pipeline().parameters.bedrijf,pipeline().parameters.dms,'\n\nDECLARE @date_ AS VARCHAR(50) = ''',variables('date'), '''\nDECLARE @time_ AS NUMERIC(4, 2) = ''',variables('time'), '''\nDECLARE @tablename_ AS VARCHAR(50) = ''',pipeline().parameters.clockentriesTable, '''\nDECLARE @DMS AS VARCHAR(10) = ''', pipeline().parameters.dms,'''\nDECLARE @bedrijf AS VARCHAR(2) = ''',pipeline().parameters.bedrijf,'''\nDECLARE @timeVC_ AS VARCHAR(6);\nDECLARE @timeVC0_ AS VARCHAR(6);\nCREATE TABLE #temp_clockentries',pipeline().parameters.bedrijf,pipeline().parameters.dms,'\n([DMS]      [VARCHAR](10), \n [BEDRIJF]  [INT], \n [ADJDATE]  [DATE], \n [ADJDESC]  [VARCHAR](30), \n [ADJMODE]  [VARCHAR](1), \n [ADJTIME]  [NUMERIC](4, 2), \n [ADJUSER]  [VARCHAR](8), \n [ALLOWED]  [NUMERIC](11, 2), \n [ANALYSIS] [VARCHAR](8), \n [DATEI]    [DATE], \n [DATEO]    [DATE], \n [FACTOR]   [NUMERIC](6, 3), \n [IDLE]     [VARCHAR](1), \n [REASON]   [VARCHAR](1), \n [RESOURCE] [VARCHAR](10), \n [SEQ]      [NUMERIC](10, 0), \n [SHIFT]    [VARCHAR](1), \n [STATE]    [NUMERIC](2, 0), \n [TAKEN]    [NUMERIC](11, 2), \n [TEAM]     [VARCHAR](1), \n [TERMID]   [NUMERIC](4, 0), \n [TIMEI]    [NUMERIC](4, 2), \n [TIMEO]    [NUMERIC](4, 2), \n [WIPLINE]  [NUMERIC](4, 0), \n [WIPNO]    [NUMERIC](5, 0)\n);\nSET @timeVC_ =\n(\n    SELECT CAST(@time_ AS VARCHAR(5))\n);\nEXEC (''insert into #temp_clockentries',pipeline().parameters.bedrijf,pipeline().parameters.dms,' (DMS,BEDRIJF,ADJDATE ,ADJDESC ,ADJMODE ,ADJTIME ,ADJUSER ,ALLOWED ,ANALYSIS ,DATEI ,DATEO ,FACTOR ,IDLE\n            \t\t,REASON ,RESOURCE ,SEQ ,SHIFT ,STATE ,TAKEN ,TEAM ,TERMID ,TIMEI ,TIMEO ,WIPLINE,WIPNO) \n            select ''''''+@DMS+'''''' as DMS, ''+@bedrijf+'' as bedrijf,* from openquery(''+@DMS+'', ''''SELECT \n            \t\tADJDATE ,ADJDESC ,ADJMODE ,ADJTIME ,ADJUSER ,ALLOWED ,ANALYSIS ,DATEI ,DATEO ,FACTOR ,IDLE\n            \t\t,REASON ,RESOURCE ,SEQ ,SHIFT ,STATE ,TAKEN ,TEAM ,TERMID ,TIMEI ,TIMEO ,WIPLINE,WIPNO\n            FROM ''+@tablename_+'' where DATEI >= ''''''''''+@date_+'''''''''' and (TIMEI >= ''+@timeVC_+'' OR (ADJDATE >= ''''''''''+@date_+'''''''''' and ADJTIME >= ''+@timeVC_+''))  '''')'');\n\nSET @timeVC0_ = (SELECT CASE WHEN CAST(''',activity('Get VTIME').output.value[0].vtime, ''' AS VARCHAR(5)) = '''' THEN NULL ELSE CAST(''',activity('Get VTIME').output.value[0].vtime, ''' AS VARCHAR(5)) END)\n\nIF @timeVC0_ IS NOT NULL\n    BEGIN\n        EXEC (''insert into #temp_clockentries',pipeline().parameters.bedrijf,pipeline().parameters.dms,' (DMS,BEDRIJF,ADJDATE ,ADJDESC ,ADJMODE ,ADJTIME ,ADJUSER ,ALLOWED ,ANALYSIS ,DATEI ,DATEO ,FACTOR ,IDLE\n            \t\t,REASON ,RESOURCE ,SEQ ,SHIFT ,STATE ,TAKEN ,TEAM ,TERMID ,TIMEI ,TIMEO ,WIPLINE,WIPNO) \n            select ''''''+@DMS+'''''' as DMS, ''+@bedrijf+'' as bedrijf,* from openquery(''+@DMS+'', ''''SELECT \n            \t\tADJDATE ,ADJDESC ,ADJMODE ,ADJTIME ,ADJUSER ,ALLOWED ,ANALYSIS ,DATEI ,DATEO ,FACTOR ,IDLE\n            \t\t,REASON ,RESOURCE ,SEQ ,SHIFT ,STATE ,TAKEN ,TEAM ,TERMID ,TIMEI ,TIMEO ,WIPLINE,WIPNO\n            FROM ''+@tablename_+'' where DATEO >= ''''''''''+@date_+'''''''''' and (TIMEO >= ''+@timeVC0_+'')'''') bron\n                where not exists (select * from #temp_clockentries',pipeline().parameters.bedrijf,pipeline().parameters.dms,' temp where \n            \t\t\t\t\t\t\ttemp.[DATEI] = bron.datei and temp.resource collate SQL_Latin1_General_CP1_CI_AS = bron.resource collate SQL_Latin1_General_CP1_CI_AS and temp.seq = bron.seq and \n            \t\t\t\t\t\t\ttemp.timei = bron.timei and temp.wipno = bron.wipno and temp.DMS = ''''''+@DMS+'''''' and temp.bedrijf = ''+@bedrijf+'') '');\nEND;\n--IF\n--(\n--    SELECT COUNT(*)\n--    FROM #temp_clockentries',pipeline().parameters.bedrijf,pipeline().parameters.dms,'\n--) > 0\n--    BEGIN\n\n      select distinct * from #temp_clockentries',pipeline().parameters.bedrijf,pipeline().parameters.dms,'\nDROP Table #temp_clockentries',pipeline().parameters.bedrijf,pipeline().parameters.dms,'\n--END\n\n')",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "PROD_SRV_APPS06",
+									"type": "DatasetReference"
+								},
+								"firstRowOnly": false
+							}
+						},
+						{
+							"name": "Get clockentries today",
+							"type": "Lookup",
+							"dependsOn": [
+								{
+									"activity": "Get VTIME",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@concat('select DMS,BEDRIJF,ADJDATE ,ADJDESC ,ADJMODE ,ADJTIME ,ADJUSER ,ALLOWED ,ANALYSIS ,DATEI ,DATEO ,FACTOR ,IDLE\n            \t\t,REASON ,RESOURCE ,SEQ ,SHIFT ,STATE ,TAKEN ,TEAM ,TERMID ,TIMEI ,TIMEO ,WIPLINE,WIPNO\n            FROM [dbo].[autoline_clockentries] bron where DATEI >= ''',variables('date'),''' and DMS = ''',pipeline().parameters.dms,''' and BEDRIJF = ''',pipeline().parameters.bedrijf,'''')",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "SQL_Doorgangen_autoline_clockentries",
+									"type": "DatasetReference"
+								},
+								"firstRowOnly": false
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Set Variable Time",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "If DATEI_ is smaller then today",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "time",
+					"value": {
+						"value": "@string(activity('Get DATEI_').output.value[0].TIMEI_)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "If werkorder is not null or empty",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "If MAGICLH_ is not empty",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@and(not(equals(variables('werkorders'),null)),not(equals(variables('werkorders'),'')))",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Copy Data sync_headerlog",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@concat('DECLARE @json NVARCHAR(MAX)\nset @json = N''',string(activity('Get werkorders').output.value),'''\n\n\nSELECT DISTINCT * FROM  \n OPENJSON ( @json ) \nWITH (   \n              DMS   varchar(200) ''$.DMS'' ,  \n              BEDRIJF varchar(20)     ''$.bedrijf'',  \n              MAGICLH numeric(20,0) ''$.magiclh'',  \n              WIPNO numeric(20,0)    ''$.wipno'',\n\t\t    DOCTYPE varchar(5) ''$.doctype'',\n\t\t    POSTDATE date ''$.postdate'',\n\t\t    TIME_ numeric(4,2) ''$.time_''\n ) ') ",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@{concat('DELETE FROM autoline_headerlog\nWHERE bedrijf = ',pipeline().parameters.bedrijf,'\n      AND DMS = ''',pipeline().parameters.dms,'''\n      AND magiclh IN\n(',activity('Select magiclh').output.value[0].magiclh,')')}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"parallelCopies": 32,
+								"dataIntegrationUnits": 32,
+								"translator": {
+									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"name": "DMS",
+												"type": "varchar"
+											},
+											"sink": {
+												"name": "DMS",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "BEDRIJF"
+											},
+											"sink": {
+												"name": "BEDRIJF"
+											}
+										},
+										{
+											"source": {
+												"name": "MAGICLH"
+											},
+											"sink": {
+												"name": "MAGICLH"
+											}
+										},
+										{
+											"source": {
+												"name": "WIPNO"
+											},
+											"sink": {
+												"name": "WIPNO"
+											}
+										},
+										{
+											"source": {
+												"name": "DOCTYPE"
+											},
+											"sink": {
+												"name": "DOCTYPE"
+											}
+										},
+										{
+											"source": {
+												"name": "POSTDATE"
+											},
+											"sink": {
+												"name": "POSTDATE"
+											}
+										},
+										{
+											"source": {
+												"name": "TIME_"
+											},
+											"sink": {
+												"name": "TIME_"
+											}
+										}
+									]
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_headerlog",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_headerlog",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "Copy partslines",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"sqlReaderQuery": {
+										"value": "@concat('SELECT ''',pipeline().parameters.dms,''' as DMS, ''',pipeline().parameters.bedrijf,''' as BEDRIJF,* FROM OPENQUERY(',pipeline().parameters.dms,',''SELECT ACCOUNT ,DATEIN,DISCOUNT ,INVSTAT ,LINE ,ORDERQTY ,ORDSTAT ,PRODGRP ,SELLPRCE ,WIPNO ,PART ,ACTLINE ,INVOICE ,DESCRIPN ,DECARDED ,DEPT,CONTRIB,EXTPRICE FROM ',pipeline().parameters.partlinesTable,' where WIPNO in (', variables('werkorders'), ')'')' )",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@{concat('delete from autoline_partslines where DMS =''',pipeline().parameters.dms,''' and BEDRIJF = ',pipeline().parameters.bedrijf,' and WIPNO in (',variables('werkorders'),')')}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"parallelCopies": 32,
+								"dataIntegrationUnits": 32,
+								"translator": {
+									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"name": "DMS",
+												"type": "String"
+											},
+											"sink": {
+												"name": "DMS",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "BEDRIJF",
+												"type": "String"
+											},
+											"sink": {
+												"name": "BEDRIJF",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "ACCOUNT",
+												"type": "String"
+											},
+											"sink": {
+												"name": "ACCOUNT",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "DATEIN",
+												"type": "DateTime"
+											},
+											"sink": {
+												"name": "DATEIN",
+												"type": "DateTime"
+											}
+										},
+										{
+											"source": {
+												"name": "DISCOUNT",
+												"type": "Decimal"
+											},
+											"sink": {
+												"name": "DISCOUNT",
+												"type": "Decimal"
+											}
+										},
+										{
+											"source": {
+												"name": "INVSTAT",
+												"type": "String"
+											},
+											"sink": {
+												"name": "INVSTAT",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "LINE",
+												"type": "Int32"
+											},
+											"sink": {
+												"name": "LINE",
+												"type": "Int32"
+											}
+										},
+										{
+											"source": {
+												"name": "ORDERQTY",
+												"type": "Decimal"
+											},
+											"sink": {
+												"name": "ORDERQTY",
+												"type": "Decimal"
+											}
+										},
+										{
+											"source": {
+												"name": "ORDSTAT",
+												"type": "String"
+											},
+											"sink": {
+												"name": "ORDSTAT",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "PRODGRP",
+												"type": "String"
+											},
+											"sink": {
+												"name": "PRODGRP",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "SELLPRCE",
+												"type": "Decimal"
+											},
+											"sink": {
+												"name": "SELLPRCE",
+												"type": "Decimal"
+											}
+										},
+										{
+											"source": {
+												"name": "WIPNO",
+												"type": "Int32"
+											},
+											"sink": {
+												"name": "WIPNO",
+												"type": "Int32"
+											}
+										},
+										{
+											"source": {
+												"name": "PART",
+												"type": "String"
+											},
+											"sink": {
+												"name": "PART",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "ACTLINE",
+												"type": "Decimal"
+											},
+											"sink": {
+												"name": "ACTLINE",
+												"type": "Decimal"
+											}
+										},
+										{
+											"source": {
+												"name": "INVOICE",
+												"type": "Decimal"
+											},
+											"sink": {
+												"name": "INVOICE",
+												"type": "Decimal"
+											}
+										},
+										{
+											"source": {
+												"name": "DESCRIPN",
+												"type": "String"
+											},
+											"sink": {
+												"name": "DESCRIPN",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "DECARDED",
+												"type": "DateTime"
+											},
+											"sink": {
+												"name": "DECARDED",
+												"type": "DateTime"
+											}
+										},
+										{
+											"source": {
+												"name": "DEPT",
+												"type": "String"
+											},
+											"sink": {
+												"name": "DEPT",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "CONTRIB",
+												"type": "Decimal"
+											},
+											"sink": {
+												"name": "CONTRIB",
+												"type": "Decimal"
+											}
+										},
+										{
+											"source": {
+												"name": "EXTPRICE",
+												"type": "Decimal"
+											},
+											"sink": {
+												"name": "EXTPRICE",
+												"type": "Decimal"
+											}
+										}
+									]
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "PROD_SRV_APPS06",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_partslines",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "Copy labourlines",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"sqlReaderQuery": {
+										"value": "@concat('SELECT ''',pipeline().parameters.dms,''' as DMS, ''',pipeline().parameters.bedrijf,''' as BEDRIJF,* FROM OPENQUERY(',pipeline().parameters.dms,',''SELECT ACCOUNT ,ACTLINE ,ALLOWED ,BONUSTIM ,CONTRIB ,DATECOST ,DEPT ,DESC_ ,DISCPC ,EXTPRICE ,FRANCODE ,INVOICE ,INVSTAT ,LINE ,LOADSTAT ,MENU ,MENUCODE ,MENUFLAG ,MENUPRCE ,RATE ,RTSCODE ,RTSCOMPY ,SALTYPE ,TAKEN ,TYPEANAL ,TYPECODE ,WIPNO ,WLCLOCKR FROM ',pipeline().parameters.labourlinesTable,' where WIPNO in (', variables('werkorders'), ') '')' )",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@{concat('delete from autoline_labourlines where DMS =''',pipeline().parameters.dms,''' and BEDRIJF = ',pipeline().parameters.bedrijf,' and WIPNO in (',variables('werkorders'),')')}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"parallelCopies": 32,
+								"dataIntegrationUnits": 32,
+								"translator": {
+									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"name": "DMS",
+												"type": "String"
+											},
+											"sink": {
+												"name": "DMS",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "BEDRIJF",
+												"type": "String"
+											},
+											"sink": {
+												"name": "BEDRIJF",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "ACCOUNT",
+												"type": "String"
+											},
+											"sink": {
+												"name": "ACCOUNT",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "ACTLINE",
+												"type": "Decimal"
+											},
+											"sink": {
+												"name": "ACTLINE",
+												"type": "Decimal"
+											}
+										},
+										{
+											"source": {
+												"name": "ALLOWED",
+												"type": "Decimal"
+											},
+											"sink": {
+												"name": "ALLOWED",
+												"type": "Decimal"
+											}
+										},
+										{
+											"source": {
+												"name": "BONUSTIM",
+												"type": "Decimal"
+											},
+											"sink": {
+												"name": "BONUSTIM",
+												"type": "Decimal"
+											}
+										},
+										{
+											"source": {
+												"name": "CONTRIB",
+												"type": "Decimal"
+											},
+											"sink": {
+												"name": "CONTRIB",
+												"type": "Decimal"
+											}
+										},
+										{
+											"source": {
+												"name": "DATECOST",
+												"type": "DateTime"
+											},
+											"sink": {
+												"name": "DATECOST",
+												"type": "DateTime"
+											}
+										},
+										{
+											"source": {
+												"name": "DEPT",
+												"type": "String"
+											},
+											"sink": {
+												"name": "DEPT",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "DESC_",
+												"type": "String"
+											},
+											"sink": {
+												"name": "DESC_",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "DISCPC",
+												"type": "Decimal"
+											},
+											"sink": {
+												"name": "DISCPC",
+												"type": "Decimal"
+											}
+										},
+										{
+											"source": {
+												"name": "EXTPRICE",
+												"type": "Decimal"
+											},
+											"sink": {
+												"name": "EXTPRICE",
+												"type": "Decimal"
+											}
+										},
+										{
+											"source": {
+												"name": "FRANCODE",
+												"type": "String"
+											},
+											"sink": {
+												"name": "FRANCODE",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "INVOICE",
+												"type": "Decimal"
+											},
+											"sink": {
+												"name": "INVOICE",
+												"type": "Decimal"
+											}
+										},
+										{
+											"source": {
+												"name": "INVSTAT",
+												"type": "String"
+											},
+											"sink": {
+												"name": "INVSTAT",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "LINE",
+												"type": "Int32"
+											},
+											"sink": {
+												"name": "LINE",
+												"type": "Int32"
+											}
+										},
+										{
+											"source": {
+												"name": "LOADSTAT",
+												"type": "String"
+											},
+											"sink": {
+												"name": "LOADSTAT",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "MENU",
+												"type": "String"
+											},
+											"sink": {
+												"name": "MENU",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "MENUCODE",
+												"type": "String"
+											},
+											"sink": {
+												"name": "MENUCODE",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "MENUFLAG",
+												"type": "String"
+											},
+											"sink": {
+												"name": "MENUFLAG",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "MENUPRCE",
+												"type": "Decimal"
+											},
+											"sink": {
+												"name": "MENUPRCE",
+												"type": "Decimal"
+											}
+										},
+										{
+											"source": {
+												"name": "RATE",
+												"type": "Decimal"
+											},
+											"sink": {
+												"name": "RATE",
+												"type": "Decimal"
+											}
+										},
+										{
+											"source": {
+												"name": "RTSCODE",
+												"type": "String"
+											},
+											"sink": {
+												"name": "RTSCODE",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "RTSCOMPY",
+												"type": "String"
+											},
+											"sink": {
+												"name": "RTSCOMPY",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "SALTYPE",
+												"type": "String"
+											},
+											"sink": {
+												"name": "SALTYPE",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "TAKEN",
+												"type": "Decimal"
+											},
+											"sink": {
+												"name": "TAKEN",
+												"type": "Decimal"
+											}
+										},
+										{
+											"source": {
+												"name": "TYPEANAL",
+												"type": "String"
+											},
+											"sink": {
+												"name": "TYPEANAL",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "TYPECODE",
+												"type": "String"
+											},
+											"sink": {
+												"name": "TYPECODE",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "WIPNO",
+												"type": "Int32"
+											},
+											"sink": {
+												"name": "WIPNO",
+												"type": "Int32"
+											}
+										},
+										{
+											"source": {
+												"name": "WLCLOCKR",
+												"type": "String"
+											},
+											"sink": {
+												"name": "WLCLOCKR",
+												"type": "String"
+											}
+										}
+									]
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "PROD_SRV_APPS06",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_labourlines",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "Copy headerrecords",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"sqlReaderQuery": {
+										"value": "@concat('SELECT ''',pipeline().parameters.dms,''' as DMS, ''',pipeline().parameters.bedrijf,''' as BEDRIJF,* FROM OPENQUERY(',pipeline().parameters.dms,',''SELECT ACCOUNT ,CHASSIS ,CREATED ,CUSTCONT ,CUSTNAME ,DATEIN ,DATEOUT, DATEREG ,DELFLAG ,DEPT ,FRANCODE ,INVNO ,MAGICT ,MAGICV ,MODEL ,OPBOOKIN ,PHONE ,REGNO ,REPREP ,SALTYPE ,SERTEXT ,SERVCODE ,TEXT001 ,TEXT002 ,TEXT003 ,TEXT004 ,TIMEIN ,TIMEOUT ,WIPNO ,VSBNO ,WDATEOUT ,MILEAGE, WDATEIN, WTIMEIN ,WLINOUT, OPCREATE, OPBOOKOU, OPINVOIC, CUSTWAIT, COURTREQ, WIPPARTS FROM ',pipeline().parameters.headerrecordsTable,' WHERE WIPNO in (', variables('werkorders'), ') '')' )",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@{concat('delete from autoline_headerrecords where DMS =''',pipeline().parameters.dms,''' and BEDRIJF = ',pipeline().parameters.bedrijf,' and WIPNO in (',variables('werkorders'),')')}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"parallelCopies": 32,
+								"dataIntegrationUnits": 32,
+								"translator": {
+									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"name": "DMS",
+												"type": "String"
+											},
+											"sink": {
+												"name": "DMS",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "BEDRIJF",
+												"type": "String"
+											},
+											"sink": {
+												"name": "BEDRIJF",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "ACCOUNT",
+												"type": "String"
+											},
+											"sink": {
+												"name": "ACCOUNT",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "CHASSIS",
+												"type": "String"
+											},
+											"sink": {
+												"name": "CHASSIS",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "CREATED",
+												"type": "DateTime"
+											},
+											"sink": {
+												"name": "CREATED",
+												"type": "DateTime"
+											}
+										},
+										{
+											"source": {
+												"name": "CUSTCONT",
+												"type": "String"
+											},
+											"sink": {
+												"name": "CUSTCONT",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "CUSTNAME",
+												"type": "String"
+											},
+											"sink": {
+												"name": "CUSTNAME",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "DATEIN",
+												"type": "DateTime"
+											},
+											"sink": {
+												"name": "DATEIN",
+												"type": "DateTime"
+											}
+										},
+										{
+											"source": {
+												"name": "DATEOUT",
+												"type": "DateTime"
+											},
+											"sink": {
+												"name": "DATEOUT",
+												"type": "DateTime"
+											}
+										},
+										{
+											"source": {
+												"name": "DATEREG",
+												"type": "DateTime"
+											},
+											"sink": {
+												"name": "DATEREG",
+												"type": "DateTime"
+											}
+										},
+										{
+											"source": {
+												"name": "DELFLAG",
+												"type": "Boolean"
+											},
+											"sink": {
+												"name": "DELFLAG",
+												"type": "Boolean"
+											}
+										},
+										{
+											"source": {
+												"name": "DEPT",
+												"type": "String"
+											},
+											"sink": {
+												"name": "DEPT",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "FRANCODE",
+												"type": "String"
+											},
+											"sink": {
+												"name": "FRANCODE",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "INVNO",
+												"type": "Decimal"
+											},
+											"sink": {
+												"name": "INVNO",
+												"type": "Decimal"
+											}
+										},
+										{
+											"source": {
+												"name": "MAGICT",
+												"type": "Decimal"
+											},
+											"sink": {
+												"name": "MAGICT",
+												"type": "Decimal"
+											}
+										},
+										{
+											"source": {
+												"name": "MAGICV",
+												"type": "Decimal"
+											},
+											"sink": {
+												"name": "MAGICV",
+												"type": "Decimal"
+											}
+										},
+										{
+											"source": {
+												"name": "MODEL",
+												"type": "String"
+											},
+											"sink": {
+												"name": "MODEL",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "OPBOOKIN",
+												"type": "String"
+											},
+											"sink": {
+												"name": "OPBOOKIN",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "PHONE",
+												"type": "String"
+											},
+											"sink": {
+												"name": "PHONE",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "REGNO",
+												"type": "String"
+											},
+											"sink": {
+												"name": "REGNO",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "REPREP",
+												"type": "String"
+											},
+											"sink": {
+												"name": "REPREP",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "SALTYPE",
+												"type": "String"
+											},
+											"sink": {
+												"name": "SALTYPE",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "SERTEXT",
+												"type": "String"
+											},
+											"sink": {
+												"name": "SERTEXT",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "SERVCODE",
+												"type": "String"
+											},
+											"sink": {
+												"name": "SERVCODE",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "TEXT001",
+												"type": "String"
+											},
+											"sink": {
+												"name": "TEXT001",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "TEXT002",
+												"type": "String"
+											},
+											"sink": {
+												"name": "TEXT002",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "TEXT003",
+												"type": "String"
+											},
+											"sink": {
+												"name": "TEXT003",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "TEXT004",
+												"type": "String"
+											},
+											"sink": {
+												"name": "TEXT004",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "TIMEIN",
+												"type": "Decimal"
+											},
+											"sink": {
+												"name": "TIMEIN",
+												"type": "Decimal"
+											}
+										},
+										{
+											"source": {
+												"name": "TIMEOUT",
+												"type": "Decimal"
+											},
+											"sink": {
+												"name": "TIMEOUT",
+												"type": "Decimal"
+											}
+										},
+										{
+											"source": {
+												"name": "WIPNO",
+												"type": "Int32"
+											},
+											"sink": {
+												"name": "WIPNO",
+												"type": "Int32"
+											}
+										},
+										{
+											"source": {
+												"name": "VSBNO",
+												"type": "String"
+											},
+											"sink": {
+												"name": "VSBNO",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "WDATEOUT",
+												"type": "DateTime"
+											},
+											"sink": {
+												"name": "WDATEOUT",
+												"type": "DateTime"
+											}
+										},
+										{
+											"source": {
+												"name": "MILEAGE",
+												"type": "Decimal"
+											},
+											"sink": {
+												"name": "MILEAGE",
+												"type": "Decimal"
+											}
+										},
+										{
+											"source": {
+												"name": "WDATEIN",
+												"type": "DateTime"
+											},
+											"sink": {
+												"name": "WDATEIN",
+												"type": "DateTime"
+											}
+										},
+										{
+											"source": {
+												"name": "WTIMEIN",
+												"type": "Decimal"
+											},
+											"sink": {
+												"name": "WTIMEIN",
+												"type": "Decimal"
+											}
+										},
+										{
+											"source": {
+												"name": "WLINOUT",
+												"type": "String"
+											},
+											"sink": {
+												"name": "WLINOUT",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "OPCREATE",
+												"type": "String"
+											},
+											"sink": {
+												"name": "OPCREATE",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "OPBOOKOU",
+												"type": "String"
+											},
+											"sink": {
+												"name": "OPBOOKOU",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "OPINVOIC",
+												"type": "String"
+											},
+											"sink": {
+												"name": "OPINVOIC",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "CUSTWAIT",
+												"type": "Boolean"
+											},
+											"sink": {
+												"name": "CUSTWAIT",
+												"type": "Boolean"
+											}
+										},
+										{
+											"source": {
+												"name": "COURTREQ",
+												"type": "Boolean"
+											},
+											"sink": {
+												"name": "COURTREQ",
+												"type": "Boolean"
+											}
+										},
+										{
+											"source": {
+												"name": "WIPPARTS"
+											},
+											"sink": {
+												"name": "WIPPARTS",
+												"type": "Decimal"
+											}
+										}
+									]
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "PROD_SRV_APPS06",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_headerrecords",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "Select MAX Magiclh",
+							"type": "Lookup",
+							"dependsOn": [
+								{
+									"activity": "Copy headerrecords",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@{concat('SELECT MAX(MAGICLH) as magiclh FROM autoline_headerlog\nWHERE bedrijf = ''',pipeline().parameters.bedrijf,'''\n      AND DMS = ''',pipeline().parameters.dms,'''\n      ')}",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "SQL_Doorgangen_autoline_headerlog",
+									"type": "DatasetReference"
+								},
+								"firstRowOnly": false
+							}
+						},
+						{
+							"name": "Stored Procedure UpdateSyncStatus",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Select MAX Magiclh",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[autoline_update_sync_status]",
+								"storedProcedureParameters": {
+									"DATEI_": {
+										"value": null,
+										"type": "String"
+									},
+									"DMS": {
+										"value": {
+											"value": "@pipeline().parameters.dms",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"MAGICLH_": {
+										"value": {
+											"value": "@string(activity('Select MAX Magiclh').output.value[0].magiclh)",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"tablename_": {
+										"value": {
+											"value": "@pipeline().parameters.headerlogTable",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TIMEI_": {
+										"value": null,
+										"type": "Double"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "DOORGANGEN_PROD_SRV_SQL_00",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"bedrijf": {
+				"type": "string"
+			},
+			"dms": {
+				"type": "string"
+			},
+			"headerrecordsTable": {
+				"type": "string"
+			},
+			"headerlogTable": {
+				"type": "string"
+			},
+			"labourlinesTable": {
+				"type": "string"
+			},
+			"partlinesTable": {
+				"type": "string"
+			},
+			"clockentriesTable": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"magiclh_": {
+				"type": "String"
+			},
+			"werkorders": {
+				"type": "String"
+			},
+			"magiclh": {
+				"type": "String"
+			},
+			"maxMagiclh": {
+				"type": "String"
+			},
+			"date": {
+				"type": "String"
+			},
+			"time": {
+				"type": "String"
+			},
+			"rows": {
+				"type": "String"
+			},
+			"UpdatesyncStatus": {
+				"type": "Boolean"
+			}
+		},
+		"folder": {
+			"name": "Doorgangen/temp"
+		},
+		"annotations": [],
+		"lastPublishTime": "2019-10-14T11:43:24Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,42 @@
+{
+	"name": "SQL_DMS_autoline_userdetails",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "DMS",
+				"type": "varchar"
+			},
+			{
+				"name": "DEPT",
+				"type": "char"
+			},
+			{
+				"name": "LOCAT",
+				"type": "char"
+			},
+			{
+				"name": "EMAIL",
+				"type": "char"
+			},
+			{
+				"name": "NAME_",
+				"type": "char"
+			},
+			{
+				"name": "USERID",
+				"type": "char"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "autoline_userdetails"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

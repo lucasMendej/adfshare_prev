@@ -1,0 +1,208 @@
+{
+	"name": "SQL_DMS_idas_dvi",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "_SET",
+				"type": "varchar"
+			},
+			{
+				"name": "_COMPANY",
+				"type": "varchar"
+			},
+			{
+				"name": "_LTSTUPDATE",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "_LTSTCHECK",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "VICCAT",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "VICUST",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 0
+			},
+			{
+				"name": "VIREGN",
+				"type": "varchar"
+			},
+			{
+				"name": "VIRACD",
+				"type": "varchar"
+			},
+			{
+				"name": "VIRACH",
+				"type": "varchar"
+			},
+			{
+				"name": "VICNFL",
+				"type": "varchar"
+			},
+			{
+				"name": "VICNCD",
+				"type": "varchar"
+			},
+			{
+				"name": "VIEXCC",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "VIEXYY",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "VIEXMM",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "VIEXDD",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "VIMILE",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 0
+			},
+			{
+				"name": "VIALCD",
+				"type": "varchar"
+			},
+			{
+				"name": "VIINNM",
+				"type": "varchar"
+			},
+			{
+				"name": "VIINPN",
+				"type": "varchar"
+			},
+			{
+				"name": "VICNTN",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "VILPI",
+				"type": "varchar"
+			},
+			{
+				"name": "VIAIRC",
+				"type": "varchar"
+			},
+			{
+				"name": "VISRVS",
+				"type": "varchar"
+			},
+			{
+				"name": "VIABS",
+				"type": "varchar"
+			},
+			{
+				"name": "VIINTF",
+				"type": "varchar"
+			},
+			{
+				"name": "VIDRIV",
+				"type": "varchar"
+			},
+			{
+				"name": "VITEXT",
+				"type": "varchar"
+			},
+			{
+				"name": "VITXT2",
+				"type": "varchar"
+			},
+			{
+				"name": "VISLOT",
+				"type": "varchar"
+			},
+			{
+				"name": "VIBIXE",
+				"type": "varchar"
+			},
+			{
+				"name": "VIBMAT",
+				"type": "varchar"
+			},
+			{
+				"name": "VIBMRK",
+				"type": "varchar"
+			},
+			{
+				"name": "VIWINB",
+				"type": "varchar"
+			},
+			{
+				"name": "VIBDNR",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 0
+			},
+			{
+				"name": "VILMNR",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 0
+			},
+			{
+				"name": "VILCNR",
+				"type": "varchar"
+			},
+			{
+				"name": "VILSED",
+				"type": "char"
+			},
+			{
+				"name": "VILKM",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 0
+			},
+			{
+				"name": "VILLPT",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "VIFISW",
+				"type": "decimal",
+				"precision": 9,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "idas_dvi"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

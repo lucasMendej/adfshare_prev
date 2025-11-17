@@ -1,0 +1,33 @@
+{
+	"name": "JLR Create XML content",
+	"properties": {
+		"description": "Write the content of 17 xml files to a table on Azure SQL",
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Generate_XML_in_SQL",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2024-04-16T14:17:00",
+				"timeZone": "W. Europe Standard Time",
+				"schedule": {
+					"minutes": [
+						0
+					],
+					"hours": [
+						9
+					]
+				}
+			}
+		}
+	}
+}

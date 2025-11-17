@@ -1,0 +1,16 @@
+{
+	"name": "AzureTableTempTableHeaderlog",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureTableStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureTable",
+		"schema": [],
+		"typeProperties": {
+			"tableName": "tempTableAutoline3Headerlog"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

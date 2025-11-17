@@ -1,0 +1,36 @@
+{
+	"name": "Weekly autoline download",
+	"properties": {
+		"description": "Weekly sunday run",
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Trigger Sync runs DMS",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"schedule": "Weekly"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 7,
+				"startTime": "2025-06-07T10:24:00",
+				"timeZone": "W. Europe Standard Time",
+				"schedule": {
+					"minutes": [
+						0
+					],
+					"hours": [
+						6
+					]
+				}
+			}
+		}
+	}
+}

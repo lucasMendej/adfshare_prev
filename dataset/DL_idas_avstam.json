@@ -1,0 +1,132 @@
+{
+	"name": "DL_idas_avstam",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStoreYGROUP",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureDataLakeStoreLocation",
+				"fileName": "avstam.parquet",
+				"folderPath": "sternData/dataFactoryLandingZone/idas"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "AGFIL",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "AGTRNP",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "AGKLNR",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "AGMERK",
+				"type": "UTF8"
+			},
+			{
+				"name": "AGTYP",
+				"type": "UTF8"
+			},
+			{
+				"name": "AGBMJJ",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "F4#1",
+				"type": "UTF8"
+			},
+			{
+				"name": "AGFKEE",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "AGKENT",
+				"type": "UTF8"
+			},
+			{
+				"name": "AGEXKL",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "AGFKJJ",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "AGFKMM",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "AGFKDD",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "AGSTAS",
+				"type": "UTF8"
+			},
+			{
+				"name": "AGBPMB",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "AGWSNS",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "AGMVKD",
+				"type": "UTF8"
+			},
+			{
+				"name": "AGBLOK",
+				"type": "UTF8"
+			},
+			{
+				"name": "AGBDNR",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "AGBENR",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "F4#2",
+				"type": "UTF8"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

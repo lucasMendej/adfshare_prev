@@ -1,0 +1,16 @@
+{
+	"name": "Autotelex",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "RestService",
+		"typeProperties": {
+			"url": "https://ads-api.autotelex.com/api/",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "OAuth2ClientCredential",
+			"clientId": "SternNieuw",
+			"tokenEndpoint": "https://mijn.autotelex.nl/connect/token",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQEYwQkEwQUQ2LTQxRDUtNEJCQi05MzYyLTYwMThBODQ4QTYzMV9jZjRhZDMwMi1jNGE5LTQ1OTItYTIwMi1iNmE3Y2VjNzZhNWYiDQp9"
+		}
+	}
+}

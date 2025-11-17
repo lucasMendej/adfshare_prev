@@ -1,0 +1,74 @@
+{
+	"name": "error_notification2",
+	"properties": {
+		"activities": [
+			{
+				"name": "test",
+				"type": "DatabricksNotebook",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/yanmingt@sterngroep.onmicrosoft.com/try/readfromsql"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks_PROD_BNL_DATABRICKS_01",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "On Failure JLR",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "test",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "NOTIFY_TEAMS_CHANNEL_2",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"runId": {
+							"value": "@pipeline().RunId",
+							"type": "Expression"
+						},
+						"name": {
+							"value": "@pipeline().Pipeline",
+							"type": "Expression"
+						},
+						"triggerTime": {
+							"value": "@pipeline().TriggerTime",
+							"type": "Expression"
+						},
+						"message": {
+							"value": "@activity('test').Error['message']",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "Supply to OEM"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-06-13T19:47:25Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

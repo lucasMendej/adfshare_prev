@@ -1,0 +1,142 @@
+{
+	"name": "pipeline7",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get Tables",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get DMS and Bedrijf",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get DMS and Bedrijf').output.value",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"batchCount": 50,
+					"activities": [
+						{
+							"name": "Execute Pipeline1",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Copy idas tables",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"bedrijf": {
+										"value": "@item().vestigingnr",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Get DMS and Bedrijf",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Stored Procedure1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT DISTINCT \n       [vestigingnr]\nFROM [dbo].[doorgangenVestigingen]\nWHERE dms = 'idas'",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SQL_Doorgangen_autoline_sync_status",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Stored Procedure1",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[idas_truncate_tables]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DOORGANGEN_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"variables": {
+			"dms": {
+				"type": "String"
+			},
+			"bedrijf": {
+				"type": "String"
+			},
+			"QueryHeaderlog": {
+				"type": "String",
+				"defaultValue": "MAGICLH, WIPNO, DOCTYPE, POSTDATE, TIME_"
+			},
+			"QueryHeaderrecords": {
+				"type": "String",
+				"defaultValue": "ACCOUNT ,CHASSIS ,CREATED ,CUSTCONT ,CUSTNAME ,DATEIN ,DATEOUT ,DATEREG ,DELFLAG ,DEPT ,FRANCODE ,INVNO ,MAGICT ,MAGICV ,MODEL ,OPBOOKIN ,PHONE ,REGNO ,REPREP ,SALTYPE ,SERTEXT ,SERVCODE ,TEXT001 ,TEXT002 ,TEXT003 ,TEXT004 ,TIMEIN ,TIMEOUT ,WIPNO ,VSBNO ,WTIMEOUT ,WDATEOUT ,MILEAGE ,WDATEIN ,WTIMEIN ,WLINOUT ,OPCREATE ,OPBOOKOU ,OPINVOIC ,CUSTWAIT ,COURTREQ ,WIPPARTS"
+			},
+			"QueryLabourlines": {
+				"type": "String",
+				"defaultValue": "ACCOUNT,ACTLINE ,ALLOWED ,BONUSTIM ,CONTRIB ,DATECOST ,DEPT ,DESC_ ,DISCPC ,EXTPRICE ,FRANCODE ,INVOICE ,INVSTAT ,LINE ,LOADSTAT ,MENU ,MENUCODE ,MENUFLAG ,MENUPRCE ,RATE ,RTSCODE ,RTSCOMPY ,SALTYPE ,TAKEN ,TYPEANAL ,TYPECODE ,WIPNO ,WLCLOCKR ,TARMAGIC"
+			},
+			"QueryPartlines": {
+				"type": "String",
+				"defaultValue": "ACCOUNT ,DATEIN,DISCOUNT ,INVSTAT,LINE,ORDERQTY,ORDSTAT,PRODGRP,SELLPRCE,WIPNO,PART,ACTLINE,INVOICE,DESCRIPN,DECARDED,DEPT,CONTRIB,EXTPRICE ,TARMAGIC"
+			},
+			"QueryClockentries": {
+				"type": "String",
+				"defaultValue": "ADJDATE ,ADJDESC ,ADJMODE ,ADJTIME ,ADJUSER ,ALLOWED ,ANALYSIS ,DATEI ,DATEO ,FACTOR ,IDLE ,REASON ,RESOURCE ,SEQ ,SHIFT ,STATE ,TAKEN ,TEAM ,TERMID ,TIMEI ,TIMEO ,WIPLINE,WIPNO"
+			},
+			"QuerySalesledgeraccounts": {
+				"type": "String",
+				"defaultValue": "category,account,editdate"
+			}
+		},
+		"folder": {
+			"name": "Doorgangen/temp"
+		},
+		"annotations": [],
+		"lastPublishTime": "2019-10-21T12:13:47Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

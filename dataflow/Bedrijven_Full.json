@@ -1,0 +1,63 @@
+{
+	"name": "Bedrijven_Full",
+	"properties": {
+		"folder": {
+			"name": "CRM"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SQL_DMS_autoline_companyrecords",
+						"type": "DatasetReference"
+					},
+					"name": "autolineCompanyrecords"
+				},
+				{
+					"dataset": {
+						"referenceName": "SQL_DMS_idas_custm",
+						"type": "DatasetReference"
+					},
+					"name": "idasCustm"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "CRM_SQL_Bedrijven",
+						"type": "DatasetReference"
+					},
+					"name": "sinkCompany"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Selectmk00companyrecords"
+				},
+				{
+					"name": "autolineSelectColumns"
+				},
+				{
+					"name": "FilterCompany"
+				},
+				{
+					"name": "idasFilterRows"
+				},
+				{
+					"name": "idasAddColumns"
+				},
+				{
+					"name": "idasSelectColumns"
+				},
+				{
+					"name": "Union1"
+				},
+				{
+					"name": "AutolineAddColumns"
+				}
+			],
+			"script": "source(output(\n\t\t{_SET} as string,\n\t\t{_COMPANY} as string,\n\t\t{_LTSTUPDATE} as timestamp,\n\t\t{_LTSTCHECK} as timestamp,\n\t\tMAGIC as decimal(10,0),\n\t\tNAME_ as string,\n\t\tADDRESS as string,\n\t\tADDRESS001 as string,\n\t\tADDRESS002 as string,\n\t\tADDRESS003 as string,\n\t\tADDRESS004 as string,\n\t\tADDRESS005 as string,\n\t\tCREATED as date,\n\t\tEDITED as date,\n\t\tEXEC_ as string,\n\t\tPHONE as string,\n\t\tPHONE001 as string,\n\t\tPHONE002 as string,\n\t\tPHONE003 as string,\n\t\tPHONE004 as string,\n\t\tSHORT as string,\n\t\tPOSTCODE as string,\n\t\tBY032400 as string,\n\t\tNATFLEET as string,\n\t\tSOURCE as string,\n\t\tSALCONT as decimal(10,0),\n\t\tASALCONT as decimal(10,0),\n\t\tPARENT as decimal(10,0),\n\t\tACCOUNT as string,\n\t\tUSERID as string,\n\t\tEDUSERID as string,\n\t\tDEALER as string,\n\t\tSTATUS as string,\n\t\tDBTMAGIC as decimal(10,0),\n\t\tFLEETCUS as string,\n\t\tTXSTATUS as string,\n\t\tCHGTIME as decimal(10,0),\n\t\tLOTIME as decimal(10,0),\n\t\tLANGUAGE_ as string,\n\t\tVATREG as string,\n\t\tDELETE_ as string,\n\t\tMANUFACT as string,\n\t\tKARDEX as string,\n\t\tADDRESS2 as string,\n\t\tADDRESS2001 as string,\n\t\tADDRESS2002 as string,\n\t\tADDRESS2003 as string,\n\t\tADDRESS2004 as string,\n\t\tADDRESS2005 as string,\n\t\tPOSTCOD2 as string,\n\t\tONAME as string,\n\t\tONAME001 as string,\n\t\tONAME002 as string,\n\t\tONAME003 as string,\n\t\tONAME004 as string,\n\t\tWORKAREA as string,\n\t\tWORKCODE as string,\n\t\tWORKNAME as string,\n\t\tWORKADDR as string,\n\t\tWORKADDR001 as string,\n\t\tWORKADDR002 as string,\n\t\tWORKADDR003 as string,\n\t\tWORKADDR004 as string,\n\t\tWEBSITE as string,\n\t\tLOYALCOD as string,\n\t\tLOYALNUM as string,\n\t\tLOYALEXP as date,\n\t\tCOUNTRYC as string,\n\t\tESTABLIS as string,\n\t\tCOREGIST as string,\n\t\tBY107100 as string,\n\t\tBUSTYPE as string,\n\t\tSUPPLIER as string,\n\t\tBACS as boolean,\n\t\tBY109600 as string,\n\t\tBANKREGC as string,\n\t\tORGSCODE as string,\n\t\tBXBANKAC as string,\n\t\tVATREG2 as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\trowUrlColumn: 'filename',\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\twildcardPaths:['sternData/dataFactoryLandingZone/autoline*/mk_00_companyrecords.parquet']) ~> autolineCompanyrecords\nsource(output(\n\t\t{_SET} as string,\n\t\t{_COMPANY} as string,\n\t\t{_LTSTUPDATE} as timestamp,\n\t\t{_LTSTCHECK} as timestamp,\n\t\tCBRCO as decimal(2,0),\n\t\tCCUSNO as decimal(6,0),\n\t\tCPBX as string,\n\t\tCAANH as string,\n\t\tCTITL as string,\n\t\tCVLET as string,\n\t\tCVOEG as string,\n\t\tCNAAM1 as string,\n\t\tCNAAM2 as string,\n\t\tCADRES as string,\n\t\tCHUISN as decimal(5,0),\n\t\tCHUIST as string,\n\t\tCPOCO as string,\n\t\tCCITY as string,\n\t\tCLANDK as string,\n\t\tCTAALK as decimal(2,0),\n\t\tCFICAT as string,\n\t\tCAROB as string,\n\t\tCGESL as string,\n\t\tCFILL5 as string,\n\t\tCDCAT as decimal(2,0),\n\t\tCOWDI as string,\n\t\tCCACR as decimal(1,0),\n\t\tCINVC as decimal(1,0),\n\t\tCVAT as decimal(1,0),\n\t\tCPROF as string,\n\t\tCTIT as string,\n\t\tCCAT as decimal(2,0),\n\t\tCSTAT as decimal(1,0),\n\t\tCFILL4 as decimal(14,0),\n\t\tCFAKT as decimal(1,0),\n\t\tCSALEM as string,\n\t\tCBGKD as string,\n\t\tCBGNR as decimal(9,0),\n\t\tCCSP as string,\n\t\tCCSPA as decimal(8,0),\n\t\tCDMAIL as string,\n\t\tCFIL as decimal(2,0),\n\t\tCNAWN1 as decimal(6,0),\n\t\tCNAWN2 as decimal(6,0),\n\t\tCCWNEW as decimal(4,0),\n\t\tCCWNER as string,\n\t\tCCSINT as decimal(3,0),\n\t\tCCSLAW as decimal(4,0),\n\t\tCCSNEW as decimal(4,0),\n\t\tCCSNER as string,\n\t\tCSEGKD as string,\n\t\tCCDGE as string,\n\t\tCWSNO as string,\n\t\tCTELO as string,\n\t\tCTELR as string,\n\t\tCFAXNR as string,\n\t\tCBTWNR as string,\n\t\tCLIM as decimal(5,0),\n\t\tCCOINV as string,\n\t\tCBRUPR as string,\n\t\tCRELT as string,\n\t\tCSDX as string,\n\t\tCPST as decimal(4,0)\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> idasCustm\nAutolineAddColumns select(mapColumn(\n\t\tbedrijfsnummer = MAGIC,\n\t\tbedrijfsnaam = NAME_,\n\t\tadres = ADDRESS001,\n\t\twoonplaats = ADDRESS004,\n\t\ttelefoon,\n\t\tteloverig,\n\t\tfax,\n\t\tpostcode = POSTCODE,\n\t\tADDRESS005,\n\t\tdebiteurnr = ACCOUNT,\n\t\tstatus = STATUS,\n\t\tdms = {_SET},\n\t\tland,\n\t\tedited = {_LTSTUPDATE}\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> Selectmk00companyrecords\nFilterCompany select(mapColumn(\n\t\tbedrijfsnummer,\n\t\tbedrijfsnaam,\n\t\tadres,\n\t\twoonplaats,\n\t\ttelefoon,\n\t\tteloverig,\n\t\tfax,\n\t\tpostcode,\n\t\tdebiteurnr,\n\t\tstatus,\n\t\tland,\n\t\tdms,\n\t\tedited\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> autolineSelectColumns\nSelectmk00companyrecords filter(isNull(bedrijfsnummer) == false()) ~> FilterCompany\nidasCustm filter(CRELT != 'PSS' && CRELT != 'PRO' && CRELT != 'PRE' && CRELT != 'OVL' && CRELT != 'IAK' && CPBX == 'B') ~> idasFilterRows\nidasFilterRows derive(bedrijfsnummer = toInteger(CCUSNO),\n\t\tbedrijfsnaam = ltrim(replace(concat(rtrim(CVLET), ' ',rtrim(CVOEG),' ',rtrim(CNAAM1)),'  ','')),\n\t\tadres = rtrim(concat(rtrim(CADRES),' ',toString(toInteger(CHUISN)),' ',toString(CHUIST))),\n\t\twoonplaats = rtrim(CCITY),\n\t\tpostcode = concat(left(CPOCO,4),' ',right(CPOCO,2)),\n\t\tdebiteurnr = '',\n\t\ttelefoon = iif(equals(length(regexReplace(trim(CTELO),'(-| |\\\\(|\\\\))','')),10),iif(equals(left(regexReplace(trim(CTELO),'(-| |\\\\(|\\\\))',''),1), '0'), concat('+31',right(regexReplace(trim(CTELO),'(-| |\\\\(|\\\\))',''), 9)), ''),iif( and(equals(length(regexReplace(trim(CTELO),'(-| |\\\\(|\\\\))','')),12),equals(left(regexReplace(trim(CTELO),'(-| |\\\\(|\\\\))',''), 1), '+')), regexReplace(trim(CTELO),'(-| |\\\\(|\\\\))',''), '')),\n\t\tteloverig = iif(equals(length(regexReplace(trim(CTELR),'(-| |\\\\(|\\\\))','')),10),iif(equals(left(regexReplace(trim(CTELR),'(-| |\\\\(|\\\\))',''),1), '0'), concat('+31',right(regexReplace(trim(CTELR),'(-| |\\\\(|\\\\))',''), 9)), ''),iif( and(equals(length(regexReplace(trim(CTELR),'(-| |\\\\(|\\\\))','')),12),equals(left(regexReplace(trim(CTELR),'(-| |\\\\(|\\\\))',''), 1), '+')), regexReplace(trim(CTELR),'(-| |\\\\(|\\\\))',''), '')),\n\t\tfax = iif(equals(length(regexReplace(trim(CFAXNR),'(-| |\\\\(|\\\\))','')),10),iif(equals(left(regexReplace(trim(CFAXNR),'(-| |\\\\(|\\\\))',''),1), '0'), concat('+31',right(regexReplace(trim(CFAXNR),'(-| |\\\\(|\\\\))',''), 9)), ''),iif( and(equals(length(regexReplace(trim(CFAXNR),'(-| |\\\\(|\\\\))','')),12),equals(left(regexReplace(trim(CFAXNR),'(-| |\\\\(|\\\\))',''), 1), '+')), regexReplace(trim(CFAXNR),'(-| |\\\\(|\\\\))',''), '')),\n\t\tedited = currentTimestamp()) ~> idasAddColumns\nidasAddColumns select(mapColumn(\n\t\tbedrijfsnummer,\n\t\tbedrijfsnaam,\n\t\tadres,\n\t\twoonplaats,\n\t\tland = CLANDK,\n\t\tpostcode,\n\t\tdebiteurnr,\n\t\ttelefoon,\n\t\tteloverig,\n\t\tfax,\n\t\tstatus = CRELT,\n\t\tdms = {_SET},\n\t\tedited\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> idasSelectColumns\nautolineSelectColumns, idasSelectColumns union(byName: true)~> Union1\nautolineCompanyrecords derive(land = left(ADDRESS005, 32),\n\t\ttelefoon = iif(equals(length(regexReplace(trim(PHONE001),'(-| |\\\\(|\\\\))','')),10),iif(equals(left(regexReplace(trim(PHONE001),'(-| |\\\\(|\\\\))',''),1), '0'), concat('+31',right(regexReplace(trim(PHONE001),'(-| |\\\\(|\\\\))',''), 9)), ''),iif( and(equals(length(regexReplace(trim(PHONE001),'(-| |\\\\(|\\\\))','')),12),equals(left(regexReplace(trim(PHONE001),'(-| |\\\\(|\\\\))',''), 1), '+')), regexReplace(trim(PHONE001),'(-| |\\\\(|\\\\))',''), '')),\n\t\tteloverig = iif(equals(length(regexReplace(trim(PHONE002),'(-| |\\\\(|\\\\))','')),10),iif(equals(left(regexReplace(trim(PHONE002),'(-| |\\\\(|\\\\))',''),1), '0'), concat('+31',right(regexReplace(trim(PHONE002),'(-| |\\\\(|\\\\))',''), 9)), ''),iif( and(equals(length(regexReplace(trim(PHONE002),'(-| |\\\\(|\\\\))','')),12),equals(left(regexReplace(trim(PHONE002),'(-| |\\\\(|\\\\))',''), 1), '+')), regexReplace(trim(PHONE002),'(-| |\\\\(|\\\\))',''), '')),\n\t\tfax = iif(equals(length(regexReplace(trim(PHONE003),'(-| |\\\\(|\\\\))','')),10),iif(equals(left(regexReplace(trim(PHONE003),'(-| |\\\\(|\\\\))',''),1), '0'), concat('+31',right(regexReplace(trim(PHONE003),'(-| |\\\\(|\\\\))',''), 9)), ''),iif( and(equals(length(regexReplace(trim(PHONE003),'(-| |\\\\(|\\\\))','')),12),equals(left(regexReplace(trim(PHONE003),'(-| |\\\\(|\\\\))',''), 1), '+')), regexReplace(trim(PHONE003),'(-| |\\\\(|\\\\))',''), ''))) ~> AutolineAddColumns\nUnion1 sink(allowSchemaDrift: false,\n\tvalidateSchema: true,\n\tinput(\n\t\tdms as string,\n\t\tbedrijfsnummer as string,\n\t\tbedrijfsnaam as string,\n\t\tadres as string,\n\t\twoonplaats as string,\n\t\tland as string,\n\t\tpostcode as string,\n\t\tdebiteurnr as string,\n\t\ttelefoon as string,\n\t\tteloverig as string,\n\t\tfax as string,\n\t\tstatus as string,\n\t\tedited as timestamp\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\ttruncate:true,\n\tformat: 'table',\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tdms,\n\t\tbedrijfsnummer,\n\t\tbedrijfsnaam,\n\t\tadres,\n\t\twoonplaats,\n\t\tland,\n\t\tpostcode,\n\t\tdebiteurnr,\n\t\ttelefoon,\n\t\tteloverig,\n\t\tfax,\n\t\tstatus,\n\t\tedited\n\t)) ~> sinkCompany"
+		}
+	}
+}

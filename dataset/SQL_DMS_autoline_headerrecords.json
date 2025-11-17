@@ -1,0 +1,225 @@
+{
+	"name": "SQL_DMS_autoline_headerrecords",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "DMS",
+				"type": "varchar"
+			},
+			{
+				"name": "BEDRIJF",
+				"type": "varchar"
+			},
+			{
+				"name": "ACCOUNT",
+				"type": "char"
+			},
+			{
+				"name": "CHASSIS",
+				"type": "char"
+			},
+			{
+				"name": "CREATED",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "CUSTCONT",
+				"type": "char"
+			},
+			{
+				"name": "CUSTNAME",
+				"type": "char"
+			},
+			{
+				"name": "DATEIN",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "DATEOUT",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "DATEREG",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "DELFLAG",
+				"type": "bit"
+			},
+			{
+				"name": "DEPT",
+				"type": "char"
+			},
+			{
+				"name": "FRANCODE",
+				"type": "char"
+			},
+			{
+				"name": "INVNO",
+				"type": "decimal",
+				"precision": 8,
+				"scale": 0
+			},
+			{
+				"name": "MAGICT",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "MAGICV",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "MODEL",
+				"type": "char"
+			},
+			{
+				"name": "OPBOOKIN",
+				"type": "char"
+			},
+			{
+				"name": "PHONE",
+				"type": "char"
+			},
+			{
+				"name": "REGNO",
+				"type": "char"
+			},
+			{
+				"name": "REPREP",
+				"type": "char"
+			},
+			{
+				"name": "SALTYPE",
+				"type": "char"
+			},
+			{
+				"name": "SERTEXT",
+				"type": "char"
+			},
+			{
+				"name": "SERVCODE",
+				"type": "char"
+			},
+			{
+				"name": "TEXT001",
+				"type": "char"
+			},
+			{
+				"name": "TEXT002",
+				"type": "char"
+			},
+			{
+				"name": "TEXT003",
+				"type": "char"
+			},
+			{
+				"name": "TEXT004",
+				"type": "char"
+			},
+			{
+				"name": "TIMEIN",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 2
+			},
+			{
+				"name": "TIMEOUT",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 2
+			},
+			{
+				"name": "WIPNO",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "VSBNO",
+				"type": "char"
+			},
+			{
+				"name": "WTIMEOUT",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 2
+			},
+			{
+				"name": "WDATEOUT",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "MILEAGE",
+				"type": "decimal",
+				"precision": 8,
+				"scale": 0
+			},
+			{
+				"name": "WDATEIN",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "WTIMEIN",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 2
+			},
+			{
+				"name": "WLINOUT",
+				"type": "char"
+			},
+			{
+				"name": "OPCREATE",
+				"type": "char"
+			},
+			{
+				"name": "OPBOOKOU",
+				"type": "char"
+			},
+			{
+				"name": "OPINVOIC",
+				"type": "char"
+			},
+			{
+				"name": "CUSTWAIT",
+				"type": "bit"
+			},
+			{
+				"name": "COURTREQ",
+				"type": "bit"
+			},
+			{
+				"name": "WIPPARTS",
+				"type": "decimal",
+				"precision": 15,
+				"scale": 2
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "autoline_headerrecords"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

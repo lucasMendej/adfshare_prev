@@ -1,0 +1,320 @@
+{
+	"name": "DL_autoline_MK_00_Companyrecords",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStoreYGROUP",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureDataLakeStoreLocation"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "MAGIC",
+				"type": "INT64"
+			},
+			{
+				"name": "NAME_",
+				"type": "UTF8"
+			},
+			{
+				"name": "ADDRESS",
+				"type": "UTF8"
+			},
+			{
+				"name": "ADDRESS001",
+				"type": "UTF8"
+			},
+			{
+				"name": "ADDRESS002",
+				"type": "UTF8"
+			},
+			{
+				"name": "ADDRESS003",
+				"type": "UTF8"
+			},
+			{
+				"name": "ADDRESS004",
+				"type": "UTF8"
+			},
+			{
+				"name": "ADDRESS005",
+				"type": "UTF8"
+			},
+			{
+				"name": "CREATED",
+				"type": "INT96"
+			},
+			{
+				"name": "EDITED",
+				"type": "INT96"
+			},
+			{
+				"name": "EXEC_",
+				"type": "UTF8"
+			},
+			{
+				"name": "PHONE",
+				"type": "UTF8"
+			},
+			{
+				"name": "PHONE001",
+				"type": "UTF8"
+			},
+			{
+				"name": "PHONE002",
+				"type": "UTF8"
+			},
+			{
+				"name": "PHONE003",
+				"type": "UTF8"
+			},
+			{
+				"name": "PHONE004",
+				"type": "UTF8"
+			},
+			{
+				"name": "SHORT",
+				"type": "UTF8"
+			},
+			{
+				"name": "POSTCODE",
+				"type": "UTF8"
+			},
+			{
+				"name": "BY032400",
+				"type": "UTF8"
+			},
+			{
+				"name": "NATFLEET",
+				"type": "UTF8"
+			},
+			{
+				"name": "SOURCE",
+				"type": "UTF8"
+			},
+			{
+				"name": "SALCONT",
+				"type": "INT64"
+			},
+			{
+				"name": "ASALCONT",
+				"type": "INT64"
+			},
+			{
+				"name": "PARENT",
+				"type": "INT64"
+			},
+			{
+				"name": "ACCOUNT",
+				"type": "UTF8"
+			},
+			{
+				"name": "USERID",
+				"type": "UTF8"
+			},
+			{
+				"name": "EDUSERID",
+				"type": "UTF8"
+			},
+			{
+				"name": "DEALER",
+				"type": "UTF8"
+			},
+			{
+				"name": "STATUS",
+				"type": "UTF8"
+			},
+			{
+				"name": "DBTMAGIC",
+				"type": "INT64"
+			},
+			{
+				"name": "FLEETCUS",
+				"type": "UTF8"
+			},
+			{
+				"name": "TXSTATUS",
+				"type": "UTF8"
+			},
+			{
+				"name": "CHGTIME",
+				"type": "INT64"
+			},
+			{
+				"name": "LOTIME",
+				"type": "INT64"
+			},
+			{
+				"name": "LANGUAGE_",
+				"type": "UTF8"
+			},
+			{
+				"name": "VATREG",
+				"type": "UTF8"
+			},
+			{
+				"name": "DELETE_",
+				"type": "UTF8"
+			},
+			{
+				"name": "MANUFACT",
+				"type": "UTF8"
+			},
+			{
+				"name": "KARDEX",
+				"type": "UTF8"
+			},
+			{
+				"name": "ADDRESS2",
+				"type": "UTF8"
+			},
+			{
+				"name": "ADDRESS2001",
+				"type": "UTF8"
+			},
+			{
+				"name": "ADDRESS2002",
+				"type": "UTF8"
+			},
+			{
+				"name": "ADDRESS2003",
+				"type": "UTF8"
+			},
+			{
+				"name": "ADDRESS2004",
+				"type": "UTF8"
+			},
+			{
+				"name": "ADDRESS2005",
+				"type": "UTF8"
+			},
+			{
+				"name": "POSTCOD2",
+				"type": "UTF8"
+			},
+			{
+				"name": "ONAME",
+				"type": "UTF8"
+			},
+			{
+				"name": "ONAME001",
+				"type": "UTF8"
+			},
+			{
+				"name": "ONAME002",
+				"type": "UTF8"
+			},
+			{
+				"name": "ONAME003",
+				"type": "UTF8"
+			},
+			{
+				"name": "ONAME004",
+				"type": "UTF8"
+			},
+			{
+				"name": "WORKAREA",
+				"type": "UTF8"
+			},
+			{
+				"name": "WORKCODE",
+				"type": "UTF8"
+			},
+			{
+				"name": "WORKNAME",
+				"type": "UTF8"
+			},
+			{
+				"name": "WORKADDR",
+				"type": "UTF8"
+			},
+			{
+				"name": "WORKADDR001",
+				"type": "UTF8"
+			},
+			{
+				"name": "WORKADDR002",
+				"type": "UTF8"
+			},
+			{
+				"name": "WORKADDR003",
+				"type": "UTF8"
+			},
+			{
+				"name": "WORKADDR004",
+				"type": "UTF8"
+			},
+			{
+				"name": "WEBSITE",
+				"type": "UTF8"
+			},
+			{
+				"name": "LOYALCOD",
+				"type": "UTF8"
+			},
+			{
+				"name": "LOYALNUM",
+				"type": "UTF8"
+			},
+			{
+				"name": "LOYALEXP",
+				"type": "INT96"
+			},
+			{
+				"name": "COUNTRYC",
+				"type": "UTF8"
+			},
+			{
+				"name": "ESTABLIS",
+				"type": "UTF8"
+			},
+			{
+				"name": "COREGIST",
+				"type": "UTF8"
+			},
+			{
+				"name": "BY107100",
+				"type": "UTF8"
+			},
+			{
+				"name": "BUSTYPE",
+				"type": "UTF8"
+			},
+			{
+				"name": "SUPPLIER",
+				"type": "UTF8"
+			},
+			{
+				"name": "BACS",
+				"type": "BOOLEAN"
+			},
+			{
+				"name": "BY109600",
+				"type": "UTF8"
+			},
+			{
+				"name": "BANKREGC",
+				"type": "UTF8"
+			},
+			{
+				"name": "ORGSCODE",
+				"type": "UTF8"
+			},
+			{
+				"name": "BXBANKAC",
+				"type": "UTF8"
+			},
+			{
+				"name": "VATREG2",
+				"type": "UTF8"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

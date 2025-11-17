@@ -1,0 +1,351 @@
+{
+	"name": "Sync Partslines",
+	"properties": {
+		"activities": [
+			{
+				"name": "If Autoline1",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Set Variable QueryDelete",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(pipeline().parameters.dms, 'autoline1')",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Sync Partslines Autoline1",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@variables('QuerySync')",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@{variables('QueryDelete')}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "Autoline1_Table",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_partslines",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "If Autoline2",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Set Variable QueryDelete",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(pipeline().parameters.dms, 'autoline2')",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Sync Partslines Autoline2",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@variables('QuerySync')",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@{variables('QueryDelete')}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "Autoline2_Table",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_partslines",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "If Autoline3",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Set Variable QueryDelete",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(pipeline().parameters.dms, 'autoline3')",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Sync Partslines Autoline3",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@variables('QuerySync')",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@{variables('QueryDelete')}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "autoline3_tables_prod_srv_apps06",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_partslines",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "If Autoline4",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Set Variable QueryDelete",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(pipeline().parameters.dms, 'autoline4')",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Sync Partslines Autoline4",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@variables('QuerySync')",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@{variables('QueryDelete')}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "Autoline4_Table",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_partslines",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "If Autoline5",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Set Variable QueryDelete",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(pipeline().parameters.dms, 'autoline5')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set Variable QuerySync",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "QuerySync",
+					"value": {
+						"value": "@concat('SELECT ''',pipeline().parameters.dms,''' as DMS, ',pipeline().parameters.bedrijf,' as BEDRIJF, ACCOUNT ,DATEIN,DISCOUNT ,INVSTAT ,LINE ,ORDERQTY ,ORDSTAT ,PRODGRP ,SELLPRCE ,WIPNO ,PART ,ACTLINE ,INVOICE ,DESCRIPN ,DECARDED ,DEPT FROM ',pipeline().parameters.partlinesTable,' where WIPNO in (', pipeline().parameters.werkorders, ')' )",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set Variable QueryDelete",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Set Variable QuerySync",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "QueryDelete",
+					"value": {
+						"value": "@{concat('delete from autoline_partslines where DMS =''',pipeline().parameters.dms,''' and BEDRIJF = ',pipeline().parameters.bedrijf,' and WIPNO in (',pipeline().parameters.werkorders,')')}",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"partlinesTable": {
+				"type": "string"
+			},
+			"dms": {
+				"type": "string"
+			},
+			"werkorders": {
+				"type": "string"
+			},
+			"bedrijf": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"QuerySync": {
+				"type": "String"
+			},
+			"QueryDelete": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Doorgangen/Sync direct"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-08-17T09:59:55Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

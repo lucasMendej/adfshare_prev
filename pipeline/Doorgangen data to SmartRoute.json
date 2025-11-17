@@ -1,0 +1,164 @@
+{
+	"name": "Doorgangen data to SmartRoute",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy Doorgangdata",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "select \n cast(\n  REPLACE(\n    REPLACE(\n      TRANSLATE(\n        LOWER([TELEFOON]), \n      'abcdefghijklmnopqrstuvwxyz:()- ,#.', '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'), \n    '@', ''),\n  '+31', '0') \n  as nvarchar(11)) as [TELEFOON],\n  cast([KENTEKEN] as VARCHAR(15)) as [KENTEKEN],\n  cast([Merk] as varchar(50)) as [MERK],\n  cast([MODEL] as varchar(50)) as [MODEL],\n  case coalesce([INUIT], '') when \n\t'IN' then 'Ja' \n\telse 'Nee' end as inService,\n  [BinnenGemeld],\n  case when TijdGereed is not null then\n\t'Gereed' else case when BinnenGemeld is not null then\n\t\t'in werkplaats' else '' end \n\t\tend as [In_service_status],\n  [TijdGereed]\n  from  [dbo].[doorgangen]\n  where Telefoon is not null and Telefoon <> '' and Telefoon <> '0'\n",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true,
+							"keys": [
+								"Telefoonnummer"
+							]
+						},
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "TELEFOON",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "Telefoonnummer",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "KENTEKEN",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Kenteken",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "MERK",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Auto_merk",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "MODEL",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Auto_type",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "inService",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "In_service",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "BinnenGemeld",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "In_service_datum",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							},
+							{
+								"source": {
+									"name": "In_service_status",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "In_service_status",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "TijdGereed",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "In_Service_gereed",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "Doorgangen_data",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SmartRoute_auto_servervice_status",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "Smart Telephony"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-04-12T13:17:56Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

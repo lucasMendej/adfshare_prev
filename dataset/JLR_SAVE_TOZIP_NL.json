@@ -1,0 +1,37 @@
+{
+	"name": "JLR_SAVE_TOZIP_NL",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Sftp_JLR",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"filename": {
+				"type": "string",
+				"defaultValue": "BUSINESS_PARTNER"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "SftpLocation",
+				"fileName": {
+					"value": "@concat('42029', dataset().filename, '.zip')",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().filename",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ",",
+			"compressionCodec": "ZipDeflate",
+			"escapeChar": "",
+			"firstRowAsHeader": false,
+			"quoteChar": ""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

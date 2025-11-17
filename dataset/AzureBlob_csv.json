@@ -1,0 +1,41 @@
+{
+	"name": "AzureBlob_csv",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DevDataFactorySink",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"OutputFolder": {
+				"type": "string",
+				"defaultValue": "ext"
+			},
+			"OutputFile": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureBlob",
+		"typeProperties": {
+			"format": {
+				"type": "TextFormat",
+				"columnDelimiter": ",",
+				"rowDelimiter": "",
+				"escapeChar": "",
+				"quoteChar": "\"",
+				"treatEmptyAsNull": true,
+				"skipLineCount": 0,
+				"firstRowAsHeader": true
+			},
+			"fileName": {
+				"value": "@concat(dataset().OutputFile, '.csv')",
+				"type": "Expression"
+			},
+			"folderPath": {
+				"value": "@dataset().OutputFolder",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

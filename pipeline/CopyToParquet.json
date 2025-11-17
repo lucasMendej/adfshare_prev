@@ -1,0 +1,94 @@
+{
+	"name": "CopyToParquet",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy Data1",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Set Variable1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RelationalSource",
+						"query": {
+							"value": "@variables('BronSql')",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Autoline1_Table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Parquet2",
+						"type": "DatasetReference",
+						"parameters": {
+							"Filename": {
+								"value": "@pipeline().parameters.BestemmingTabel",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Set Variable1",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "BronSql",
+					"value": {
+						"value": "@concat('select * from ', pipeline().parameters.BestemmingTabel)",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"BestemmingTabel": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"BronSql": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Z_Samples"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-03-22T16:17:52Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

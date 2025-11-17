@@ -1,0 +1,578 @@
+{
+	"name": "CRMDataToYDLIdas",
+	"properties": {
+		"activities": [
+			{
+				"name": "iDas CUSTM",
+				"description": "Overhalen klanten/bedrijven tabel",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RelationalSource",
+						"query": {
+							"value": "select * from DASFPA.CUSTM",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureDataLakeStoreWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Idas_table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ParquetToDataLakeYGROUP",
+						"type": "DatasetReference",
+						"parameters": {
+							"FileName": "idas\\custm"
+						}
+					}
+				]
+			},
+			{
+				"name": "iDas CARVEH",
+				"description": "overhalen voertuigen tabel",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "iDas CUSTM",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RelationalSource",
+						"query": {
+							"value": "select * from DASFPA.CARVEH",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureDataLakeStoreWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Idas_table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ParquetToDataLakeYGROUP",
+						"type": "DatasetReference",
+						"parameters": {
+							"FileName": "idas\\carveh"
+						}
+					}
+				]
+			},
+			{
+				"name": "iDas CARVAR_B",
+				"description": "Overhalen koppel tabel voertuigen B",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "iDas CARVEH",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RelationalSource",
+						"query": {
+							"value": "select * from DASFPA.CARVAR_B",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureDataLakeStoreWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Idas_table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ParquetToDataLakeYGROUP",
+						"type": "DatasetReference",
+						"parameters": {
+							"FileName": "idas\\carvar_b"
+						}
+					}
+				]
+			},
+			{
+				"name": "iDas CARVAR_C",
+				"description": "Overhalen koppel tabel voertuigen C",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "iDas CARVAR_B",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RelationalSource",
+						"query": {
+							"value": "select * from DASFPA.CARVAR_C",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureDataLakeStoreWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Idas_table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ParquetToDataLakeYGROUP",
+						"type": "DatasetReference",
+						"parameters": {
+							"FileName": "idas\\carvar_c"
+						}
+					}
+				]
+			},
+			{
+				"name": "iDas CARVAR_E",
+				"description": "Overhalen koppel tabel voertuigen E",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "iDas CARVAR_C",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RelationalSource",
+						"query": {
+							"value": "select * from DASFPA.CARVAR_E",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureDataLakeStoreWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Idas_table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ParquetToDataLakeYGROUP",
+						"type": "DatasetReference",
+						"parameters": {
+							"FileName": "idas\\carvar_e"
+						}
+					}
+				]
+			},
+			{
+				"name": "iDas AVSTAM",
+				"description": "overhalen auto stamgegevens",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "iDas DVIA",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RelationalSource",
+						"query": {
+							"value": "select * from DASFPA.AVSTAM",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureDataLakeStoreWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Idas_table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ParquetToDataLakeYGROUP",
+						"type": "DatasetReference",
+						"parameters": {
+							"FileName": "idas\\avstam"
+						}
+					}
+				]
+			},
+			{
+				"name": "iDas DVIA",
+				"description": "overhalen voertuigen info aanvulling",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "iDas DVI",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RelationalSource",
+						"query": {
+							"value": "select * from DASFPA.DVIA",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureDataLakeStoreWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Idas_table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ParquetToDataLakeYGROUP",
+						"type": "DatasetReference",
+						"parameters": {
+							"FileName": "idas\\dvia"
+						}
+					}
+				]
+			},
+			{
+				"name": "iDas DVI",
+				"description": "overhalen voertuigen info",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "iDas CARVAR_E",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RelationalSource",
+						"query": {
+							"value": "select * from DASFPA.DVI",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureDataLakeStoreWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Idas_table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ParquetToDataLakeYGROUP",
+						"type": "DatasetReference",
+						"parameters": {
+							"FileName": "idas\\dvi"
+						}
+					}
+				]
+			},
+			{
+				"name": "iDas DCI",
+				"description": "overhalen klanten gegevens",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "iDas CONTRK_H",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RelationalSource",
+						"query": {
+							"value": "select * from DASFPA.DCI",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureDataLakeStoreWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Idas_table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ParquetToDataLakeYGROUP",
+						"type": "DatasetReference",
+						"parameters": {
+							"FileName": "idas\\dci"
+						}
+					}
+				]
+			},
+			{
+				"name": "iDas CONTRK_H",
+				"description": "overhalen klanten gegevens",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "iDas AVSTAM",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RelationalSource",
+						"query": {
+							"value": "select * from DASFPA.CONTRK_H",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureDataLakeStoreWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Idas_table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ParquetToDataLakeYGROUP",
+						"type": "DatasetReference",
+						"parameters": {
+							"FileName": "idas\\contrk_h"
+						}
+					}
+				]
+			},
+			{
+				"name": "iDas FILMA",
+				"description": "overhalen vestigingen",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "iDas DCI",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RelationalSource",
+						"query": {
+							"value": "select * from DASFPA.FILMA",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureDataLakeStoreWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Idas_table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ParquetToDataLakeYGROUP",
+						"type": "DatasetReference",
+						"parameters": {
+							"FileName": "idas\\filma"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "iDas"
+		},
+		"annotations": [],
+		"lastPublishTime": "2020-02-28T17:22:58Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

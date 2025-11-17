@@ -1,0 +1,76 @@
+{
+	"name": "Vestigingen_Full",
+	"properties": {
+		"folder": {
+			"name": "CRM"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SQL_DMS_autoline_companylocations",
+						"type": "DatasetReference"
+					},
+					"name": "autolineCompanylocations"
+				},
+				{
+					"dataset": {
+						"referenceName": "SQL_DMS_idas_filma",
+						"type": "DatasetReference"
+					},
+					"name": "idasFilma"
+				},
+				{
+					"dataset": {
+						"referenceName": "CRM_SQL_Vestigingen",
+						"type": "DatasetReference"
+					},
+					"name": "CrmVestigingen"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "CRM_SQL_Vestigingen",
+						"type": "DatasetReference"
+					},
+					"name": "sinkCompanylocations"
+				}
+			],
+			"transformations": [
+				{
+					"name": "autolineSelectColumns"
+				},
+				{
+					"name": "autolineAddColumns"
+				},
+				{
+					"name": "autolineFilter"
+				},
+				{
+					"name": "idasAddColumns"
+				},
+				{
+					"name": "idasSelectColumns"
+				},
+				{
+					"name": "Union"
+				},
+				{
+					"name": "JoinCrmVestigingen"
+				},
+				{
+					"name": "AlterRow"
+				},
+				{
+					"name": "DerivedColumn"
+				},
+				{
+					"name": "Filter"
+				}
+			],
+			"script": "source(output(\n\t\t{_SET} as string,\n\t\t{_COMPANY} as string,\n\t\t{_LTSTUPDATE} as timestamp,\n\t\t{_LTSTCHECK} as timestamp,\n\t\tCODE as string,\n\t\tDESC_ as string,\n\t\tCCENT as decimal(4,0),\n\t\tNAME_ as string,\n\t\tADDRESS1 as string,\n\t\tADDRESS2 as string,\n\t\tADDRESS3 as string,\n\t\tADDRESS4 as string,\n\t\tPOSTCODE as string,\n\t\tPHONE as string,\n\t\tFAX as string,\n\t\tEXPEN as decimal(8,0),\n\t\tTYPE_ as string,\n\t\tBSCCENT as decimal(4,0),\n\t\tBSEXPEN as decimal(8,0),\n\t\tPTIND as string,\n\t\tDEPTANAL as string,\n\t\tDLRCODE as string,\n\t\tDEPSLACC as string,\n\t\tDEPNLEX as decimal(8,0),\n\t\tDEPPRINT as string,\n\t\tBUSICOND as string,\n\t\tBUSIITEM as string,\n\t\tBUSREGNO as string,\n\t\tDEPNLAC as decimal(8,0),\n\t\tLOCATILL as string,\n\t\tOWNER as string,\n\t\tREGBNAME as string,\n\t\tREGSLACC as string,\n\t\tVATNO as string,\n\t\tAPPSEQ as decimal(6,0),\n\t\tVSBCO as string,\n\t\tVSBGROUP as string,\n\t\tMKDEPTS as string,\n\t\tMKDEPTS001 as string,\n\t\tMKDEPTS002 as string,\n\t\tDEPJTYPE as string,\n\t\tBONDED as boolean,\n\t\tTHIRDPTY as boolean,\n\t\tREFJTYPE as string,\n\t\tUSTAX as string,\n\t\tDBAUMAIL as string,\n\t\tDBVIEW as boolean,\n\t\tREGION as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\trowUrlColumn: 'filename',\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\twildcardPaths:['sternData/dataFactoryLandingZone/autoline*/gb_00_companylocations.parquet']) ~> autolineCompanylocations\nsource(output(\n\t\t{_SET} as string,\n\t\t{_COMPANY} as string,\n\t\t{_LTSTUPDATE} as timestamp,\n\t\t{_LTSTCHECK} as timestamp,\n\t\tFIBRNO as decimal(2,0),\n\t\tFIADRS as string,\n\t\tFIHSNR as decimal(5,0),\n\t\tFIHSNT as string,\n\t\tFIPOCO as string,\n\t\tFICITY as string,\n\t\tFITELO as string,\n\t\tFIBTWN as string,\n\t\tFIBNKR as decimal(9,0),\n\t\tFICTCP as string,\n\t\tFIROBE as string,\n\t\tFIRDCN as decimal(6,0),\n\t\tFIRDCK as string,\n\t\tFIRDCP as string,\n\t\tFIONDP as string,\n\t\tFIIBAN as string,\n\t\tFIBIC as string,\n\t\tFIRDWN as decimal(5,0),\n\t\tFIDQST as string,\n\t\tFIROBK as string,\n\t\tFIROBP as string,\n\t\tFIKVK as decimal(8,0)\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> idasFilma\nsource(output(\n\t\tdms as string,\n\t\tbedrijf as string,\n\t\tnaam as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> CrmVestigingen\nautolineAddColumns select(mapColumn(\n\t\tdms = {_SET},\n\t\tbedrijf,\n\t\tnaam\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> autolineSelectColumns\nautolineFilter derive(bedrijf = right('00'+trim(CODE),2),\n\t\tnaam = trim(NAME_)) ~> autolineAddColumns\nautolineCompanylocations filter(TYPE_=='C') ~> autolineFilter\nidasFilma derive(bedrijf = trim(toString(toInteger(FIBRNO))),\n\t\tnaam = concat('Hedin Automotive 4V ', upper(left(trim(FICITY), 1)) + lower(right(trim(FICITY), length(trim(FICITY)) - 1)) )) ~> idasAddColumns\nidasAddColumns select(mapColumn(\n\t\tdms = {_SET},\n\t\tbedrijf,\n\t\tnaam\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> idasSelectColumns\nautolineSelectColumns, idasSelectColumns union(byName: true)~> Union\nUnion, CrmVestigingen join(trim(Union@dms) == trim(CrmVestigingen@dms)\n\t&& trim(Union@bedrijf) == trim(CrmVestigingen@bedrijf),\n\tjoinType:'outer',\n\tmatchType:'exact',\n\tignoreSpaces: false,\n\tbroadcast: 'auto')~> JoinCrmVestigingen\nFilter alterRow(deleteIf(equals(delete,true())),\n\tupdateIf(equals(update,true())),\n\tinsertIf(equals(insert,true()))) ~> AlterRow\nJoinCrmVestigingen derive(dms = iif(isNull(Union@dms), CrmVestigingen@dms, Union@dms),\n\t\tbedrijf = iif(isNull(Union@dms), CrmVestigingen@bedrijf, Union@bedrijf),\n\t\tnaam = iif(isNull(Union@dms), CrmVestigingen@naam, Union@naam),\n\t\tinsert = isNull(CrmVestigingen@dms),\n\t\tupdate = and(and(equals(trim(Union@dms), trim(CrmVestigingen@dms)), equals(trim(Union@bedrijf), trim(CrmVestigingen@bedrijf))), notEquals(trim(Union@naam), trim(CrmVestigingen@naam))),\n\t\tdelete = isNull(Union@dms)) ~> DerivedColumn\nDerivedColumn filter(equals(delete, true()) || equals(update, true()) || equals(insert, true())) ~> Filter\nAlterRow sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tdms as string,\n\t\tbedrijf as string,\n\t\tnaam as string\n\t),\n\tdeletable:true,\n\tinsertable:true,\n\tupdateable:true,\n\tupsertable:true,\n\tkeys:['dms','bedrijf'],\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tdms,\n\t\tbedrijf,\n\t\tnaam\n\t)) ~> sinkCompanylocations"
+		}
+	}
+}

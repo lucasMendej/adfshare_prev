@@ -1,0 +1,468 @@
+{
+	"name": "Datamodel_WPL_create",
+	"properties": {
+		"activities": [
+			{
+				"name": "Create Fact Orders",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[wpl].[Fact_Orders]') AND type in (N'U'))\nDROP TABLE [wpl].[Fact_Orders]\n\n\nCREATE TABLE [wpl].[Fact_Orders](\n\t[Order_id] [nvarchar](50) NOT NULL,\n\t[Order_nr] [varchar](20) NULL,\n\t[Voertuig_id] [nvarchar](50) NULL,\n\t[Klant_id] [nvarchar](50) NULL,\n\t[Valid_From] [date] NULL,\n\t[Valid_To] [date] NULL,\n\t[Afdeling_id] [varchar](50) NULL,\n\t[Weg] [int] NULL,\n\t[Datum_Order] [date] NULL,\n\t[Instance] [nvarchar](50) NOT NULL,\n\t[Vestiging] [nvarchar](50) NOT NULL,\n\t[Vestiging_id] [nvarchar](50) NOT NULL,\n\t[Remvloeistof] [int] NULL,\n\t[Petromark] [int] NULL,\n\t[Onderhoudsbeurt] [int] NULL,\n\t[richttijd] [numeric](38, 6) NULL,\n\t[gereed] [int] NULL,\n\t[Datumgereed] [date] NULL,\n\t[Openstaand] [int] NULL,\n\t[Open_Bedrag] [numeric](38, 2) NULL,\n\t[Open_Dagen] [int] NULL,\n\t[Open_Bucket] [varchar](50) NULL,\n\t[Nog_binnen] [int] NULL,\n\t[Doorgepland] [int] NULL,\n\t[Opschonen] [int] NULL,\n\t[Factureren] [int] NULL,\n\t[DELFLAG] [int] NULL,\n\t[OPBOOKIN] [nvarchar](40) NULL,\n\t[CUSTCONT] [nvarchar](40) NULL,\n\t[Klant_Wacht] [smallint] NULL,\n    [timestamp] [datetime] NOT NULL)\n\n\nINSERT INTO [wpl].[Fact_Orders]\n           ([Order_id]\n           ,[Order_nr]\n           ,[Voertuig_id]\n           ,[Klant_id]\n           ,[Valid_From]\n           ,[Valid_To]\n           ,[Afdeling_id]\n           ,[Weg]\n           ,[Datum_Order]\n           ,[Instance]\n           ,[Vestiging]\n           ,[Vestiging_id]\n           ,[Remvloeistof]\n           ,[Petromark]\n           ,[Onderhoudsbeurt]\n           ,[richttijd]\n           ,[gereed]\n           ,[Datumgereed]\n           ,[Openstaand]\n           ,[Open_Bedrag]\n           ,[Open_Dagen]\n           ,[Open_Bucket]\n           ,[Nog_binnen]\n           ,[Doorgepland]\n           ,[Opschonen]\n           ,[Factureren]\n           ,[DELFLAG]\n           ,[OPBOOKIN]\n           ,[CUSTCONT]\n           ,[Klant_Wacht]\n           ,[timestamp])\nSELECT [Order_id]\n           ,[Order_nr]\n           ,[Voertuig_id]\n           ,[Klant_id]\n           ,NULL\n           ,NULL\n           ,[Afdeling_id]\n           ,[Weg]\n           ,[Datum_Order]\n           ,[Instance]\n           ,[Vestiging]\n           ,[Vestiging_id]\n           ,NULL\n           ,NULL\n           ,NULL\n           ,[richttijd]\n           ,[gereed]\n           ,[Datumgereed]\n           ,[Openstaand]\n           ,[Open_Bedrag]\n           ,[Open_Dagen]\n           ,[Open_Bucket]\n           ,[Nog_binnen]\n           ,[Doorgepland]\n           ,[Opschonen]\n           ,[Factureren]\n           ,[DELFLAG]\n           ,[OPBOOKIN]\n           ,[CUSTCONT]\n           ,[Klant_Wacht]\n           , GETDATE()\n  FROM [wpl].[Fact_Orders_staging]\n  where Datum_Order >= '2022-09-01'\n"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create Fact_Klokuren_Rooster",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create Fact Orders",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[wpl].[Fact_Klokuren_Rooster]') AND type in (N'U'))\nDROP TABLE [wpl].[Fact_Klokuren_Rooster]\n\n\nCREATE TABLE [wpl].[Fact_Klokuren_Rooster](\n\t[Monteur_id] [nvarchar](50) NOT NULL,\n\t[Vestiging_id] [nvarchar](50) NOT NULL,\n\t[Afdeling_id] [varchar](50) NULL,\n\t[StartShift] [numeric](15, 2) NULL,\n\t[EindShift] [numeric](14, 2) NULL,\n\t[Datum] [date] NOT NULL,\n\t[Rooster_Uren] [numeric](38, 2) NULL,\n\t[Volgens_Rooster] [numeric](13, 2) NULL,\n\t[Tijd_Impro] [numeric](38, 2) NULL,\n\t[Uren_Werkplaats] [numeric](38, 2) NULL,\n\t[Uren_Magazijn] [numeric](38, 2) NULL,\n\t[Uren_Geenwerk] [numeric](38, 2) NULL,\n\t[Uren_Leiding] [numeric](38, 2) NULL,\n\t[Uren_ATV] [numeric](38, 2) NULL,\n\t[Uren_Scholing] [numeric](38, 2) NULL,\n\t[Uren_Verlof] [numeric](38, 2) NULL,\n\t[Uren_Ziek] [numeric](38, 2) NULL,\n\t[Uren_Anderfiliaal] [numeric](38, 2) NULL,\n\t[Uren_Verloren] [numeric](38, 2) NULL,\n\t[Uren_Pauze] [numeric](38, 2) NULL,\n\t[Uren_HaalBreng] [numeric](38, 2) NULL,\n\t[Uren_Onbekend] [numeric](38, 2) NULL,\n\t[Uren_geklokt_clockentries] [numeric](38, 2) NULL,\n\t[Productief] [numeric](38, 2) NULL,\n\t[Starttijd_klok] [numeric](4, 2) NULL,\n\t[Eindtijd_klok] [numeric](4, 2) NULL,\n\t[Start_ErrorV] [int] NULL,\n\t[Start_ErrorN] [int] NULL,\n\t[Eind_ErrorV] [int] NULL,\n\t[Eind_ErrorN] [int] NULL,\n\t[Melding] [nvarchar](max) NULL,\n\t[Clock_Errors] [int] NULL,\n\t[Klok_verschil] [numeric](38, 2) NULL,\n\t[Pauze_Verwacht] [numeric](38, 2) NULL,\n\t[Monteur_id_Hash] [varbinary](8000) NULL,\n\t[id] [int] NULL,\n\t[Flag_Monteur] [int] NULL,\n\t[Datum_Monteur] [varchar](max) NULL,\n\t[timestamp] [datetime] NOT NULL)\n\n\tINSERT INTO [wpl].[Fact_Klokuren_Rooster]\n           ([Monteur_id]\n           ,[Vestiging_id]\n           ,[Afdeling_id]\n           ,[StartShift]\n           ,[EindShift]\n           ,[Datum]\n           ,[Rooster_Uren]\n           ,[Volgens_Rooster]\n           ,[Tijd_Impro]\n           ,[Uren_Werkplaats]\n           ,[Uren_Magazijn]\n           ,[Uren_Geenwerk]\n           ,[Uren_Leiding]\n           ,[Uren_ATV]\n           ,[Uren_Scholing]\n           ,[Uren_Verlof]\n           ,[Uren_Ziek]\n           ,[Uren_Anderfiliaal]\n           ,[Uren_Verloren]\n           ,[Uren_Pauze]\n           ,[Uren_HaalBreng]\n           ,[Uren_Onbekend]\n           ,[Uren_geklokt_clockentries]\n           ,[Productief]\n           ,[Starttijd_klok]\n           ,[Eindtijd_klok]\n           ,[Start_ErrorV]\n           ,[Start_ErrorN]\n           ,[Eind_ErrorV]\n           ,[Eind_ErrorN]\n           ,[Melding]\n           ,[Clock_Errors]\n           ,[Klok_verschil]\n           ,[Pauze_Verwacht]\n           ,[Monteur_id_Hash]\n           ,[id]\n           ,[Flag_Monteur]\n           ,[Datum_Monteur]\n           ,[timestamp])\n     select [Monteur_id]\n           ,[Vestiging_id]\n           ,[Afdeling_id]\n           ,[StartShift]\n           ,[EindShift]\n           ,[Datum]\n           ,[Rooster_Uren]\n           ,[Volgens_Rooster_x]\n           ,[Tijd_Impro]\n           ,[Uren_Werkplaats]\n           ,[Uren_Magazijn]\n           ,[Uren_Geenwerk]\n           ,[Uren_Leiding]\n           ,[Uren_ATV]\n           ,[Uren_Scholing]\n           ,[Uren_Verlof]\n           ,[Uren_Ziek]\n           ,[Uren_Anderfiliaal]\n           ,[Uren_Verloren]\n           ,[Uren_Pauze]\n           ,[Uren_HaalBreng]\n           ,[Uren_Onbekend]\n           ,[Uren_geklokt_clockentries]\n           ,[Productief]\n           ,[Starttijd_klok]\n           ,[Eindtijd_klok]\n           ,[Start_ErrorV]\n           ,[Start_ErrorN]\n           ,[Eind_ErrorV]\n           ,[Eind_ErrorN]\n           , NULL\n           , NULL\n           ,[Klok_verschil]\n           ,[Pauze_Verwacht]\n           ,[Monteur_id_Hash]\n           , NULL\n           , NULL\n           ,[Datum_Monteur]\n           , GETDATE()\n  FROM [wpl].[Fact_Klokuren_Rooster_staging]\n  where Datum >= '2022-09-01'\n     "
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create Fact Orders Uren Monteur",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create Fact_Klokuren_Rooster",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[wpl].[Fact_Orders_Uren_Monteur]') AND type in (N'U'))\nDROP TABLE [wpl].[Fact_Orders_Uren_Monteur]\n\n\nCREATE TABLE [wpl].[Fact_Orders_Uren_Monteur](\n\t[Order_id] [nvarchar](50) NOT NULL,\n\t[Order_Line_id] [nvarchar](50) NOT NULL,\n\t[Monteur_id] [nvarchar](50) NOT NULL,\n\t[Uren_geklokt_clockentries] [numeric](38, 2) NULL,\n\t[Toegestaan_Labourlines] [numeric](38, 6) NULL,\n\t[Gefactureerd_Labourlines] [numeric](38, 6) NULL,\n\t[Omzet_Loon] [numeric](38, 6) NULL,\n\t[Klok_datum] [date] NULL,\n    [datum_factuur] [date] NULL,\n\t[Monteur_id_Hash] [varbinary](8000) NULL,\n\t[richttijd] [numeric](38, 6) NULL,\n\t[Datum_Order_Fact_Orders] [date] NULL,\n\t[Datumgereed_Fact_Orders] [date] NULL,\n\t[Datum_Order_Fact_Orders_Monteurlink] [varchar](max) NULL,\n\t[Datumgereed_Fact_Orders_Monteurlink] [varchar](max) NULL,\n\t[Klok_datum_Monteurlink] [varchar](max) NULL,\n    [datum_factuur_Monteurlink] [varchar](max) NULL,\n\t[Afdeling_id] [varchar](50) NULL,\n\t[Voertuig_id] [nvarchar](50) NULL,\n\t[Klant_id] [nvarchar](50) NULL,\n\t[timestamp] [datetime] NOT NULL)\n\n\n\nINSERT INTO [wpl].[Fact_Orders_Uren_Monteur]\n            ([Order_id]\n           ,[Order_Line_id]\n           ,[Monteur_id]\n           ,[Uren_geklokt_clockentries]\n           ,[Toegestaan_Labourlines]\n           ,[Gefactureerd_Labourlines]\n           ,[Omzet_Loon]\n           ,[Klok_datum]\n           ,[datum_factuur]\n           ,[Monteur_id_Hash]\n           ,[richttijd]\n           ,[Datum_Order_Fact_Orders]\n           ,[Datumgereed_Fact_Orders]\n           ,[Datum_Order_Fact_Orders_Monteurlink]\n           ,[Datumgereed_Fact_Orders_Monteurlink]\n           ,[Klok_datum_Monteurlink]\n           ,[datum_factuur_Monteurlink]\n           ,[Afdeling_id]\n           ,[Voertuig_id]\n           ,[Klant_id]\n           ,[timestamp])\nSELECT  [Order_id]\n           ,[Order_Line_id]\n           ,[Monteur_id]\n           ,[Uren_geklokt_clockentries]\n           ,[Toegestaan_Labourlines]\n           ,[Gefactureerd_Labourlines]\n           ,[Omzet_Loon]\n           ,[Klok_datum]\n           ,[datum_factuur]\n           ,[Monteur_id_Hash]\n           ,[richttijd]\n           ,[Datum_Order_Fact_Orders]\n           ,[Datumgereed_Fact_Orders]\n           ,[Datum_Order_Fact_Orders_Monteurlink]\n           ,[Datumgereed_Fact_Orders_Monteurlink]\n           ,[Klok_datum_Monteurlink]\n           ,[datum_factuur_Monteurlink]\n           ,[Afdeling_id]\n           ,[Voertuig_id]\n           ,[Klant_id]\n           ,[timestamp]\n  FROM [wpl].[Fact_Orders_Uren_Monteur_staging]\n  where klok_datum >= '2022-09-01'\n\n\n\n"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create Fact Orders Uren",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create Fact Orders Uren Monteur",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[wpl].[Fact_Orders_Uren]') AND type in (N'U'))\nDROP TABLE [wpl].[Fact_Orders_Uren]\n\n\nCREATE TABLE [wpl].[Fact_Orders_Uren](\n\t[Order_id] [nvarchar](50) NOT NULL,\n\t[Order_Line_id] [nvarchar](50) NOT NULL,\n\t[Factuur] [nvarchar](50) NULL,\n\t[DESC_] [nvarchar](50) NULL,\n\t[RTSCODE] [nvarchar](50) NULL,\n\t[Gefactureerd] [int] NULL,\n\t[Uren_geklokt_clockentries] [numeric](38, 2) NULL,\n\t[Toegestaan_Labourlines] [numeric](38, 6) NULL,\n\t[Gefactureerd_Labourlines] [numeric](38, 6) NULL,\n\t[Omzet loon] [numeric](38, 6) NULL,\n\t[Korting_MB_pakket] [numeric](38, 6) NULL,\n\t[Korting_00_pakket] [numeric](38, 6) NULL,\n\t[neg] [numeric](38, 6) NULL,\n\t[Tarief] [numeric](38, 6) NULL,\n\t[Korting] [numeric](38, 6) NULL,\n\t[Verschil] [numeric](38, 6) NULL,\n\t[Datum] [date] NOT NULL,\n\t[Datum_Factuur] [date] NULL,\n\t[richttijd] [numeric](38, 6) NULL,\n\t[Tijd_Planning_Niet_toegewezen] [numeric](38, 6) NULL,\n\t[Datum_Planning] [date] NULL,\n\t[Tijd_Planning_toegewezen] [numeric](38, 6) NULL,\n\t[Skill_id] [nvarchar](60) NULL,\n\t[Operator] [nvarchar](40) NULL,\n\t[Account] [nvarchar](40) NULL,\n\t[timestamp] [datetime] NOT NULL)\n\n\n\nINSERT INTO [wpl].[Fact_Orders_Uren]\n           ([Order_id]\n           ,[Order_Line_id]\n           ,[Factuur]\n           ,[DESC_]\n           ,[RTSCODE]\n           ,[Gefactureerd]\n           ,[Uren_geklokt_clockentries]\n           ,[Toegestaan_Labourlines]\n           ,[Gefactureerd_Labourlines]\n           ,[Omzet loon]\n           ,[Korting_MB_pakket]\n           ,[Korting_00_pakket]\n           ,[neg]\n           ,[Tarief]\n           ,[Korting]\n           ,[Verschil]\n           ,[Datum]\n           ,[Datum_Factuur]\n           ,[richttijd]\n           ,[Tijd_Planning_Niet_toegewezen]\n           ,[Datum_Planning]\n           ,[Tijd_Planning_toegewezen]\n           ,[Skill_id]\n           ,[Operator]\n           ,[Account]\n           ,[timestamp])\nSELECT [Order_id]\n      ,[Order_Line_id]\n      ,[Factuur]\n      ,[DESC_]\n      ,[RTSCODE]\n      ,[Gefactureerd]\n      ,[Uren_geklokt_clockentries]\n      ,[Toegestaan_Labourlines]\n      ,[Gefactureerd_Labourlines]\n      ,[Omzet_Loon]\n      ,[Korting_MB_pakket]\n      ,[Korting_00_pakket]\n      ,[neg]\n      ,[Tarief]\n      ,[Korting]\n      ,[Verschil]\n      ,[Datum]\n      ,[Datum_Factuur]\n      ,[richttijd]\n      ,[Tijd_Planning_Niet_toegewezen]\n      ,[Datum_Planning]\n      ,[Tijd_Planning_toegewezen]\n      ,[Skill_id]\n      ,[Operator]\n      ,[Account]\n      ,[timestamp]\nFROM [wpl].[Fact_Orders_Uren_staging]\nwhere Datum >= '2022-09-01'"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create Fact Orders Onderdelen",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create Fact Orders Uren",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[wpl].[Fact_Orders_Onderdelen]') AND type in (N'U'))\nDROP TABLE [wpl].[Fact_Orders_Onderdelen]\n\n\nCREATE TABLE [wpl].[Fact_Orders_Onderdelen](\n\t[DATEIN] [date] NULL,\n\t[Order_id] [nvarchar](50) NOT NULL,\n\t[Order_Line_id] [nvarchar](81) NOT NULL,\n\t[Onderdeel_nummer] [char](24) NULL,\n\t[Onderdeel_omschrijving] [char](40) NULL,\n\t[Aantal] [numeric](11, 4) NULL,\n\t[Kostprijs] [numeric](16, 4) NULL,\n\t[Verkoopprijs] [numeric](16, 2) NULL,\n\t[Korting] [numeric](6, 4) NULL,\n\t[Externeprijs] [numeric](38, 6) NULL,\n\t[Factuur] [numeric](8, 0) NULL,\n\t[Gefactureerd] [char](1) NULL,\n\t[Status] [char](1) NULL,\n\t[timestamp] [datetime] NOT NULL)\n\nINSERT INTO [wpl].[Fact_Orders_Onderdelen]\n           ([DATEIN]\n           ,[Order_id]\n           ,[Order_Line_id]\n           ,[Onderdeel_nummer]\n           ,[Onderdeel_omschrijving]\n           ,[Aantal]\n           ,[Kostprijs]\n           ,[Verkoopprijs]\n           ,[Korting]\n           ,[Externeprijs]\n           ,[Factuur]\n           ,[Gefactureerd]\n           ,[Status]\n           ,[timestamp])\nSELECT [DATEIN]\n      ,[Order_id]\n      ,[Order_Line_id]\n      ,[Onderdeel_nummer]\n      ,[Onderdeel_omschrijving]\n      ,[Aantal]\n      ,[Kostprijs]\n      ,[Verkoopprijs]\n      ,[Korting]\n      ,[Externeprijs]\n      ,[Factuur]\n      ,[Gefactureerd]\n      ,[Status]\n      ,[timestamp]\n  FROM [wpl].[Fact_Orders_Onderdelen_staging]\n  where DATEIN >= '2022-09-01'\n    \n\n\n"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create Fact Finance",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create Fact Orders Onderdelen",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[wpl].[Fact_Finance]') AND type in (N'U'))\nDROP TABLE [wpl].[Fact_Finance]\n\n\nCREATE TABLE [wpl].[Fact_Finance](\n\t[Bedrag] [numeric](38, 2) NULL,\n\t[COSTCENT] [numeric](4, 0) NULL,\n\t[Vestiging_id] [nvarchar](50) NOT NULL,\n\t[Afdeling_id] [varchar](50) NOT NULL,\n\t[EXPENSE] [numeric](8, 0) NOT NULL,\n\t[PERIOD] [numeric](10, 0) NULL,\n\t[POSTDATE] [date] NOT NULL,\n\t[OmzetO] [int] NOT NULL,\n\t[OmzetO_vb] [int] NOT NULL,\n\t[KortO] [int] NOT NULL,\n\t[KortO_vb] [int] NOT NULL,\n\t[KostpO] [int] NOT NULL,\n\t[KostpO_vb] [int] NOT NULL,\n\t[Omzetwpl] [int] NOT NULL,\n\t[OmzetDiverse] [int] NOT NULL,\n\t[OmzetOlie] [int] NOT NULL,\n\t[KortOlie] [int] NOT NULL,\n\t[KostpOlie] [int] NOT NULL,\n\t[Kortingwpl] [int] NOT NULL,\n\t[Gratiswpl] [int] NOT NULL,\n\t[Klantsoort] [varchar](8) NOT NULL,\n\t[H_id] [varchar](168) NOT NULL,\n\t[timestamp] [datetime] NOT NULL)\n\nINSERT INTO [wpl].[Fact_Finance]\n           ([Bedrag]\n           ,[COSTCENT]\n           ,[Vestiging_id]\n           ,[Afdeling_id]\n           ,[EXPENSE]\n           ,[PERIOD]\n           ,[POSTDATE]\n           ,[OmzetO]\n           ,[OmzetO_vb]\n           ,[KortO]\n           ,[KortO_vb]\n           ,[KostpO]\n           ,[KostpO_vb]\n           ,[Omzetwpl]\n           ,[OmzetDiverse]\n           ,[OmzetOlie]\n           ,[KortOlie]\n           ,[KostpOlie]\n           ,[Kortingwpl]\n           ,[Gratiswpl]\n           ,[Klantsoort]\n           ,[H_id]\n           ,[timestamp])\nSELECT [Bedrag]\n      ,[COSTCENT]\n      ,[Vestiging_id]\n      ,[Afdeling_id]\n      ,[EXPENSE]\n      ,[PERIOD]\n      ,[POSTDATE]\n      ,[OmzetO]\n      ,[OmzetO_vb]\n      ,[KortO]\n      ,[KortO_vb]\n      ,[KostpO]\n      ,[KostpO_vb]\n      ,[Omzetwpl]\n      ,[OmzetDiverse]\n      ,[OmzetOlie]\n      ,[KortOlie]\n      ,[KostpOlie]\n      ,[Kortingwpl]\n      ,[Gratiswpl]\n      ,[Klantsoort]\n      ,[H_id]\n      ,[timestamp]\n  FROM [wpl].[Fact_Finance_staging]\n  where POSTDATE >= '2022-09-01'\n     \n\n"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create Datum_Monteur",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create Fact Finance",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[wpl].[Datum_Monteur]') AND type in (N'U'))\nDROP TABLE [wpl].[Datum_Monteur]\n\n\nCREATE TABLE [wpl].[Datum_Monteur](\n\t[Monteur_id] [nvarchar](50) NOT NULL,\n\t[Monteur_id_Hash] [int] NULL,\n\t[Datum_Monteur] [varchar](max) NULL,\n\t[FullDate] [date] NULL,\n    [timestamp] [datetime] NOT NULL\n)\n\n\n\nINSERT INTO [wpl].[Datum_Monteur]\n           ([Monteur_id]\n           ,[Monteur_id_Hash]\n           ,[Datum_Monteur]\n           ,[FullDate]\n           ,[timestamp])\n\nSELECT      [Monteur_id]\n           ,[Monteur_id_Hash]\n           ,[Datum_Monteur]\n           ,[FullDate]\n           ,[timestamp]\nFROM [wpl].[Datum_Monteur_staging]\nwhere FullDate >= '2022-09-01'\n     \n\n"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create Dim_WegingsFactor",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create Datum_Monteur",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[wpl].[Dim_WegingsFactor]') AND type in (N'U'))\nDROP TABLE [wpl].[Dim_WegingsFactor]\n\n\nCREATE TABLE [wpl].[Dim_WegingsFactor](\n\t[WegingsFactor_id] [nvarchar](60) NOT NULL,\n\t[Vestiging_id] [nvarchar](50) NOT NULL,\n\t[Afdeling] [varchar](13) NOT NULL,\n\t[WegingsFactor] [decimal](18, 3) NULL\n)"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create Dim_Afdeling",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create Dim_WegingsFactor",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[wpl].[Dim_Afdeling]') AND type in (N'U'))\nDROP TABLE [wpl].[Dim_Afdeling]\n\n\n\nCREATE TABLE [wpl].[Dim_Afdeling](\n\t[Afdeling_id] [varchar](50) NOT NULL,\n\t[Afdeling] [varchar](50) NULL,\n\t[Vestiging_id] [nvarchar](50) NOT NULL,\n\t[WegingsFactor_id] [nvarchar](60) NULL,\n\t[NormVerdeeld_id] [nvarchar](60) NULL,\n\t[Rayon] [varchar](50) NULL\n)"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create Fact_Normen_Verdeeld",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create Dim_Afdeling",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[wpl].[Fact_Normen_Verdeeld]') AND type in (N'U'))\nDROP TABLE [wpl].[Fact_Normen_Verdeeld]\n\nCREATE TABLE [wpl].[Fact_Normen_Verdeeld](\n\t[NormVerdeeld_id] [nvarchar](60) NOT NULL,\n\t[Vestiging_id] [nvarchar](60) NOT NULL,\n\t[Afdeling] [nvarchar](50) NULL,\n\t[Date_Norm_Verdeeld] [date] NOT NULL,\n\t[Soort] [nvarchar](max) NULL,\n\t[Bedrag] [float] NULL\n)\n"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create Link_Table_WegingsFactor",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create Fact_Normen_Verdeeld",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[wpl].[Link_Table_WegingsFactor]') AND type in (N'U'))\nDROP TABLE [wpl].[Link_Table_WegingsFactor]\n\n\nCREATE TABLE [wpl].[Link_Table_WegingsFactor](\n\t[WegingsFactor_id] [nvarchar](60) NOT NULL\n)\n\n"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create Link_Table_NormVerdeeld",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create Link_Table_WegingsFactor",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[wpl].[Link_Table_NormVerdeeld]') AND type in (N'U'))\nDROP TABLE [wpl].[Link_Table_NormVerdeeld]\n\nCREATE TABLE [wpl].[Link_Table_NormVerdeeld](\n\t[NormVerdeeld_id] [nvarchar](60) NOT NULL\n)\n\n\n"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create Fact_Normen_Vast",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create Link_Table_NormVerdeeld",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[wpl].[Fact_Normen_Vast]') AND type in (N'U'))\nDROP TABLE [wpl].[Fact_Normen_Vast]\n\n\nCREATE TABLE [wpl].[Fact_Normen_Vast](\n\t[WegingsFactor_id] [nvarchar](60) NOT NULL,\n\t[Date_Norm] [date] NOT NULL,\n\t[Norm_B%] [int] NULL,\n\t[Norm_F%] [int] NULL,\n\t[Norm_Geklokt%] [int] NULL,\n\t[Norm_P%] [int] NULL,\n\t[Norm_Totaal%] [int] NULL,\n\t[Doel_Conversie%] [int] NULL,\n\t[Gemiddeld _Uurtarief] [numeric](18, 2) NULL\n )\n\n\n"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create Link_Table_NormVerdeeld_Afdeling",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create Fact_Normen_Vast",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[wpl].[Link_Table_NormVerdeeld_Afdeling]') AND type in (N'U'))\nDROP TABLE [wpl].[Link_Table_NormVerdeeld_Afdeling]\n\n\n\nCREATE TABLE [wpl].[Link_Table_NormVerdeeld_Afdeling](\n\t[NormVerdeeld_id] [nvarchar](60) NOT NULL,\n\t[Afdeling_id] [varchar](50) NOT NULL\n)\n\n"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			}
+		],
+		"folder": {
+			"name": "Dashboard/WPL"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-05-16T21:41:34Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

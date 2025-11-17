@@ -1,0 +1,747 @@
+{
+	"name": "Copy Autoline Tables Deel 3",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get Tables",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get DMS and Bedrijf",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get DMS and Bedrijf').output.value",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"batchCount": 50,
+					"activities": [
+						{
+							"name": "If autoline1",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(item().DMS, 'autoline1')",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Copy calendar autoline1",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ',variables('QueryCalendar') , ' from  wl_',  item().bedrijf, '_calendar calnd, wl_', item().bedrijf,'_SHIFTS shift, wl_',  item().bedrijf,'_workshopresources resou\n           where resou.CODE = calnd.SRCODE and calnd.year_ = ', formatDateTime(utcnow(),'yyyy'), ' and calnd.TYPE_ = ''R''  and calnd.shift', activity('Get Daynumber and Year').output.firstRow.daynumber, '  <> '''' and shift.code = calnd.shift', activity('Get Daynumber and Year').output.firstRow.daynumber, ' and resou.analysis in (''A'',''E'') ')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline1_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_calendar",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy workshopresources autoline1",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ',variables('QueryWorkshopresources') , ' from  wl_',  item().bedrijf, '_workshopresources')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline1_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_workshopresources",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy departmentcodes autoline1",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ',variables('QueryDepartmentcodes') , ' from  SO_',  item().bedrijf, '_DEPARTMENTCODES')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline1_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_departmentcodes",
+												"type": "DatasetReference"
+											}
+										]
+									}
+								]
+							}
+						},
+						{
+							"name": "If autoline2",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(item().DMS, 'autoline2')",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Copy calendar autoline2",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ',variables('QueryCalendar') , ' from  wl_',  item().bedrijf, '_calendar calnd, wl_', item().bedrijf,'_SHIFTS shift, wl_',  item().bedrijf,'_workshopresources resou\n           where resou.CODE = calnd.SRCODE and calnd.year_ = ', formatDateTime(utcnow(),'yyyy'), ' and calnd.TYPE_ = ''R''  and calnd.shift', activity('Get Daynumber and Year').output.firstRow.daynumber, '  <> '''' and shift.code = calnd.shift', activity('Get Daynumber and Year').output.firstRow.daynumber, ' and resou.analysis in (''A'') ')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline2_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_calendar",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy workshopresources autoline2",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ',variables('QueryWorkshopresources') , ' from  wl_',  item().bedrijf, '_workshopresources')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline2_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_workshopresources",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy departmentcodes autoline2",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ',variables('QueryDepartmentcodes') , ' from  SO_',  item().bedrijf, '_DEPARTMENTCODES')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline2_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_departmentcodes",
+												"type": "DatasetReference"
+											}
+										]
+									}
+								]
+							}
+						},
+						{
+							"name": "If autoline3",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(item().DMS, 'autoline3')",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Copy calendar autoline3",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ',variables('QueryCalendar') , ' from  wl_',  item().bedrijf, '_calendar calnd, wl_', item().bedrijf,'_SHIFTS shift, wl_',  item().bedrijf,'_workshopresources resou\n           where resou.CODE = calnd.SRCODE and calnd.year_ = ', formatDateTime(utcnow(),'yyyy'), ' and calnd.TYPE_ = ''R''  and calnd.shift', activity('Get Daynumber and Year').output.firstRow.daynumber, '  <> '''' and shift.code = calnd.shift', activity('Get Daynumber and Year').output.firstRow.daynumber, ' and resou.analysis in (''A'') ')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline3_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_calendar",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy workshopresources autoline3",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ',variables('QueryWorkshopresources') , ' from  wl_',  item().bedrijf, '_workshopresources')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline3_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_workshopresources",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy departmentcodes autoline3",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ',variables('QueryDepartmentcodes') , ' from  SO_',  item().bedrijf, '_DEPARTMENTCODES')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline3_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_departmentcodes",
+												"type": "DatasetReference"
+											}
+										]
+									}
+								]
+							}
+						},
+						{
+							"name": "If autoline4",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(item().DMS, 'autoline4')",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Copy calendar autoline4",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ',variables('QueryCalendar') , ' from  wl_',  item().bedrijf, '_calendar calnd, wl_', item().bedrijf,'_SHIFTS shift, wl_',  item().bedrijf,'_workshopresources resou\n           where resou.CODE = calnd.SRCODE and calnd.year_ = ', formatDateTime(utcnow(),'yyyy'), ' and calnd.TYPE_ = ''R''  and calnd.shift', activity('Get Daynumber and Year').output.firstRow.daynumber, '  <> '''' and shift.code = calnd.shift', activity('Get Daynumber and Year').output.firstRow.daynumber, ' and resou.analysis in (''A'') ')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline4_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_calendar",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy workshopresources autoline4",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ',variables('QueryWorkshopresources') , ' from  wl_',  item().bedrijf, '_workshopresources')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline4_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_workshopresources",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy departmentcodes autoline4",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ',variables('QueryDepartmentcodes') , ' from  SO_00_DEPARTMENTCODES')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline4_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_departmentcodes",
+												"type": "DatasetReference"
+											}
+										]
+									}
+								]
+							}
+						},
+						{
+							"name": "If autoline6",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(item().DMS, 'autoline6')",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Copy calendar autoline6",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ',variables('QueryCalendar') , ' from  wl_',  item().bedrijf, '_calendar calnd, wl_', item().bedrijf,'_SHIFTS shift, wl_',  item().bedrijf,'_workshopresources resou\n           where resou.CODE = calnd.SRCODE and calnd.year_ = ', formatDateTime(utcnow(),'yyyy'), ' and calnd.TYPE_ = ''R''  and calnd.shift', activity('Get Daynumber and Year').output.firstRow.daynumber, '  <> '''' and shift.code = calnd.shift', activity('Get Daynumber and Year').output.firstRow.daynumber, ' and resou.analysis in (''A'',''E'') ')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline6_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_calendar",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy workshopresources autoline6",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ',variables('QueryWorkshopresources') , ' from  wl_',  item().bedrijf, '_workshopresources')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline6_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_workshopresources",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy departmentcodes autoline1_copy1",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ',variables('QueryDepartmentcodes') , ' from  SO_',  item().bedrijf, '_DEPARTMENTCODES')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline6_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_departmentcodes",
+												"type": "DatasetReference"
+											}
+										]
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Get DMS and Bedrijf",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Get Daynumber and Year",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT DISTINCT \n       [DMS],\n       [bedrijf]\nFROM [dbo].[autoline_sync_status]\nWHERE bedrijf <> '00'  and DMS <> 'autoline5'",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SQL_Doorgangen_autoline_sync_status",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Get Daynumber and Year",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "select RIGHT('000' + CAST(DATEDIFF(day, CAST(CAST(YEAR(GETDATE()) AS CHAR(4)) AS DATE), CAST(GETDATE() + 1 AS DATE)) AS VARCHAR(3)), 3) as daynumber, YEAR(GETDATE()) as year",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SQL_Doorgangen_autoline_headerlog",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": true
+				}
+			}
+		],
+		"variables": {
+			"QueryCalendar": {
+				"type": "String",
+				"defaultValue": "calnd.SRCODE,  resou.DESC_, shift.active024 AS [600], shift.active025 AS [615], shift.active026 AS [630], shift.active027 AS [645], shift.active028 AS [700], shift.active029 AS [715], shift.active030 AS [730], shift.active031 AS [745], shift.active032 AS [800], shift.active033 AS [815], shift.active034 AS [830],  shift.active035 AS [845], shift.active036 AS [900], shift.active037 AS [915], shift.active038 AS [930],  shift.active039 AS [945], shift.active040 AS [1000], shift.active041 AS [1015], shift.active042 AS [1030],  shift.active043 AS [1045], shift.active044 AS [1100], shift.active045 AS [1115], shift.active046 AS [1130],  shift.active047 AS [1145], shift.active048 AS [1200], shift.active049 AS [1215], shift.active050 AS [1230],  shift.active051 AS [1245], shift.active052 AS [1300], shift.active053 AS [1315], shift.active054 AS [1330],  shift.active055 AS [1345], shift.active056 AS [1400], shift.active057 AS [1415], shift.active058 AS [1430],  shift.active059 AS [1445], shift.active060 AS [1500], shift.active061 AS [1515], shift.active062 AS [1530],  shift.active063 AS [1545], shift.active064 AS [1600], shift.active065 AS [1615], shift.active066 AS [1630],  shift.active067 AS [1645], shift.active068 AS [1700], shift.active069 AS [1715], shift.active070 AS [1730],  shift.active071 AS [1745], shift.active072 AS [1800], shift.active073 AS [1815], shift.active074 AS [1830] "
+			},
+			"QueryWorkshopresources": {
+				"type": "String",
+				"defaultValue": "ANALYSIS, AVAILABL, CODE, DESC_, EMPLOYNO, IDLE, TYPE_"
+			},
+			"QueryDepartmentcodes": {
+				"type": "String",
+				"defaultValue": "CODE, DESC_, DESC001, DESC002 ,DESC003 ,DESC004 ,DESC005 ,DESC006 ,DESC007 ,DESC008 ,DESC009 ,MKCCENT ,BRANCH ,DEPTTYPE ,CRMLOCAT"
+			}
+		},
+		"folder": {
+			"name": "Doorgangen"
+		},
+		"annotations": [],
+		"lastPublishTime": "2020-03-23T14:11:09Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

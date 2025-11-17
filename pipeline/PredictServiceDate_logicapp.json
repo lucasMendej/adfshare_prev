@@ -1,0 +1,67 @@
+{
+	"name": "PredictServiceDate_logicapp",
+	"properties": {
+		"activities": [
+			{
+				"name": "Start Logicapp to upload data to FTP",
+				"description": "Logic app used to send data from sql table to Sftp site\nlogicapp name : ",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Set batch number",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"url": "https://prod-21.westeurope.logic.azure.com:443/workflows/cfa27668f82f4818bd095182cde83d03/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2xJ6ysbdAxwvv-Qfb-6upQkGE3UWLYo_BvTtmIoi7RA",
+					"body": {
+						"source": "Datafactory"
+					}
+				}
+			},
+			{
+				"name": "Set batch number",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "CRM_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "INSERT INTO [dbo].[servicedate_ford_run_hist_test] (run_datetime) \n    VALUES (GETDATE())"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			}
+		],
+		"folder": {
+			"name": "CRM"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-03-15T16:01:41Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

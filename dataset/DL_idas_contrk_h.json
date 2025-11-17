@@ -1,0 +1,50 @@
+{
+	"name": "DL_idas_contrk_h",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStoreYGROUP",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureDataLakeStoreLocation",
+				"fileName": "contrk_h.parquet",
+				"folderPath": "sternData/dataFactoryLandingZone/idas"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "RKRCCD",
+				"type": "UTF8"
+			},
+			{
+				"name": "RKKCTK",
+				"type": "UTF8"
+			},
+			{
+				"name": "RKLNTX",
+				"type": "UTF8"
+			},
+			{
+				"name": "F137#1",
+				"type": "UTF8"
+			},
+			{
+				"name": "RKWSID",
+				"type": "UTF8"
+			},
+			{
+				"name": "F030#1",
+				"type": "UTF8"
+			},
+			{
+				"name": "RKKCTL2",
+				"type": "UTF8"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

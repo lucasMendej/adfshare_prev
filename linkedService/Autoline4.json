@@ -1,0 +1,22 @@
+{
+	"name": "Autoline4",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "ODBC verbinding naar Arend Database",
+		"annotations": [],
+		"type": "Odbc",
+		"typeProperties": {
+			"connectionString": {
+				"type": "SecureString",
+				"value": "**********"
+			},
+			"authenticationType": "Basic",
+			"userName": "odbc4",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJiOWI5NDVjYS1jOTY5LTQwNmEtYjg4ZS0xYWQxMzg4ZWVhOTUiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "WRK9011",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

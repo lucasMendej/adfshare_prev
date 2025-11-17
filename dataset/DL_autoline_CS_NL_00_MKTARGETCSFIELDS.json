@@ -1,0 +1,282 @@
+{
+	"name": "DL_autoline_CS_NL_00_MKTARGETCSFIELDS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStoreYGROUP",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureDataLakeStoreLocation"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "MAGIC",
+				"type": "INT64"
+			},
+			{
+				"name": "RDCMAGIC",
+				"type": "UTF8"
+			},
+			{
+				"name": "AIRMILES",
+				"type": "UTF8"
+			},
+			{
+				"name": "HOBBY",
+				"type": "UTF8"
+			},
+			{
+				"name": "HOBBY001",
+				"type": "UTF8"
+			},
+			{
+				"name": "HOBBY002",
+				"type": "UTF8"
+			},
+			{
+				"name": "HOBBY003",
+				"type": "UTF8"
+			},
+			{
+				"name": "HOBBY004",
+				"type": "UTF8"
+			},
+			{
+				"name": "HOBBY005",
+				"type": "UTF8"
+			},
+			{
+				"name": "SPORT",
+				"type": "UTF8"
+			},
+			{
+				"name": "SPORT001",
+				"type": "UTF8"
+			},
+			{
+				"name": "SPORT002",
+				"type": "UTF8"
+			},
+			{
+				"name": "SPORT003",
+				"type": "UTF8"
+			},
+			{
+				"name": "SPORT004",
+				"type": "UTF8"
+			},
+			{
+				"name": "SPORT005",
+				"type": "UTF8"
+			},
+			{
+				"name": "DEAMAG",
+				"type": "UTF8"
+			},
+			{
+				"name": "DEAMAG001",
+				"type": "UTF8"
+			},
+			{
+				"name": "DEAMAG002",
+				"type": "UTF8"
+			},
+			{
+				"name": "DEAMAG003",
+				"type": "UTF8"
+			},
+			{
+				"name": "DEAMAG004",
+				"type": "UTF8"
+			},
+			{
+				"name": "DEAMAG005",
+				"type": "UTF8"
+			},
+			{
+				"name": "CONTACT",
+				"type": "UTF8"
+			},
+			{
+				"name": "CONTACT001",
+				"type": "UTF8"
+			},
+			{
+				"name": "CONTACT002",
+				"type": "UTF8"
+			},
+			{
+				"name": "CONTACT003",
+				"type": "UTF8"
+			},
+			{
+				"name": "CONTACT004",
+				"type": "UTF8"
+			},
+			{
+				"name": "CONTACT005",
+				"type": "UTF8"
+			},
+			{
+				"name": "CREDCRD",
+				"type": "UTF8"
+			},
+			{
+				"name": "CREDCRD001",
+				"type": "UTF8"
+			},
+			{
+				"name": "CREDCRD002",
+				"type": "UTF8"
+			},
+			{
+				"name": "CREDCRD003",
+				"type": "UTF8"
+			},
+			{
+				"name": "FAMILY",
+				"type": "UTF8"
+			},
+			{
+				"name": "PURCRIT",
+				"type": "UTF8"
+			},
+			{
+				"name": "PURCRIT001",
+				"type": "UTF8"
+			},
+			{
+				"name": "PURCRIT002",
+				"type": "UTF8"
+			},
+			{
+				"name": "STATUS",
+				"type": "UTF8"
+			},
+			{
+				"name": "CURTYPE",
+				"type": "UTF8"
+			},
+			{
+				"name": "CURMAKE",
+				"type": "UTF8"
+			},
+			{
+				"name": "CURMODEL",
+				"type": "UTF8"
+			},
+			{
+				"name": "CURBODY",
+				"type": "UTF8"
+			},
+			{
+				"name": "CURYEAR",
+				"type": "UTF8"
+			},
+			{
+				"name": "CURENGIN",
+				"type": "UTF8"
+			},
+			{
+				"name": "INTGRP",
+				"type": "UTF8"
+			},
+			{
+				"name": "INTGRP001",
+				"type": "UTF8"
+			},
+			{
+				"name": "INTGRP002",
+				"type": "UTF8"
+			},
+			{
+				"name": "INTEREST",
+				"type": "UTF8"
+			},
+			{
+				"name": "INTMAKE",
+				"type": "UTF8"
+			},
+			{
+				"name": "INTMODEL",
+				"type": "UTF8"
+			},
+			{
+				"name": "INTBODY",
+				"type": "UTF8"
+			},
+			{
+				"name": "INTPRICE",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "INTAXLE",
+				"type": "INT64"
+			},
+			{
+				"name": "INTENGIN",
+				"type": "UTF8"
+			},
+			{
+				"name": "INTGVW",
+				"type": "UTF8"
+			},
+			{
+				"name": "VATOBLIG",
+				"type": "BOOLEAN"
+			},
+			{
+				"name": "VATREG",
+				"type": "UTF8"
+			},
+			{
+				"name": "CNTRYCOD",
+				"type": "UTF8"
+			},
+			{
+				"name": "CPSKIP",
+				"type": "BOOLEAN"
+			},
+			{
+				"name": "INVCLAUS",
+				"type": "UTF8"
+			},
+			{
+				"name": "BOATADDR",
+				"type": "BOOLEAN"
+			},
+			{
+				"name": "BEMAIL",
+				"type": "UTF8"
+			},
+			{
+				"name": "GENERAT",
+				"type": "UTF8"
+			},
+			{
+				"name": "TITLEAFT",
+				"type": "UTF8"
+			},
+			{
+				"name": "ISDECEAS",
+				"type": "BOOLEAN"
+			},
+			{
+				"name": "TITLE",
+				"type": "UTF8"
+			},
+			{
+				"name": "GENDER",
+				"type": "UTF8"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

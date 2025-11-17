@@ -1,0 +1,21 @@
+{
+	"name": "Interne_FTP_server",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "FtpServer",
+		"typeProperties": {
+			"host": "10.252.0.99",
+			"port": 21,
+			"enableSsl": false,
+			"enableServerCertificateValidation": false,
+			"authenticationType": "Basic",
+			"userName": "00_FTP_Autoline6@stern.local",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJlMWM1YzIzMC0xMGI4LTQ3YjktOGE3ZC1iODM5MTlkMDI0MmIiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "WRK9011",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

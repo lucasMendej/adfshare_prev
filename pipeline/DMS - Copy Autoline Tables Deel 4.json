@@ -1,0 +1,468 @@
+{
+	"name": "DMS - Copy Autoline Tables Deel 4",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get Tables",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get DMS and Bedrijf",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get DMS and Bedrijf').output.value",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"batchCount": 50,
+					"activities": [
+						{
+							"name": "If autoline1",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(item().DMS, 'autoline1')",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Copy textlines autoline1",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ', variables('QueryTextlines'),' from so_',item().bedrijf,'_textlines ')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline1_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_textlines",
+												"type": "DatasetReference"
+											}
+										]
+									}
+								]
+							}
+						},
+						{
+							"name": "If autoline2",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(item().DMS, 'autoline2')",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Copy textlines autoline2",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ', variables('QueryTextlines'),' from so_',item().bedrijf,'_textlines ')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline2_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_textlines",
+												"type": "DatasetReference"
+											}
+										]
+									}
+								]
+							}
+						},
+						{
+							"name": "If autoline3",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(item().DMS, 'autoline3')",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Copy textlines autoline3",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ', variables('QueryTextlines'),' from so_',item().bedrijf,'_textlines ')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline3_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_textlines",
+												"type": "DatasetReference"
+											}
+										]
+									}
+								]
+							}
+						},
+						{
+							"name": "If autoline4",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(item().DMS, 'autoline4')",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Copy textlines autoline4",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ', variables('QueryTextlines'),' from so_',item().bedrijf,'_textlines ')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline4_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_textlines",
+												"type": "DatasetReference"
+											}
+										]
+									}
+								]
+							}
+						},
+						{
+							"name": "If autoline6",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(item().DMS, 'autoline6')",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Copy textlines autoline6",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"additionalColumns": [
+													{
+														"name": "dummy",
+														"value": "leeg"
+													}
+												],
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ', variables('QueryTextlines'),' from so_',item().bedrijf,'_textlines ')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false,
+											"translator": {
+												"type": "TabularTranslator",
+												"mappings": [
+													{
+														"source": {
+															"name": "DMS",
+															"type": "String"
+														},
+														"sink": {
+															"name": "DMS",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "BEDRIJF",
+															"type": "String"
+														},
+														"sink": {
+															"name": "BEDRIJF",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "WIPNO",
+															"type": "Int64"
+														},
+														"sink": {
+															"name": "WIPNO",
+															"type": "Decimal"
+														}
+													},
+													{
+														"source": {
+															"name": "RTSLINE",
+															"type": "Int64"
+														},
+														"sink": {
+															"name": "RTSLINE",
+															"type": "Decimal"
+														}
+													},
+													{
+														"source": {
+															"name": "TEXT001",
+															"type": "String"
+														},
+														"sink": {
+															"name": "TEXT001",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "TEXT002",
+															"type": "String"
+														},
+														"sink": {
+															"name": "TEXT002",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "TEXT003",
+															"type": "String"
+														},
+														"sink": {
+															"name": "TEXT003",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "TEXT004",
+															"type": "String"
+														},
+														"sink": {
+															"name": "TEXT004",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "TEXT005",
+															"type": "String"
+														},
+														"sink": {
+															"name": "TEXT005",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "TEXT006",
+															"type": "String"
+														},
+														"sink": {
+															"name": "TEXT006",
+															"type": "String"
+														}
+													}
+												]
+											}
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline6_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_textlines",
+												"type": "DatasetReference"
+											}
+										]
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Get DMS and Bedrijf",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT DISTINCT \n       [DMS],\n       [bedrijf]\nFROM [dbo].[autoline_sync_status]\nWHERE bedrijf <> '00'   and DMS <> 'autoline5'",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SQL_DMS_autoline_sync_status",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			}
+		],
+		"variables": {
+			"dms": {
+				"type": "String"
+			},
+			"bedrijf": {
+				"type": "String"
+			},
+			"QueryHeaderlog": {
+				"type": "String",
+				"defaultValue": "MAGICLH, WIPNO, DOCTYPE, POSTDATE, TIME_"
+			},
+			"QueryHeaderrecords": {
+				"type": "String",
+				"defaultValue": "ACCOUNT ,CHASSIS ,CREATED ,CUSTCONT ,CUSTNAME ,DATEIN ,DATEOUT ,DATEREG ,DELFLAG ,DEPT ,FRANCODE ,INVNO ,MAGICT ,MAGICV ,MODEL ,OPBOOKIN ,PHONE ,REGNO ,REPREP ,SALTYPE ,SERTEXT ,SERVCODE ,TEXT001 ,TEXT002 ,TEXT003 ,TEXT004 ,TIMEIN ,TIMEOUT ,WIPNO ,VSBNO ,WTIMEOUT ,WDATEOUT ,MILEAGE ,WDATEIN ,WTIMEIN ,WLINOUT ,OPCREATE ,OPBOOKOU ,OPINVOIC ,CUSTWAIT ,COURTREQ ,WIPPARTS"
+			},
+			"QueryLabourlines": {
+				"type": "String",
+				"defaultValue": "ACCOUNT,ACTLINE ,ALLOWED ,BONUSTIM ,CONTRIB ,DATECOST ,DEPT ,DESC_ ,DISCPC ,EXTPRICE ,FRANCODE ,INVOICE ,INVSTAT ,LINE ,LOADSTAT ,MENU ,MENUCODE ,MENUFLAG ,MENUPRCE ,RATE ,RTSCODE ,RTSCOMPY ,SALTYPE ,TAKEN ,TYPEANAL ,TYPECODE ,WIPNO ,WLCLOCKR ,TARMAGIC"
+			},
+			"QueryPartlines": {
+				"type": "String",
+				"defaultValue": "ACCOUNT ,DATEIN,DISCOUNT ,INVSTAT,LINE,ORDERQTY,ORDSTAT,PRODGRP,SELLPRCE,WIPNO,PART,ACTLINE,INVOICE,DESCRIPN,DECARDED,DEPT,CONTRIB,EXTPRICE ,TARMAGIC"
+			},
+			"QueryClockentries": {
+				"type": "String",
+				"defaultValue": "ADJDATE ,ADJDESC ,ADJMODE ,ADJTIME ,ADJUSER ,ALLOWED ,ANALYSIS ,DATEI ,DATEO ,FACTOR ,IDLE ,REASON ,RESOURCE ,SEQ ,SHIFT ,STATE ,TAKEN ,TEAM ,TERMID ,TIMEI ,TIMEO ,WIPLINE,WIPNO"
+			},
+			"QuerySalesledgeraccounts": {
+				"type": "String",
+				"defaultValue": "category,account,editdate"
+			},
+			"QueryTextlines": {
+				"type": "String",
+				"defaultValue": "RTSLINE,WIPNO,TEXT001,TEXT002,TEXT003,TEXT004,TEXT005,TEXT006"
+			}
+		},
+		"folder": {
+			"name": "DMS"
+		},
+		"annotations": [],
+		"lastPublishTime": "2020-04-29T14:08:46Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

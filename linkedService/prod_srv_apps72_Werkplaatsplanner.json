@@ -1,0 +1,16 @@
+{
+	"name": "prod_srv_apps72_Werkplaatsplanner",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=False;data source=prod-srv-apps72;initial catalog=Werkplaatsplanner;user id=SQL_SA_Werkplaatsplanner",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIzZWEyNjlmOC03YWU0LTQwZjAtOWFkMS1kMjAwOTU5NDRhMmUiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "APPS72",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

@@ -1,0 +1,15 @@
+{
+	"name": "Autoline_BMW_Table",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Autoline BMW NL",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "RelationalTable",
+		"typeProperties": {
+			"tableName": "\"GB_00_Catlg\""
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

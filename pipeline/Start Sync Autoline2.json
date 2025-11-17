@@ -1,0 +1,106 @@
+{
+	"name": "Start Sync Autoline2",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get DMS and Bedrijf",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT DISTINCT \n       [DMS],\n       [bedrijf]\nFROM [dbo].[autoline_sync_status]\nWHERE bedrijf <> '00'  and dms = 'autoline2'",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SQL_Doorgangen_autoline_sync_status",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get DMS and Bedrijf",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get DMS and Bedrijf').output.value",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"activities": [
+						{
+							"name": "ExecutePipeline Sync Autoline Tables",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Sync Autoline Tables _OLD",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"bedrijf": {
+										"value": "@item().bedrijf",
+										"type": "Expression"
+									},
+									"dms": {
+										"value": "@item().DMS",
+										"type": "Expression"
+									},
+									"headerrecordsTable": {
+										"value": "@concat('so_',item().bedrijf,if(equals(item().DMS,'autoline5'),'_headr','_headerrecords'))",
+										"type": "Expression"
+									},
+									"headerlogTable": {
+										"value": "@concat('so_',item().bedrijf,if(equals(item().DMS,'autoline5'),'_loghd','_headerlog'))",
+										"type": "Expression"
+									},
+									"labourlinesTable": {
+										"value": "@concat('so_',item().bedrijf,if(equals(item().DMS,'autoline5'),'_labor','_labourlines'))",
+										"type": "Expression"
+									},
+									"partlinesTable": {
+										"value": "@concat('so_',item().bedrijf,if(equals(item().DMS,'autoline5'),'_parts','_partslines'))",
+										"type": "Expression"
+									},
+									"clockentriesTable": {
+										"value": "@concat('wl_',item().bedrijf,if(equals(item().DMS,'autoline5'),'_clockentries','_clockentries'))",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"folder": {
+			"name": "Doorgangen/temp"
+		},
+		"annotations": [],
+		"lastPublishTime": "2019-11-06T10:28:16Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

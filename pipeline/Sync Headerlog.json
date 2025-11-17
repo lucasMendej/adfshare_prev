@@ -1,0 +1,308 @@
+{
+	"name": "Sync Headerlog",
+	"properties": {
+		"activities": [
+			{
+				"name": "If Autoline1",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Set Variable QuerySync",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(pipeline().parameters.dms, 'autoline1')",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Sync Headerlog Autoline1",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@variables('QuerySync')",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "Autoline1_Table",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_headerlog_temp",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "If Autoline2",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Set Variable QuerySync",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(pipeline().parameters.dms, 'autoline2')",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Sync Headerlog Autoline2",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@variables('QuerySync')",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "Autoline2_Table",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_headerlog_temp",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "If Autoline3",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Set Variable QuerySync",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(pipeline().parameters.dms, 'autoline3')",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Sync Headerlog Autoline3",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@variables('QuerySync')",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "autoline3_tables_prod_srv_apps06",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_headerlog_temp",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "If Autoline4",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Set Variable QuerySync",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(pipeline().parameters.dms, 'autoline4')",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Sync Headerlog Autoline4",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@variables('QuerySync')",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "Autoline4_Table",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_headerlog_temp",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "If Autoline5",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Set Variable QuerySync",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(pipeline().parameters.dms, 'autoline5')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set Variable QuerySync",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "QuerySync",
+					"value": {
+						"value": "@concat('SELECT ''',pipeline().parameters.dms,''' as DMS, ',pipeline().parameters.bedrijf,' as bedrijf, magiclh as magiclh, wipno as wipno, doctype as doctype, postdate as postdate, time_ as time_  FROM ', pipeline().parameters.headerlogTable,' where magiclh >= ', pipeline().parameters.magiclh_)",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"headerlogTable": {
+				"type": "string"
+			},
+			"dms": {
+				"type": "string"
+			},
+			"magiclh_": {
+				"type": "string"
+			},
+			"bedrijf": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"QuerySync": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Doorgangen/Sync direct"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-08-17T09:59:55Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

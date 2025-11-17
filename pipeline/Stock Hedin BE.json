@@ -1,0 +1,126 @@
+{
+	"name": "Stock Hedin BE",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy Stock 13 Hedin BE",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "with base as (select * from openquery(autoline_hedin_live, \n\t'select PPARTNO, PARTNO, DESC002, BIN001, QUANTITY001\n\t\t\tfrom sm_13_stock'))\n\nselect distinct * \nfrom (\n\tselect 'HedinBE' as [_set],\n\t\t'13' as [_company],\n\t\tPPARTNO, PARTNO, DESC002, BIN001, \n\t\tQUANTITY001, \n\t\tsubstring(replace(PPARTNO,'/',''),2,100) as [SCANCODE]\n\tfrom \n\t\tbase\n\tunion \n\tselect 'HedinBE' as [_set],\n\t\t'13' as [_company],\n\t\tPPARTNO, PARTNO, DESC002, BIN001, \n\t\tQUANTITY001, \n\t\tsubstring(replace(replace(PARTNO,' ', ''),'/',''),2,100) as [SCANCODE]\n\tfrom \n\t    base\n) as b\n\t",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"preCopyScript": "delete from dbo.autoline_sm_stock where _set = 'HedinBE'",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "clntap149_server_connection",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Logistiek_autoline_sm_stock",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy data from dms to logistiek",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Copy Stock 13 Hedin BE",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT *\r\n  FROM [dbo].[autoline_stock]\r\nwhere _set = 'autolineb'",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"preCopyScript": "IF OBJECT_ID('dbo.Autoline_be_stock', 'U') IS NOT NULL\n    DROP TABLE dbo.Autoline_be_stock;",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": true,
+						"tableOption": "autoCreate",
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "AZURE_DMS_PROD_SRV_SQL00",
+						"type": "DatasetReference",
+						"parameters": {
+							"OutputTable": "dummy"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQL_00_logistiek",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema": "dbo",
+							"table": "Autoline_be_stock"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "Parts"
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-06-25T16:20:25Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

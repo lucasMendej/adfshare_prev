@@ -1,0 +1,784 @@
+{
+	"name": "SQL_DMS_autoline_customerrecords",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "_SET",
+				"type": "varchar"
+			},
+			{
+				"name": "_COMPANY",
+				"type": "char"
+			},
+			{
+				"name": "_LTSTUPDATE",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "_LTSTCHECK",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "MAGIC",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "COMMAGIC",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "STATUS",
+				"type": "char"
+			},
+			{
+				"name": "CREATED",
+				"type": "date"
+			},
+			{
+				"name": "EDITED",
+				"type": "date"
+			},
+			{
+				"name": "TITLE",
+				"type": "char"
+			},
+			{
+				"name": "INITIALS",
+				"type": "char"
+			},
+			{
+				"name": "FIRSTNAM",
+				"type": "char"
+			},
+			{
+				"name": "SURNAME",
+				"type": "char"
+			},
+			{
+				"name": "SALUTE",
+				"type": "char"
+			},
+			{
+				"name": "SHORT",
+				"type": "char"
+			},
+			{
+				"name": "EXEC_",
+				"type": "char"
+			},
+			{
+				"name": "EXEC001",
+				"type": "char"
+			},
+			{
+				"name": "EXEC002",
+				"type": "char"
+			},
+			{
+				"name": "EXEC003",
+				"type": "char"
+			},
+			{
+				"name": "EXEC004",
+				"type": "char"
+			},
+			{
+				"name": "EXEC005",
+				"type": "char"
+			},
+			{
+				"name": "EXEC006",
+				"type": "char"
+			},
+			{
+				"name": "EXEC007",
+				"type": "char"
+			},
+			{
+				"name": "EXEC008",
+				"type": "char"
+			},
+			{
+				"name": "EXEC009",
+				"type": "char"
+			},
+			{
+				"name": "EXEC010",
+				"type": "char"
+			},
+			{
+				"name": "PHONE",
+				"type": "char"
+			},
+			{
+				"name": "PHONE001",
+				"type": "char"
+			},
+			{
+				"name": "PHONE002",
+				"type": "char"
+			},
+			{
+				"name": "PHONE003",
+				"type": "char"
+			},
+			{
+				"name": "PHONE004",
+				"type": "char"
+			},
+			{
+				"name": "ADDRESS",
+				"type": "char"
+			},
+			{
+				"name": "ADDRESS001",
+				"type": "char"
+			},
+			{
+				"name": "ADDRESS002",
+				"type": "char"
+			},
+			{
+				"name": "ADDRESS003",
+				"type": "char"
+			},
+			{
+				"name": "ADDRESS004",
+				"type": "char"
+			},
+			{
+				"name": "ADDRESS005",
+				"type": "char"
+			},
+			{
+				"name": "POSTCODE",
+				"type": "char"
+			},
+			{
+				"name": "TARGTYPE",
+				"type": "char"
+			},
+			{
+				"name": "TARGTYPE001",
+				"type": "char"
+			},
+			{
+				"name": "TARGTYPE002",
+				"type": "char"
+			},
+			{
+				"name": "TARGTYPE003",
+				"type": "char"
+			},
+			{
+				"name": "TARGTYPE004",
+				"type": "char"
+			},
+			{
+				"name": "TARGTYPE005",
+				"type": "char"
+			},
+			{
+				"name": "TARGTYPE006",
+				"type": "char"
+			},
+			{
+				"name": "TARGTYPE007",
+				"type": "char"
+			},
+			{
+				"name": "TARGTYPE008",
+				"type": "char"
+			},
+			{
+				"name": "TARGTYPE009",
+				"type": "char"
+			},
+			{
+				"name": "TARGTYPE010",
+				"type": "char"
+			},
+			{
+				"name": "LETTERS",
+				"type": "char"
+			},
+			{
+				"name": "LETTERS001",
+				"type": "char"
+			},
+			{
+				"name": "LETTERS002",
+				"type": "char"
+			},
+			{
+				"name": "LETTERS003",
+				"type": "char"
+			},
+			{
+				"name": "LETTERS004",
+				"type": "char"
+			},
+			{
+				"name": "LETTERS005",
+				"type": "char"
+			},
+			{
+				"name": "LETTERS006",
+				"type": "char"
+			},
+			{
+				"name": "LETTERS007",
+				"type": "char"
+			},
+			{
+				"name": "LETTERS008",
+				"type": "char"
+			},
+			{
+				"name": "LETTERS009",
+				"type": "char"
+			},
+			{
+				"name": "LETTERS010",
+				"type": "char"
+			},
+			{
+				"name": "COSTCENT",
+				"type": "char"
+			},
+			{
+				"name": "COSTCENT001",
+				"type": "char"
+			},
+			{
+				"name": "COSTCENT002",
+				"type": "char"
+			},
+			{
+				"name": "COSTCENT003",
+				"type": "char"
+			},
+			{
+				"name": "COSTCENT004",
+				"type": "char"
+			},
+			{
+				"name": "COSTCENT005",
+				"type": "char"
+			},
+			{
+				"name": "COSTCENT006",
+				"type": "char"
+			},
+			{
+				"name": "COSTCENT007",
+				"type": "char"
+			},
+			{
+				"name": "COSTCENT008",
+				"type": "char"
+			},
+			{
+				"name": "COSTCENT009",
+				"type": "char"
+			},
+			{
+				"name": "COSTCENT010",
+				"type": "char"
+			},
+			{
+				"name": "ACCOUNT",
+				"type": "char"
+			},
+			{
+				"name": "COMPPOS",
+				"type": "char"
+			},
+			{
+				"name": "SUFFIX",
+				"type": "char"
+			},
+			{
+				"name": "JOBTITLE",
+				"type": "char"
+			},
+			{
+				"name": "SOURCE",
+				"type": "char"
+			},
+			{
+				"name": "BY071900",
+				"type": "char"
+			},
+			{
+				"name": "BRANCH",
+				"type": "char"
+			},
+			{
+				"name": "BRANCH001",
+				"type": "char"
+			},
+			{
+				"name": "BRANCH002",
+				"type": "char"
+			},
+			{
+				"name": "BRANCH003",
+				"type": "char"
+			},
+			{
+				"name": "USERID",
+				"type": "char"
+			},
+			{
+				"name": "TITLENAM",
+				"type": "char"
+			},
+			{
+				"name": "EDUSERID",
+				"type": "char"
+			},
+			{
+				"name": "LANGUAGE_",
+				"type": "char"
+			},
+			{
+				"name": "EMAIL",
+				"type": "char"
+			},
+			{
+				"name": "OBRANCH",
+				"type": "char"
+			},
+			{
+				"name": "OBRANCH001",
+				"type": "char"
+			},
+			{
+				"name": "OBRANCH002",
+				"type": "char"
+			},
+			{
+				"name": "OBRANCH003",
+				"type": "char"
+			},
+			{
+				"name": "DLRCODE",
+				"type": "char"
+			},
+			{
+				"name": "DLRCODE001",
+				"type": "char"
+			},
+			{
+				"name": "DLRCODE002",
+				"type": "char"
+			},
+			{
+				"name": "DLRCODE003",
+				"type": "char"
+			},
+			{
+				"name": "TXSTATUS",
+				"type": "char"
+			},
+			{
+				"name": "NOMAIL",
+				"type": "bit"
+			},
+			{
+				"name": "COUNTRYC",
+				"type": "char"
+			},
+			{
+				"name": "CHGTIME",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "LOTIME",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "INTNR",
+				"type": "decimal",
+				"precision": 14,
+				"scale": 0
+			},
+			{
+				"name": "SOCIALID",
+				"type": "char"
+			},
+			{
+				"name": "MOTAB",
+				"type": "char"
+			},
+			{
+				"name": "CONAME",
+				"type": "char"
+			},
+			{
+				"name": "EXTENSN",
+				"type": "char"
+			},
+			{
+				"name": "CARGROUP",
+				"type": "char"
+			},
+			{
+				"name": "MANUFACT",
+				"type": "char"
+			},
+			{
+				"name": "SEX",
+				"type": "char"
+			},
+			{
+				"name": "DOB",
+				"type": "date"
+			},
+			{
+				"name": "OSURNAME",
+				"type": "char"
+			},
+			{
+				"name": "TPSON",
+				"type": "char"
+			},
+			{
+				"name": "TPSON001",
+				"type": "char"
+			},
+			{
+				"name": "TPSON002",
+				"type": "char"
+			},
+			{
+				"name": "TPSON003",
+				"type": "char"
+			},
+			{
+				"name": "TPSON004",
+				"type": "char"
+			},
+			{
+				"name": "TPSON005",
+				"type": "char"
+			},
+			{
+				"name": "KARDEX",
+				"type": "char"
+			},
+			{
+				"name": "ADDRESS2",
+				"type": "char"
+			},
+			{
+				"name": "ADDRESS2001",
+				"type": "char"
+			},
+			{
+				"name": "ADDRESS2002",
+				"type": "char"
+			},
+			{
+				"name": "ADDRESS2003",
+				"type": "char"
+			},
+			{
+				"name": "ADDRESS2004",
+				"type": "char"
+			},
+			{
+				"name": "ADDRESS2005",
+				"type": "char"
+			},
+			{
+				"name": "POSTCOD2",
+				"type": "char"
+			},
+			{
+				"name": "TITLECOD",
+				"type": "char"
+			},
+			{
+				"name": "ONAME",
+				"type": "char"
+			},
+			{
+				"name": "ONAME001",
+				"type": "char"
+			},
+			{
+				"name": "ONAME002",
+				"type": "char"
+			},
+			{
+				"name": "ONAME003",
+				"type": "char"
+			},
+			{
+				"name": "ONAME004",
+				"type": "char"
+			},
+			{
+				"name": "WORKAREA",
+				"type": "char"
+			},
+			{
+				"name": "WORKCODE",
+				"type": "char"
+			},
+			{
+				"name": "WORKNAME",
+				"type": "char"
+			},
+			{
+				"name": "WORKADDR",
+				"type": "char"
+			},
+			{
+				"name": "WORKADDR001",
+				"type": "char"
+			},
+			{
+				"name": "WORKADDR002",
+				"type": "char"
+			},
+			{
+				"name": "WORKADDR003",
+				"type": "char"
+			},
+			{
+				"name": "WORKADDR004",
+				"type": "char"
+			},
+			{
+				"name": "PREFPHON",
+				"type": "char"
+			},
+			{
+				"name": "CMA",
+				"type": "bit"
+			},
+			{
+				"name": "LOYALCOD",
+				"type": "char"
+			},
+			{
+				"name": "LOYALNUM",
+				"type": "char"
+			},
+			{
+				"name": "LOYALEXP",
+				"type": "date"
+			},
+			{
+				"name": "BESTDAY001",
+				"type": "decimal",
+				"precision": 1,
+				"scale": 0
+			},
+			{
+				"name": "BESTDAY002",
+				"type": "decimal",
+				"precision": 1,
+				"scale": 0
+			},
+			{
+				"name": "BESTDAY003",
+				"type": "decimal",
+				"precision": 1,
+				"scale": 0
+			},
+			{
+				"name": "BESTDAY004",
+				"type": "decimal",
+				"precision": 1,
+				"scale": 0
+			},
+			{
+				"name": "BESTDAY005",
+				"type": "decimal",
+				"precision": 1,
+				"scale": 0
+			},
+			{
+				"name": "BESTDAY006",
+				"type": "decimal",
+				"precision": 1,
+				"scale": 0
+			},
+			{
+				"name": "BESTDAY007",
+				"type": "decimal",
+				"precision": 1,
+				"scale": 0
+			},
+			{
+				"name": "BESTBEG001",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 0
+			},
+			{
+				"name": "BESTBEG002",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 0
+			},
+			{
+				"name": "BESTBEG003",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 0
+			},
+			{
+				"name": "BESTBEG004",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 0
+			},
+			{
+				"name": "BESTBEG005",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 0
+			},
+			{
+				"name": "BESTBEG006",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 0
+			},
+			{
+				"name": "BESTBEG007",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 0
+			},
+			{
+				"name": "BESTEND001",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 0
+			},
+			{
+				"name": "BESTEND002",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 0
+			},
+			{
+				"name": "BESTEND003",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 0
+			},
+			{
+				"name": "BESTEND004",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 0
+			},
+			{
+				"name": "BESTEND005",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 0
+			},
+			{
+				"name": "BESTEND006",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 0
+			},
+			{
+				"name": "BESTEND007",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 0
+			},
+			{
+				"name": "SENSITIV",
+				"type": "char"
+			},
+			{
+				"name": "TRANTYPE",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "VATREG",
+				"type": "char"
+			},
+			{
+				"name": "MSTART",
+				"type": "date"
+			},
+			{
+				"name": "MAUTH",
+				"type": "char"
+			},
+			{
+				"name": "BY185500",
+				"type": "char"
+			},
+			{
+				"name": "BUSTYPE",
+				"type": "char"
+			},
+			{
+				"name": "SUPPLIER",
+				"type": "char"
+			},
+			{
+				"name": "BY187400",
+				"type": "char"
+			},
+			{
+				"name": "BACS",
+				"type": "bit"
+			},
+			{
+				"name": "BANKREGC",
+				"type": "char"
+			},
+			{
+				"name": "ORGSCODE",
+				"type": "char"
+			},
+			{
+				"name": "BXBANKAC",
+				"type": "char"
+			},
+			{
+				"name": "VATREG2",
+				"type": "char"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "autoline_customerrecords"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

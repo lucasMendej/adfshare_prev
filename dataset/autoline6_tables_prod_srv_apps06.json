@@ -1,0 +1,13 @@
+{
+	"name": "autoline6_tables_prod_srv_apps06",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "autoline6_prod_srv_apps06",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "OdbcTable",
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,436 @@
+{
+	"name": "Sync Autoline Tables Deel 2",
+	"properties": {
+		"activities": [
+			{
+				"name": "If autoline1",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "SetVariable MAGICLH_",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(pipeline().parameters.dms, 'autoline1')",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Copy new data autoline_headerlog autoline1",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@concat('SELECT  ''',pipeline().parameters.dms,''' as DMS, ''',pipeline().parameters.bedrijf,''' as BEDRIJF, magiclh, wipno, doctype, postdate, time_  FROM ',pipeline().parameters.headerlogTable,' where magiclh >= ', variables('magiclh_') )",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@{concat('DELETE FROM autoline_headerlog\nWHERE bedrijf = ',pipeline().parameters.bedrijf,'\n      AND DMS = ''',pipeline().parameters.dms,'''\n      AND magiclh >= ', variables('magiclh_') )}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"parallelCopies": 32,
+								"dataIntegrationUnits": 32
+							},
+							"inputs": [
+								{
+									"referenceName": "autoline1_tables_prod_srv_apps06",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_headerlog",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "If autoline2",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "SetVariable MAGICLH_",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(pipeline().parameters.dms, 'autoline2')",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Copy new data autoline_headerlog autoline2",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@concat('SELECT  ''',pipeline().parameters.dms,''' as DMS, ''',pipeline().parameters.bedrijf,''' as BEDRIJF, magiclh, wipno, doctype, postdate, time_  FROM ',pipeline().parameters.headerlogTable,' where magiclh >= ', variables('magiclh_') )",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@{concat('DELETE FROM autoline_headerlog\nWHERE bedrijf = ',pipeline().parameters.bedrijf,'\n      AND DMS = ''',pipeline().parameters.dms,'''\n      AND magiclh >= ', variables('magiclh_') )}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"parallelCopies": 32,
+								"dataIntegrationUnits": 32
+							},
+							"inputs": [
+								{
+									"referenceName": "autoline2_tables_prod_srv_apps06",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_headerlog",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "If autoline3",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "SetVariable MAGICLH_",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(pipeline().parameters.dms, 'autoline3')",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Copy new data autoline_headerlog autoline3",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@concat('SELECT  ''',pipeline().parameters.dms,''' as DMS, ''',pipeline().parameters.bedrijf,''' as BEDRIJF, magiclh, wipno, doctype, postdate, time_  FROM ',pipeline().parameters.headerlogTable,' where magiclh >= ', variables('magiclh_') )",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@{concat('DELETE FROM autoline_headerlog\nWHERE bedrijf = ',pipeline().parameters.bedrijf,'\n      AND DMS = ''',pipeline().parameters.dms,'''\n      AND magiclh >= ', variables('magiclh_') )}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"parallelCopies": 32,
+								"dataIntegrationUnits": 32
+							},
+							"inputs": [
+								{
+									"referenceName": "autoline3_tables_prod_srv_apps06",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_headerlog",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "If autoline4",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "SetVariable MAGICLH_",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(pipeline().parameters.dms, 'autoline4')",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Copy new data autoline_headerlog autoline4",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@concat('SELECT  ''',pipeline().parameters.dms,''' as DMS, ''',pipeline().parameters.bedrijf,''' as BEDRIJF, magiclh, wipno, doctype, postdate, time_  FROM ',pipeline().parameters.headerlogTable,' where magiclh >= ', variables('magiclh_') )",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@{concat('DELETE FROM autoline_headerlog\nWHERE bedrijf = ',pipeline().parameters.bedrijf,'\n      AND DMS = ''',pipeline().parameters.dms,'''\n      AND magiclh >= ', variables('magiclh_') )}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"parallelCopies": 32,
+								"dataIntegrationUnits": 32
+							},
+							"inputs": [
+								{
+									"referenceName": "autoline4_tables_prod_srv_apps06",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_headerlog",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "SetVariable MAGICLH_",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Check if syncStatus contains data from yesterday",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "magiclh_",
+					"value": {
+						"value": "@string(activity('Check if syncStatus contains data from yesterday').output.value[0].MAGICLH_)\n\n",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Check if syncStatus contains data from yesterday",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "@concat('if (select count(*) FROM dbo.autoline_sync_status WHERE cast(timestamp_ as date) <> cast(getdate() as date) and dms = ''',pipeline().parameters.dms,''') <> 0 \n\t\tdelete from [dbo].[autoline_headerlog] where postdate < cast(getdate() as date) and dms = ''',pipeline().parameters.dms,'''\n\nselect min(magiclh) as [MAGICLH_] from (\n\t\tselect min(magiclh) as magiclh from [dbo].[autoline_headerlog] where bedrijf = ''',pipeline().parameters.bedrijf,''' and doctype = ''''  and dms = ''',pipeline().parameters.dms,''' and time_ > cast( DATEPART(HOUR, GETDATE()) - 1 as numeric(4,2))\n\t\tunion select [MAGICLH_] + 1 from dbo.autoline_sync_status WHERE tablename_ = ''', pipeline().parameters.headerlogTable,'''  and dms = ''',pipeline().parameters.dms,''') a')",
+							"type": "Expression"
+						},
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SQL_Doorgangen_autoline_sync_status",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "If autoline6",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "SetVariable MAGICLH_",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(pipeline().parameters.dms, 'autoline6')",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Copy new data autoline_headerlog autoline6",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@concat('SELECT  ''',pipeline().parameters.dms,''' as DMS, ''',pipeline().parameters.bedrijf,''' as BEDRIJF, magiclh, wipno, doctype, postdate, time_  FROM ',pipeline().parameters.headerlogTable,' where magiclh >= ', variables('magiclh_') )",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@{concat('DELETE FROM autoline_headerlog\nWHERE bedrijf = ',pipeline().parameters.bedrijf,'\n      AND DMS = ''',pipeline().parameters.dms,'''\n      AND magiclh >= ', variables('magiclh_') )}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"parallelCopies": 32,
+								"dataIntegrationUnits": 32
+							},
+							"inputs": [
+								{
+									"referenceName": "autoline6_tables_prod_srv_apps06",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_headerlog",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"bedrijf": {
+				"type": "string"
+			},
+			"dms": {
+				"type": "string"
+			},
+			"headerlogTable": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"magiclh_": {
+				"type": "String"
+			},
+			"werkorders": {
+				"type": "String"
+			},
+			"magiclh": {
+				"type": "String"
+			},
+			"maxMagiclh": {
+				"type": "String"
+			},
+			"date": {
+				"type": "String"
+			},
+			"time": {
+				"type": "String"
+			},
+			"rows": {
+				"type": "String"
+			},
+			"UpdatesyncStatus": {
+				"type": "Boolean"
+			},
+			"QueryTextlines": {
+				"type": "String",
+				"defaultValue": "RTSLINE,WIPNO,TEXT001,TEXT002,TEXT003,TEXT004,TEXT005,TEXT006"
+			}
+		},
+		"folder": {
+			"name": "Doorgangen"
+		},
+		"annotations": [],
+		"lastPublishTime": "2020-03-23T14:44:12Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

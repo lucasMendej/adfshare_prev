@@ -1,0 +1,298 @@
+{
+	"name": "DL_idas_custm",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStoreYGROUP",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureDataLakeStoreLocation",
+				"fileName": "custm.parquet",
+				"folderPath": "sternData/dataFactoryLandingZone/idas"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "CBRCO",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "CCUSNO",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "CPBX",
+				"type": "UTF8"
+			},
+			{
+				"name": "CAANH",
+				"type": "UTF8"
+			},
+			{
+				"name": "CTITL",
+				"type": "UTF8"
+			},
+			{
+				"name": "CVLET",
+				"type": "UTF8"
+			},
+			{
+				"name": "CVOEG",
+				"type": "UTF8"
+			},
+			{
+				"name": "CNAAM1",
+				"type": "UTF8"
+			},
+			{
+				"name": "CNAAM2",
+				"type": "UTF8"
+			},
+			{
+				"name": "CADRES",
+				"type": "UTF8"
+			},
+			{
+				"name": "CHUISN",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "CHUIST",
+				"type": "UTF8"
+			},
+			{
+				"name": "CPOCO",
+				"type": "UTF8"
+			},
+			{
+				"name": "CCITY",
+				"type": "UTF8"
+			},
+			{
+				"name": "CLANDK",
+				"type": "UTF8"
+			},
+			{
+				"name": "CTAALK",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "CFICAT",
+				"type": "UTF8"
+			},
+			{
+				"name": "CAROB",
+				"type": "UTF8"
+			},
+			{
+				"name": "CGESL",
+				"type": "UTF8"
+			},
+			{
+				"name": "CFILL5",
+				"type": "UTF8"
+			},
+			{
+				"name": "CDCAT",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "COWDI",
+				"type": "UTF8"
+			},
+			{
+				"name": "CCACR",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "CINVC",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "CVAT",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "CPROF",
+				"type": "UTF8"
+			},
+			{
+				"name": "CTIT",
+				"type": "UTF8"
+			},
+			{
+				"name": "CCAT",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "CSTAT",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "CFILL4",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "CFAKT",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "CSALEM",
+				"type": "UTF8"
+			},
+			{
+				"name": "CBGKD",
+				"type": "UTF8"
+			},
+			{
+				"name": "CBGNR",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "CCSP",
+				"type": "UTF8"
+			},
+			{
+				"name": "CCSPA",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "CDMAIL",
+				"type": "UTF8"
+			},
+			{
+				"name": "CFIL",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "CNAWN1",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "CNAWN2",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "CCWNEW",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "CCWNER",
+				"type": "UTF8"
+			},
+			{
+				"name": "CCSINT",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "CCSLAW",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "CCSNEW",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "CCSNER",
+				"type": "UTF8"
+			},
+			{
+				"name": "CSEGKD",
+				"type": "UTF8"
+			},
+			{
+				"name": "CCDGE",
+				"type": "UTF8"
+			},
+			{
+				"name": "CWSNO",
+				"type": "UTF8"
+			},
+			{
+				"name": "CTELO",
+				"type": "UTF8"
+			},
+			{
+				"name": "CTELR",
+				"type": "UTF8"
+			},
+			{
+				"name": "CFAXNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "CBTWNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "CLIM",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "CCOINV",
+				"type": "UTF8"
+			},
+			{
+				"name": "CBRUPR",
+				"type": "UTF8"
+			},
+			{
+				"name": "CRELT",
+				"type": "UTF8"
+			},
+			{
+				"name": "CSDX",
+				"type": "UTF8"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,17 @@
+{
+	"name": "DynamicsSternCrm4",
+	"properties": {
+		"description": "https://stern.crm4.dynamics.com",
+		"linkedServiceName": {
+			"referenceName": "Dynamics",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DynamicsEntity",
+		"schema": [],
+		"typeProperties": {
+			"entityName": "phonecall"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

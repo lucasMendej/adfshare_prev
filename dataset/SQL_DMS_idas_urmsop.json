@@ -1,0 +1,54 @@
+{
+	"name": "SQL_DMS_idas_urmsop",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "GMBRAN",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "GMSDOC",
+				"type": "decimal",
+				"precision": 7,
+				"scale": 0
+			},
+			{
+				"name": "GMMONT",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "GMDATE",
+				"type": "date"
+			},
+			{
+				"name": "GMBTIM",
+				"type": "time",
+				"scale": 7
+			},
+			{
+				"name": "GMETIM",
+				"type": "time",
+				"scale": 7
+			},
+			{
+				"name": "GMSTAT",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "idas_urmsop"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

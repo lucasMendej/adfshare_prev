@@ -1,0 +1,22 @@
+{
+	"name": "Autoline2",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "ODBC verbinding naar autoline2 database",
+		"annotations": [],
+		"type": "Odbc",
+		"typeProperties": {
+			"connectionString": {
+				"type": "SecureString",
+				"value": "**********"
+			},
+			"authenticationType": "Basic",
+			"userName": "odbc2",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJkZTQ1ZDdhYi05ODRjLTRjZTEtYjAxMy03ZjhlNWNmOGMwYTIiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "WRK9011",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

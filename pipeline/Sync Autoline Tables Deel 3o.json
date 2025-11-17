@@ -1,0 +1,451 @@
+{
+	"name": "Sync Autoline Tables Deel 3o",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy doh",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Get wipnos",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "OdbcSource",
+						"query": {
+							"value": "@concat('select\nDOH.*,\nDSA.SANAME,\nDSAC.SANAME as SANAMEC,\nDSAR.SANAME as SANAMER,\nCARVEH.BVINUM,\nCARVEH.BPRCDE,\nVKTR3.VKOFFN,\ncase when URMSHP.GHBTIM is null then URMSOP.GMBTIM else URMSHP.GHBTIM  end as GHBTIM,\ncase when URMSHP.GHDATE is null then URMSOP.GMDATE else URMSHP.GHDATE end as GHDATE\nFROM DASFPA.DOH DOH\n     LEFT JOIN DASFPA.DSA DSA ON DSA.SAUSER = DOH.OHUSIN and DSA.SAUSER <> ''''\n\tLEFT JOIN DASFPA.DSA DSAC ON DSAC.SAUSER = DOH.OHUSCR and DSAC.SAUSER <> ''''\n\tLEFT JOIN DASFPA.DSA DSAR ON DSAR.SARCPT = DOH.OHRCPT and DSAR.SARCPT <> ''''\n     LEFT JOIN DASFPA.CARVEH CARVEH ON CARVEH.BREGNO = DOH.OHREGN\n     LEFT JOIN DASFPA.VKTR3 VKTR3 ON VKTR3.VKKONT = DOH.OHORDN\n                                     AND VKTR3.VKFILN = DOH.OHBRAN\n\tLEFT JOIN DASFPA.URMSHP URMSHP ON URMSHP.GHSDOC = DOH.OHORDN \n\t\t\t\t\t\t\t  AND URMSHP.GHBRAN = DOH.OHBRAN\nLEFT JOIN DASFPA.URMSOP URMSOP ON URMSOP.GMSDOC = DOH.OHORDN \n\t\t\t\t\t\t\t  AND URMSOP.GMBRAN = DOH.OHBRAN\n\t\t\t\t\t\t\t  where DOH.OHBRAN = ', pipeline().parameters.bedrijf,'  and ohstat IN(0, 1, 2, 3, 4) and ohtype = ''W'' and OHINVC = '''' and cast(concat(concat(concat(concat(concat(doh.OHORCC,doh.OHORYY),''-''),trim(doh.OHORMM)),''-''), doh.OHORDD ) as date) >= ''',formatDateTime(adddays(utcnow(),-365), 'yyyy-MM-dd') , ''' or DOH.OHBRAN = ', pipeline().parameters.bedrijf,' and DOH.OHORDN in (', activity('Get wipnos').output.firstRow.werkorders, ')')",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"preCopyScript": {
+							"value": "@{concat('delete from [dbo].[idas_doh] where OHBRAN = ', pipeline().parameters.bedrijf)}",
+							"type": "Expression"
+						},
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Idas_table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQL_Doorgangen_idas_doh",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Get wipnos",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "@concat('\nSELECT TOP 1 STUFF(\n                      (\n                          SELECT DISTINCT '',''+CAST(wipno AS VARCHAR)\n                          FROM [dbo].doorgangen A where dms = ''idas'' and vestiging = ', pipeline().parameters.bedrijf, ' FOR XML PATH('''')\n                      ), 1, 1, '''') as werkorders ')",
+							"type": "Expression"
+						},
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SQL_Doorgangen_idas_doh",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": true
+				}
+			},
+			{
+				"name": "Copy dot",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Get wipnos",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "OdbcSource",
+						"query": {
+							"value": "@concat('\nselect OTORDN,OTBRAN,OTTEXT from DASFPA.dot where OTORDN in (', activity('Get wipnos').output.firstRow.werkorders, ') and OTBRAN = ',pipeline().parameters.bedrijf)",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"preCopyScript": {
+							"value": "@{concat('delete from [dbo].[idas_dot] where [OTBRAN] = ', pipeline().parameters.bedrijf)}",
+							"type": "Expression"
+						},
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Idas_table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQL_Doorgangen_idas_dot",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy dow",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Get wipnos",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "OdbcSource",
+						"query": {
+							"value": "@concat('\nSELECT * FROM DASFPA.DOW where OWORDN in (', activity('Get wipnos').output.firstRow.werkorders, ') and OWBRAN = ',pipeline().parameters.bedrijf)",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"preCopyScript": {
+							"value": "@{concat('delete from [dbo].[idas_dow] where [OWBRAN] = ', pipeline().parameters.bedrijf)}",
+							"type": "Expression"
+						},
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Idas_table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQL_Doorgangen_idas_dow",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy urmshp",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Get wipnos",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "OdbcSource",
+						"query": {
+							"value": "@concat('\nSELECT * FROM DASFPA.URMSHP where GHSDOC in (', activity('Get wipnos').output.firstRow.werkorders, ') and GHBRAN = ',pipeline().parameters.bedrijf)",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"preCopyScript": {
+							"value": "@{concat('delete from [dbo].[idas_urmshp] where [GHBRAN] = ', pipeline().parameters.bedrijf)}",
+							"type": "Expression"
+						},
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Idas_table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQL_Doorgangen_idas_urmshp",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy urmedw",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Get wipnos",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "OdbcSource",
+						"query": {
+							"value": "@concat('\nSELECT * FROM DASFPA.URMEDW where MWBRAN = ',pipeline().parameters.bedrijf)",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"preCopyScript": {
+							"value": "@{concat('delete from [dbo].[idas_urmedw] where [MWBRAN] = ', pipeline().parameters.bedrijf)}",
+							"type": "Expression"
+						},
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Idas_table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQL_Doorgangen_idas_urmedw",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy urmsop",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Get wipnos",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "OdbcSource",
+						"query": {
+							"value": "@concat('\nSELECT * FROM DASFPA.URMSOP where GMSDOC in (', activity('Get wipnos').output.firstRow.werkorders, ') and GMBRAN = ',pipeline().parameters.bedrijf)",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"preCopyScript": {
+							"value": "@{concat('delete from [dbo].[idas_urmsop] where [GMBRAN] = ', pipeline().parameters.bedrijf)}",
+							"type": "Expression"
+						},
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Idas_table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQL_Doorgangen_idas_urmsop",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy urawkd",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Get wipnos",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "OdbcSource",
+						"query": {
+							"value": "@concat('\nSELECT * FROM DASFPA.URAWKD\nWHERE AWBRAN = ',pipeline().parameters.bedrijf)",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"preCopyScript": {
+							"value": "@{concat('delete from [dbo].[idas_urawkd] where [AWBRAN] = ', pipeline().parameters.bedrijf)}",
+							"type": "Expression"
+						},
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Idas_table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQL_Doorgangen_idas_urawkd",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy urmahp",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Get wipnos",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "OdbcSource",
+						"query": {
+							"value": "@concat('\nSELECT * FROM DASFPA.URMAHP\nWHERE UABRAN = ',pipeline().parameters.bedrijf,' and uadate = ''', formatDateTime(utcnow(), 'yyyy-MM-dd'),'''')",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"preCopyScript": {
+							"value": "@{concat('delete from [dbo].[idas_urmahp] where [UABRAN] = ', pipeline().parameters.bedrijf)}",
+							"type": "Expression"
+						},
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Idas_table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQL_Doorgangen_idas_urmahp",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"parameters": {
+			"bedrijf": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"wipno": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Doorgangen/temp"
+		},
+		"annotations": [],
+		"lastPublishTime": "2019-11-06T14:02:21Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

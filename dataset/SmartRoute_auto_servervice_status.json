@@ -1,0 +1,54 @@
+{
+	"name": "SmartRoute_auto_servervice_status",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SmartTelephony SQL Server",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "Telefoonnummer",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Kenteken",
+				"type": "varchar"
+			},
+			{
+				"name": "Auto_merk",
+				"type": "varchar"
+			},
+			{
+				"name": "Auto_type",
+				"type": "varchar"
+			},
+			{
+				"name": "In_service",
+				"type": "varchar"
+			},
+			{
+				"name": "In_service_datum",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "In_service_status",
+				"type": "varchar"
+			},
+			{
+				"name": "In_Service_gereed",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Auto_Service_status"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

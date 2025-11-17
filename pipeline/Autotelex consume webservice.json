@@ -1,0 +1,282 @@
+{
+	"name": "Autotelex consume webservice",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get token",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/x-www-form-urlencoded"
+					},
+					"url": "https://mijn.autotelex.nl/connect/token",
+					"body": {
+						"value": "@concat('grant_type=client_credentials&client_id=', 'SternNieuw', '&client_secret=', 'l5O_x7yTS3W1IrnsS66XV5y3uOFiVrnFGGMasbqKypyYluMyH-E1AeUc-SibaooUklUfGrbZKOgbc5oqLM_6FA' )",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Get Changed vehicles",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Get token",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Get last update timestamp",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "GET",
+					"headers": {
+						"Authorization": {
+							"value": "@concat('Bearer ', activity('Get token').output.access_token)",
+							"type": "Expression"
+						},
+						"accept": "text/plain"
+					},
+					"url": {
+						"value": "@concat('https://ads-api.autotelex.com/api/v2/stock?includeDeleted=true&modifiedSinceUnixMs=', activity('Get last update timestamp').output.outputParameters.maxdate)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get Changed vehicles",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@json(activity('Get Changed vehicles').output.Response)",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Append variable1",
+							"type": "AppendVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "ChangedVehicles",
+								"value": {
+									"value": "@item().id",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Get vehicle detail",
+							"type": "WebActivity",
+							"dependsOn": [
+								{
+									"activity": "Append variable1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"method": "GET",
+								"headers": {
+									"Authorization": {
+										"value": "@concat('Bearer ', activity('Get token').output.access_token)",
+										"type": "Expression"
+									},
+									"Accept": "application/json"
+								},
+								"url": {
+									"value": "@concat('https://ads-api.autotelex.com/api/v2/stock/' , item().id , '/summary')",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Append to output",
+							"type": "AppendVariable",
+							"dependsOn": [
+								{
+									"activity": "Get vehicle detail",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "Output",
+								"value": {
+									"value": "@activity('Get vehicle detail').output",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Create output json",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "ForEach1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "OutputJson",
+					"value": {
+						"value": "@concat('{[', replace(join(variables('Output'), ','), '''', '\"') , ']}')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Write to dumptable",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create output json",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "DMS_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"parameters": [
+								{
+									"name": "voorraad_json",
+									"type": "String",
+									"value": {
+										"value": "@string(variables('Output'))",
+										"type": "Expression"
+									},
+									"direction": "Input"
+								}
+							],
+							"type": "NonQuery",
+							"text": "-- remove old new recrords\n--delete S\n--from [dbo].[Autotelex_stock] S \n--inner join OPENJSON(@voorraad_Json)\n--\tWITH (adsStockId INT '$.adsStockId') as f on f.adsStockId = S.adsStockId\n\n--insert new data\n\tinsert into [dbo].[Autotelex_stock]\n        SELECT *\n\tFROM OPENJSON(@voorraad_Json)\n\tWITH (\n\t    establishmentId INT 'strict $.establishmentId',\n\t\tadsStockId INT '$.adsStockId',\n\t\tlicensePlate NVARCHAR(50) '$.vehicleInfo.licensePlate',\n\t\tadvertisementTitle nvarchar(255)  '$.advertisementTitle',\n\t\tisAdvertised nvarchar(5) '$.isAdvertised',\n\t\tmodifiedDateUtc nvarchar(50) '$.modifiedDateUtc',\n\t\townerEstablishmentId INT 'strict $.ownerEstablishmentId',\n\t\tcompanyId INT 'strict $.companyId',\n\t\tphysicalLocationId INT 'strict $.physicalLocationId',\n\t\tstockStatus NVARCHAR(50) 'strict $.stockStatus',\n\t\tstockType NVARCHAR(50) 'strict $.stockType',\n\t\tsoldTimestampUtc NVARCHAR(50) 'strict $.soldTimestampUtc',\n\t\tinStockTimestampUtc NVARCHAR(50) 'strict $.inStockTimestampUtc',\n\t\tpresenceStartDate NVARCHAR(50) 'strict $.presenceStartDate',\n\t\tpresenceEndDate NVARCHAR(50) 'strict $.presenceEndDate',\n\t\tdeletedDateTimeUtc NVARCHAR(50) 'strict $.deletedDateTimeUtc',\n\t\tisDeleted nvarchar(5) 'strict $.isDeleted',\n\t\thighlights NVARCHAR(255) 'strict $.highlights',\n\t\tcategory NVARCHAR(25) 'strict $.category',\n\t\tpriceType NVARCHAR(25) 'strict $.priceType',\n\t\tinternalIdentificationNumber NVARCHAR(25) 'strict $.internalIdentificationNumber',\n\t\tvehicleTarget NVARCHAR(25) 'strict $.vehicleTarget',\n\t\tstickerText NVARCHAR(255) 'strict $.stickerText',\n\t\tuseManufacturerOptionName NVARCHAR(5) 'strict $.useManufacturerOptionName',\n\t\ttradeText NVARCHAR(255) 'strict $.tradeText',\n\t\tdmsReference NVARCHAR(25) 'strict $.dmsReference',\n\t\tvehicleInfo_displacement NVARCHAR(25) 'strict $.vehicleInfo.displacement',\n\t\tvehicleInfo_mileage NVARCHAR(25) 'strict $.vehicleInfo.mileage',\n\t\tvehicleInfo_power NVARCHAR(25) 'strict $.vehicleInfo.power',\n\t\tvehicleInfo_powerUnit NVARCHAR(25) 'strict $.vehicleInfo.powerUnit',\n\t\tvehicleInfo_make NVARCHAR(25) 'strict $.vehicleInfo.make',\n\t\tvehicleInfo_model NVARCHAR(25) 'strict $.vehicleInfo.model',\n\t\tvehicleInfo_baseColor NVARCHAR(25) 'strict $.vehicleInfo.baseColor',\n\t\tvehicleInfo_bpmAmountGross NVARCHAR(25) 'strict $.vehicleInfo.bpmAmountGross',\n\t\tvehicleInfo_design NVARCHAR(25) 'strict $.vehicleInfo.design',\n\t\tvehicleInfo_fuelType NVARCHAR(25) 'strict $.vehicleInfo.fuelType',\n\t\tvehicleInfo_transmission NVARCHAR(25) 'strict $.vehicleInfo.transmission',\n\t\tvehicleInfo_vehicleType NVARCHAR(25) 'strict $.vehicleInfo.vehicleType',\n\t\tvehicleInfo_version NVARCHAR(25) 'strict $.vehicleInfo.version',\n\t\tvehicleInfo_vin NVARCHAR(25) 'strict $.vehicleInfo.vin',\n\t\tvehicleInfo_gears NVARCHAR(25) 'strict $.vehicleInfo.gears',\n\t\tvehicleInfo_seats NVARCHAR(25) 'strict $.vehicleInfo.seats',\n\t\tvehicleInfo_baseColor2 NVARCHAR(25) 'strict $.vehicleInfo.baseColor2',\n\t\tvehicleInfo_colorExterior NVARCHAR(25) 'strict $.vehicleInfo.colorExterior',\n\t\tvehicleInfo_batteryCapacity int 'strict $.vehicleInfo.batteryCapacity',\n\t\tvehicleInfo_achievableActionRadius int 'strict $.vehicleInfo.achievableActionRadius'\n\t  ) b\n\n\n\n\t--[], [string[,\n\t--[], \n\t--[], [string[,\n\t--[], [string[,\n\t--[], [string[,\n\t--[], [string[,\n\t--[], [string[,\n\t--[], [string[,\n\t--[], \n\t--[], \n\t--[], [string[,\n\t--[], [string[,\n\t--[vehicleInfo_lacquerTint], [string[,\n\t--[vehicleInfo_colorInterior], [string[,\n\t--[vehicleInfo_externalCharging], true,\n\t--[], \n\t--[vehicleInfo_maxChargeSpeedAC], \n\t--[vehicleInfo_maxChargeSpeedDC], \n\t--[vehicleInfo_minChargeTimeHoursAC], \n\t--[vehicleInfo_minChargeTimeHoursDC], \n\t--[vehicleInfo_minChargeTimeMinutesAC], \n\t--[vehicleInfo_minChargeTimeMinutesDC], \n\t--[vehicleInfo_minChargeTimeFromAC], \n\t--[vehicleInfo_minChargeTimeFromDC], \n\t--[vehicleInfo_minChargeTimeToAC], \n\t--[vehicleInfo_minChargeTimeToDC], \n\t--[], \n \n"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Get last update timestamp",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "DMS_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"parameters": [
+								{
+									"name": "maxdate",
+									"type": "String",
+									"value": "\"\"",
+									"direction": "Output",
+									"size": "20"
+								}
+							],
+							"type": "Query",
+							"text": "select @maxdate = \nCAST(\n      max(\n         DATEDIFF_BIG(MILLISECOND, '1970-01-01', CONVERT(DATETIME, left([modifiedDateUtc],23),126)))\n   AS VARCHAR(20))\n  FROM [dbo].[Autotelex_stock]\n"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			}
+		],
+		"variables": {
+			"ChangedVehicles": {
+				"type": "Array"
+			},
+			"Output": {
+				"type": "Array"
+			},
+			"OutputJson": {
+				"type": "String"
+			},
+			"ltstchange": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Consume Webservices"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-09-28T14:11:09Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

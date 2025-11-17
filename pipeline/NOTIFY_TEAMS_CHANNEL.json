@@ -1,0 +1,127 @@
+{
+	"name": "NOTIFY_TEAMS_CHANNEL",
+	"properties": {
+		"activities": [
+			{
+				"name": "Remove specific characters",
+				"description": "Removes following characters from pipeline.message:\n\" { }",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "pipelineMessageAdjusted",
+					"value": {
+						"value": "@replace(replace(replace(pipeline().parameters.message,'{',''),'}',''),'\"','')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set JSON schema",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Remove specific characters",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "messageCard",
+					"value": {
+						"value": "{\n    \"@type\": \"MessageCard\",\n    \"@context\": \"http://schema.org/extensions\",\n    \"themeColor\": \"0076D7\",\n    \"summary\": \"Pipeline status alert message​​​​\",\n    \"sections\": [\n        {\n            \"activityTitle\": \"Pipeline execution alert​​​​\",\n            \"facts\": [\n                {\n                    \"name\": \"Subscription Id:\",\n                    \"value\": \"@{pipeline().parameters.subscription}\"\n                },\n                {\n                    \"name\": \"Resource Group:\",\n                    \"value\": \"@{pipeline().parameters.resourceGroup}\"\n                },\n                {\n                    \"name\": \"Data Factory Name:\",\n                    \"value\": \"@{pipeline().DataFactory}\"\n                },\n                {\n                    \"name\": \"Company Name:\",\n                    \"value\": \"@{pipeline().parameters.company}\"\n                },\n                {\n                    \"name\": \"Pipeline RunId:\",\n                    \"value\": \"@{pipeline().parameters.runId}\"\n                },\n                {\n                    \"name\": \"Pipline Name:\",\n                    \"value\": \"@{pipeline().parameters.name}\"\n                },\n                {\n                    \"name\": \"Pipeline Status:\",\n                    \"value\": \"@{pipeline().parameters.status}\"\n                },\n                {\n                    \"name\": \"Execution Start Time (UTC):\",\n                    \"value\": \"@{pipeline().parameters.triggerTime}\"\n                },\n                {\n                    \"name\": \"Execution Finish Time (UTC):\",\n                    \"value\": \"@{pipeline().parameters.executionEndTime}\"\n                },\n                {\n                    \"name\": \"Execution Duration (s):\",\n                    \"value\": \"@{pipeline().parameters.runDuration}\"\n                },\n                {\n                    \"name\": \"Message:\",\n                    \"value\": \"@{variables('pipelineMessageAdjusted')}\"\n                },\n                {\n                    \"name\": \"Notification Time (UTC):\",\n                    \"value\": \"@{utcnow()}\"\n                }\n            ],\n            \"markdown\": true\n        }\n    ],\n    \"potentialAction\": [\n        {\n            \"@type\": \"OpenUri\",\n            \"name\": \"View pipeline run\",\n            \"targets\": [\n                {\n                    \"os\": \"default\",\n                    \"uri\": \"@{concat('https://adf.azure.com/monitoring/pipelineruns/',pipeline().parameters.runId,'?factory=/subscriptions/',pipeline().parameters.subscription,'/resourceGroups/',pipeline().parameters.resourceGroup,'/providers/Microsoft.DataFactory/factories/',pipeline().DataFactory)}\"\n                }\n            ]\n        }\n    ]\n}",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Invoke Teams Webhook Url",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Set JSON schema",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"url": "https://hedinbil.webhook.office.com/webhookb2/a69c51c8-acbd-4284-a0fd-11844435ffc8@578e8159-3cd3-4036-9b16-eca64560a31c/IncomingWebhook/fa83bc9fb8dc4e769138cf1610fcf87c/49497b01-c732-4ca9-b156-b51fa71d0ef9/V2gaDD-tjIGjCDE8To9HW43QfuZqltjojhJlBJefmXnvU1",
+					"body": {
+						"value": "@json(variables('messageCard'))",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"subscription": {
+				"type": "string"
+			},
+			"resourceGroup": {
+				"type": "string"
+			},
+			"runId": {
+				"type": "string"
+			},
+			"name": {
+				"type": "string"
+			},
+			"triggerTime": {
+				"type": "string"
+			},
+			"status": {
+				"type": "string"
+			},
+			"message": {
+				"type": "string"
+			},
+			"executionEndTime": {
+				"type": "string"
+			},
+			"runDuration": {
+				"type": "string"
+			},
+			"teamWebhookUrl": {
+				"type": "string",
+				"defaultValue": "https://hedinbil.webhook.office.com/webhookb2/0f958e46-cd26-42f7-8e9b-7ae761a2bf5d@578e8159-3cd3-4036-9b16-eca64560a31c/IncomingWebhook/c58224cd03d04675b34a043a24147316/d88cd491-3374-4bc8-b34c-a09ac415ee7e "
+			},
+			"company": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"messageCard": {
+				"type": "String"
+			},
+			"pipelineMessageAdjusted": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Supply to OEM"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-10-21T14:06:44Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

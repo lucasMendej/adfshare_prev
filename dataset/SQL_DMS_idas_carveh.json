@@ -1,0 +1,360 @@
+{
+	"name": "SQL_DMS_idas_carveh",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "_SET",
+				"type": "varchar"
+			},
+			{
+				"name": "_COMPANY",
+				"type": "varchar"
+			},
+			{
+				"name": "_LTSTUPDATE",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "_LTSTCHECK",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "BDELCD",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "BBRNCH",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "BCUSNO",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "BREGNO",
+				"type": "varchar"
+			},
+			{
+				"name": "BFILL1",
+				"type": "varchar"
+			},
+			{
+				"name": "BCHAVA",
+				"type": "varchar"
+			},
+			{
+				"name": "BMODYR",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "BCHANO",
+				"type": "varchar"
+			},
+			{
+				"name": "BVINUM",
+				"type": "varchar"
+			},
+			{
+				"name": "BENGNO",
+				"type": "varchar"
+			},
+			{
+				"name": "BMRKCD",
+				"type": "varchar"
+			},
+			{
+				"name": "BCOL",
+				"type": "varchar"
+			},
+			{
+				"name": "BINT",
+				"type": "varchar"
+			},
+			{
+				"name": "BOPT",
+				"type": "varchar"
+			},
+			{
+				"name": "BSCODE",
+				"type": "varchar"
+			},
+			{
+				"name": "BDKEY",
+				"type": "varchar"
+			},
+			{
+				"name": "BIKEY",
+				"type": "varchar"
+			},
+			{
+				"name": "BVOPER",
+				"type": "varchar"
+			},
+			{
+				"name": "BWARMO",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "BREDAT",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "BLSDAT",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "BNEWUS",
+				"type": "varchar"
+			},
+			{
+				"name": "BAFMIL",
+				"type": "varchar"
+			},
+			{
+				"name": "BLMILE",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "BLVDAT",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "BLVCD",
+				"type": "varchar"
+			},
+			{
+				"name": "BNVDAT",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "BCREMD",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "BLCALL",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "BINACT",
+				"type": "varchar"
+			},
+			{
+				"name": "BCAMP",
+				"type": "varchar"
+			},
+			{
+				"name": "BNSDAT",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "BLU",
+				"type": "varchar"
+			},
+			{
+				"name": "BUSER",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "BPRCDE",
+				"type": "varchar"
+			},
+			{
+				"name": "BLBEE",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "BOWDIC",
+				"type": "varchar"
+			},
+			{
+				"name": "BSALM",
+				"type": "varchar"
+			},
+			{
+				"name": "BFILL3",
+				"type": "varchar"
+			},
+			{
+				"name": "BINCAR",
+				"type": "varchar"
+			},
+			{
+				"name": "BINMYR",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "BINMIL",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "BINTYP",
+				"type": "varchar"
+			},
+			{
+				"name": "BINCHA",
+				"type": "varchar"
+			},
+			{
+				"name": "BINCD",
+				"type": "varchar"
+			},
+			{
+				"name": "BNCFIN",
+				"type": "varchar"
+			},
+			{
+				"name": "BLSMIL",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "BPRMIL",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "BFILL5",
+				"type": "varchar"
+			},
+			{
+				"name": "BCOCD",
+				"type": "varchar"
+			},
+			{
+				"name": "BCOFDT",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "BCOTAR",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "BCOMXM",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "BCOMXA",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "BYEINS",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "BINDT1",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "BINAP1",
+				"type": "varchar"
+			},
+			{
+				"name": "BINDT2",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "BINAP2",
+				"type": "varchar"
+			},
+			{
+				"name": "BGRDAT",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "BGRMIL",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "BAPMIL",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "BWSNO",
+				"type": "varchar"
+			},
+			{
+				"name": "BPUSR",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "BKMPJ",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "idas_carveh"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

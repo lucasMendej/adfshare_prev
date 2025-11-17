@@ -1,0 +1,161 @@
+{
+	"name": "CRM_SQL_LABOURLINES",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CRM_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "DMS",
+				"type": "varchar"
+			},
+			{
+				"name": "BEDRIJF",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ACCOUNT",
+				"type": "char"
+			},
+			{
+				"name": "ACTLINE",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "ALLOWED",
+				"type": "decimal",
+				"precision": 11,
+				"scale": 2
+			},
+			{
+				"name": "BONUSTIM",
+				"type": "decimal",
+				"precision": 11,
+				"scale": 2
+			},
+			{
+				"name": "CONTRIB",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 3
+			},
+			{
+				"name": "DATECOST",
+				"type": "date"
+			},
+			{
+				"name": "DEPT",
+				"type": "char"
+			},
+			{
+				"name": "DESC_",
+				"type": "char"
+			},
+			{
+				"name": "DISCPC",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 4
+			},
+			{
+				"name": "EXTPRICE",
+				"type": "decimal",
+				"precision": 15,
+				"scale": 2
+			},
+			{
+				"name": "FRANCODE",
+				"type": "char"
+			},
+			{
+				"name": "INVOICE",
+				"type": "decimal",
+				"precision": 8,
+				"scale": 0
+			},
+			{
+				"name": "INVSTAT",
+				"type": "char"
+			},
+			{
+				"name": "LINE",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "LOADSTAT",
+				"type": "char"
+			},
+			{
+				"name": "MENU",
+				"type": "char"
+			},
+			{
+				"name": "MENUCODE",
+				"type": "char"
+			},
+			{
+				"name": "MENUFLAG",
+				"type": "char"
+			},
+			{
+				"name": "MENUPRCE",
+				"type": "decimal",
+				"precision": 15,
+				"scale": 2
+			},
+			{
+				"name": "RATE",
+				"type": "decimal",
+				"precision": 8,
+				"scale": 2
+			},
+			{
+				"name": "RTSCODE",
+				"type": "char"
+			},
+			{
+				"name": "RTSCOMPY",
+				"type": "char"
+			},
+			{
+				"name": "SALTYPE",
+				"type": "char"
+			},
+			{
+				"name": "TAKEN",
+				"type": "decimal",
+				"precision": 11,
+				"scale": 2
+			},
+			{
+				"name": "TYPEANAL",
+				"type": "char"
+			},
+			{
+				"name": "TYPECODE",
+				"type": "char"
+			},
+			{
+				"name": "WIPNO",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "WLCLOCKR",
+				"type": "char"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "SO_XX_LABOURLINES"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

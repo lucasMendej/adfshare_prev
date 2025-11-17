@@ -1,0 +1,1254 @@
+{
+	"name": "Copy SO Tables",
+	"properties": {
+		"activities": [
+			{
+				"name": "If Autoline1",
+				"type": "IfCondition",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(pipeline().parameters.dms, 'autoline1')",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Copy partslines autoline1",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@concat('SELECT ''',pipeline().parameters.dms,''' as DMS, ''',pipeline().parameters.bedrijf,''' as BEDRIJF,ACCOUNT ,DATEIN,DISCOUNT ,INVSTAT ,LINE ,ORDERQTY ,ORDSTAT ,PRODGRP ,SELLPRCE ,WIPNO ,PART ,ACTLINE ,INVOICE ,DESCRIPN ,DECARDED ,DEPT,CONTRIB,EXTPRICE ,TARMAGIC FROM ',pipeline().parameters.partlinesTable,' where WIPNO in (', pipeline().parameters.werkorders, ')' )",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@{concat('delete from autoline_partslines where DMS =''',pipeline().parameters.dms,''' and BEDRIJF = ',pipeline().parameters.bedrijf,' and WIPNO in (',pipeline().parameters.werkorders,')')}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"parallelCopies": 32,
+								"dataIntegrationUnits": 32
+							},
+							"inputs": [
+								{
+									"referenceName": "autoline1_tables_prod_srv_apps06",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_partslines",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "Copy labourlines autoline1",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@concat('SELECT ''',pipeline().parameters.dms,''' as DMS, ''',pipeline().parameters.bedrijf,''' as BEDRIJF, ACCOUNT ,ACTLINE ,ALLOWED ,BONUSTIM ,CONTRIB ,DATECOST ,DEPT ,DESC_ ,DISCPC ,EXTPRICE ,FRANCODE ,INVOICE ,INVSTAT ,LINE ,LOADSTAT ,MENU ,MENUCODE ,MENUFLAG ,MENUPRCE ,RATE ,RTSCODE ,RTSCOMPY ,SALTYPE ,TAKEN ,TYPEANAL ,TYPECODE ,WIPNO ,WLCLOCKR ,TARMAGIC FROM ',pipeline().parameters.labourlinesTable,' where WIPNO in (', pipeline().parameters.werkorders, ')' )",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@{concat('delete from autoline_labourlines where DMS =''',pipeline().parameters.dms,''' and BEDRIJF = ',pipeline().parameters.bedrijf,' and WIPNO in (',pipeline().parameters.werkorders,')')}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"parallelCopies": 32,
+								"dataIntegrationUnits": 32
+							},
+							"inputs": [
+								{
+									"referenceName": "autoline1_tables_prod_srv_apps06",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_labourlines",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "Copy headerrecords autoline1",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@concat('SELECT ''',pipeline().parameters.dms,''' as DMS, ''',pipeline().parameters.bedrijf,''' as BEDRIJF, ACCOUNT ,CHASSIS ,CREATED ,CUSTCONT ,CUSTNAME ,DATEIN ,DATEOUT, DATEREG ,DELFLAG ,DEPT ,FRANCODE ,INVNO ,MAGICT ,MAGICV ,MODEL ,OPBOOKIN ,PHONE ,REGNO ,REPREP ,SALTYPE ,SERTEXT ,SERVCODE ,TEXT001 ,TEXT002 ,TEXT003 ,TEXT004 ,TIMEIN ,TIMEOUT ,WIPNO ,VSBNO ,WTIMEOUT ,WDATEOUT ,MILEAGE, WDATEIN, WTIMEIN ,WLINOUT, OPCREATE, OPBOOKOU, OPINVOIC, CUSTWAIT, COURTREQ, WIPPARTS FROM ',pipeline().parameters.headerrecordsTable,' WHERE WIPNO in (', pipeline().parameters.werkorders, ') ' )",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@{concat('delete from autoline_headerrecords where DMS =''',pipeline().parameters.dms,''' and BEDRIJF = ',pipeline().parameters.bedrijf,' and WIPNO in (',pipeline().parameters.werkorders,')')}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"parallelCopies": 32,
+								"dataIntegrationUnits": 32
+							},
+							"inputs": [
+								{
+									"referenceName": "autoline1_tables_prod_srv_apps06",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_headerrecords",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "Select MAX Magiclh autoline1",
+							"type": "Lookup",
+							"dependsOn": [
+								{
+									"activity": "Copy headerrecords autoline1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@{concat('SELECT MAX(MAGICLH) as magiclh FROM autoline_headerlog\nWHERE bedrijf = ''',pipeline().parameters.bedrijf,'''\n      AND DMS = ''',pipeline().parameters.dms,'''\n      ')}",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "SQL_Doorgangen_autoline_headerlog",
+									"type": "DatasetReference"
+								},
+								"firstRowOnly": false
+							}
+						},
+						{
+							"name": "SqlServerStoredProcedure2",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Select MAX Magiclh autoline1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[autoline_update_sync_status]",
+								"storedProcedureParameters": {
+									"DATEI_": {
+										"value": null,
+										"type": "String"
+									},
+									"DMS": {
+										"value": {
+											"value": "@pipeline().parameters.dms",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"MAGICLH_": {
+										"value": {
+											"value": "@string(activity('Select MAX Magiclh autoline1').output.value[0].magiclh)",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"tablename_": {
+										"value": {
+											"value": "@pipeline().parameters.headerlogTable",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TIMEI_": {
+										"value": null,
+										"type": "Double"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "DOORGANGEN_PROD_SRV_SQL_00",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "If Autoline2",
+				"type": "IfCondition",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(pipeline().parameters.dms, 'autoline2')",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Copy partslines autoline2",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@concat('SELECT ''',pipeline().parameters.dms,''' as DMS, ''',pipeline().parameters.bedrijf,''' as BEDRIJF,ACCOUNT ,DATEIN,DISCOUNT ,INVSTAT ,LINE ,ORDERQTY ,ORDSTAT ,PRODGRP ,SELLPRCE ,WIPNO ,PART ,ACTLINE ,INVOICE ,DESCRIPN ,DECARDED ,DEPT,CONTRIB,EXTPRICE ,TARMAGIC FROM ',pipeline().parameters.partlinesTable,' where WIPNO in (', pipeline().parameters.werkorders, ')' )",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@{concat('delete from autoline_partslines where DMS =''',pipeline().parameters.dms,''' and BEDRIJF = ',pipeline().parameters.bedrijf,' and WIPNO in (',pipeline().parameters.werkorders,')')}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"parallelCopies": 32,
+								"dataIntegrationUnits": 32
+							},
+							"inputs": [
+								{
+									"referenceName": "Autoline2_Table",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_partslines",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "Copy labourlines autoline2",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@concat('SELECT ''',pipeline().parameters.dms,''' as DMS, ''',pipeline().parameters.bedrijf,''' as BEDRIJF, ACCOUNT ,ACTLINE ,ALLOWED ,BONUSTIM ,CONTRIB ,DATECOST ,DEPT ,DESC_ ,DISCPC ,EXTPRICE ,FRANCODE ,INVOICE ,INVSTAT ,LINE ,LOADSTAT ,MENU ,MENUCODE ,MENUFLAG ,MENUPRCE ,RATE ,RTSCODE ,RTSCOMPY ,SALTYPE ,TAKEN ,TYPEANAL ,TYPECODE ,WIPNO ,WLCLOCKR ,TARMAGIC FROM ',pipeline().parameters.labourlinesTable,' where WIPNO in (', pipeline().parameters.werkorders, ')' )",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@{concat('delete from autoline_labourlines where DMS =''',pipeline().parameters.dms,''' and BEDRIJF = ',pipeline().parameters.bedrijf,' and WIPNO in (',pipeline().parameters.werkorders,')')}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"parallelCopies": 32,
+								"dataIntegrationUnits": 32
+							},
+							"inputs": [
+								{
+									"referenceName": "Autoline2_Table",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_labourlines",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "Copy headerrecords autoline2",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@concat('SELECT ''',pipeline().parameters.dms,''' as DMS, ''',pipeline().parameters.bedrijf,''' as BEDRIJF, ACCOUNT ,CHASSIS ,CREATED ,CUSTCONT ,CUSTNAME ,DATEIN ,DATEOUT, DATEREG ,DELFLAG ,DEPT ,FRANCODE ,INVNO ,MAGICT ,MAGICV ,MODEL ,OPBOOKIN ,PHONE ,REGNO ,REPREP ,SALTYPE ,SERTEXT ,SERVCODE ,TEXT001 ,TEXT002 ,TEXT003 ,TEXT004 ,TIMEIN ,TIMEOUT ,WIPNO ,VSBNO ,WTIMEOUT ,WDATEOUT ,MILEAGE, WDATEIN, WTIMEIN ,WLINOUT, OPCREATE, OPBOOKOU, OPINVOIC, CUSTWAIT, COURTREQ, WIPPARTS FROM ',pipeline().parameters.headerrecordsTable,' WHERE WIPNO in (', pipeline().parameters.werkorders, ') ' )",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@{concat('delete from autoline_headerrecords where DMS =''',pipeline().parameters.dms,''' and BEDRIJF = ',pipeline().parameters.bedrijf,' and WIPNO in (',pipeline().parameters.werkorders,')')}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"parallelCopies": 32,
+								"dataIntegrationUnits": 32
+							},
+							"inputs": [
+								{
+									"referenceName": "Autoline2_Table",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_headerrecords",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "Select MAX Magiclh autoline2",
+							"type": "Lookup",
+							"dependsOn": [
+								{
+									"activity": "Copy headerrecords autoline2",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@{concat('SELECT MAX(MAGICLH) as magiclh FROM autoline_headerlog\nWHERE bedrijf = ''',pipeline().parameters.bedrijf,'''\n      AND DMS = ''',pipeline().parameters.dms,'''\n      ')}",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "SQL_Doorgangen_autoline_headerlog",
+									"type": "DatasetReference"
+								},
+								"firstRowOnly": false
+							}
+						},
+						{
+							"name": "SqlServerStoredProcedure3",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Select MAX Magiclh autoline2",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[autoline_update_sync_status]",
+								"storedProcedureParameters": {
+									"DATEI_": {
+										"value": null,
+										"type": "String"
+									},
+									"DMS": {
+										"value": {
+											"value": "@pipeline().parameters.dms",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"MAGICLH_": {
+										"value": {
+											"value": "@string(activity('Select MAX Magiclh autoline2').output.value[0].magiclh)",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"tablename_": {
+										"value": {
+											"value": "@pipeline().parameters.headerlogTable",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TIMEI_": {
+										"value": null,
+										"type": "Double"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "DOORGANGEN_PROD_SRV_SQL_00",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "If Autoline3",
+				"type": "IfCondition",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(pipeline().parameters.dms, 'autoline3')",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Copy partslines autoline3",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@concat('SELECT ''',pipeline().parameters.dms,''' as DMS, ''',pipeline().parameters.bedrijf,''' as BEDRIJF,ACCOUNT ,DATEIN,DISCOUNT ,INVSTAT ,LINE ,ORDERQTY ,ORDSTAT ,PRODGRP ,SELLPRCE ,WIPNO ,PART ,ACTLINE ,INVOICE ,DESCRIPN ,DECARDED ,DEPT,CONTRIB,EXTPRICE ,TARMAGIC FROM ',pipeline().parameters.partlinesTable,' where WIPNO in (', pipeline().parameters.werkorders, ')' )",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@{concat('delete from autoline_partslines where DMS =''',pipeline().parameters.dms,''' and BEDRIJF = ',pipeline().parameters.bedrijf,' and WIPNO in (',pipeline().parameters.werkorders,')')}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"parallelCopies": 32,
+								"dataIntegrationUnits": 32
+							},
+							"inputs": [
+								{
+									"referenceName": "autoline3_tables_prod_srv_apps06",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_partslines",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "Copy labourlines autoline3",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@concat('SELECT ''',pipeline().parameters.dms,''' as DMS, ''',pipeline().parameters.bedrijf,''' as BEDRIJF, ACCOUNT ,ACTLINE ,ALLOWED ,BONUSTIM ,CONTRIB ,DATECOST ,DEPT ,DESC_ ,DISCPC ,EXTPRICE ,FRANCODE ,INVOICE ,INVSTAT ,LINE ,LOADSTAT ,MENU ,MENUCODE ,MENUFLAG ,MENUPRCE ,RATE ,RTSCODE ,RTSCOMPY ,SALTYPE ,TAKEN ,TYPEANAL ,TYPECODE ,WIPNO ,WLCLOCKR ,TARMAGIC FROM ',pipeline().parameters.labourlinesTable,' where WIPNO in (', pipeline().parameters.werkorders, ')' )",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@{concat('delete from autoline_labourlines where DMS =''',pipeline().parameters.dms,''' and BEDRIJF = ',pipeline().parameters.bedrijf,' and WIPNO in (',pipeline().parameters.werkorders,')')}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"parallelCopies": 32,
+								"dataIntegrationUnits": 32
+							},
+							"inputs": [
+								{
+									"referenceName": "autoline3_tables_prod_srv_apps06",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_labourlines",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "Copy headerrecords autoline3",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@concat('SELECT ''',pipeline().parameters.dms,''' as DMS, ''',pipeline().parameters.bedrijf,''' as BEDRIJF, ACCOUNT ,CHASSIS ,CREATED ,CUSTCONT ,CUSTNAME ,DATEIN ,DATEOUT, DATEREG ,DELFLAG ,DEPT ,FRANCODE ,INVNO ,MAGICT ,MAGICV ,MODEL ,OPBOOKIN ,PHONE ,REGNO ,REPREP ,SALTYPE ,SERTEXT ,SERVCODE ,TEXT001 ,TEXT002 ,TEXT003 ,TEXT004 ,TIMEIN ,TIMEOUT ,WIPNO ,VSBNO ,WTIMEOUT ,WDATEOUT ,MILEAGE, WDATEIN, WTIMEIN ,WLINOUT, OPCREATE, OPBOOKOU, OPINVOIC, CUSTWAIT, COURTREQ, WIPPARTS FROM ',pipeline().parameters.headerrecordsTable,' WHERE WIPNO in (', pipeline().parameters.werkorders, ') ' )",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@{concat('delete from autoline_headerrecords where DMS =''',pipeline().parameters.dms,''' and BEDRIJF = ',pipeline().parameters.bedrijf,' and WIPNO in (',pipeline().parameters.werkorders,')')}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"parallelCopies": 32,
+								"dataIntegrationUnits": 32
+							},
+							"inputs": [
+								{
+									"referenceName": "autoline3_tables_prod_srv_apps06",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_headerrecords",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "Select MAX Magiclh autoline3",
+							"type": "Lookup",
+							"dependsOn": [
+								{
+									"activity": "Copy headerrecords autoline3",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@{concat('SELECT MAX(MAGICLH) as magiclh FROM autoline_headerlog\nWHERE bedrijf = ''',pipeline().parameters.bedrijf,'''\n      AND DMS = ''',pipeline().parameters.dms,'''\n      ')}",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "SQL_Doorgangen_autoline_headerlog",
+									"type": "DatasetReference"
+								},
+								"firstRowOnly": false
+							}
+						},
+						{
+							"name": "SqlServerStoredProcedure1",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Select MAX Magiclh autoline3",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[autoline_update_sync_status]",
+								"storedProcedureParameters": {
+									"DATEI_": {
+										"value": null,
+										"type": "String"
+									},
+									"DMS": {
+										"value": {
+											"value": "@pipeline().parameters.dms",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"MAGICLH_": {
+										"value": {
+											"value": "@string(activity('Select MAX Magiclh autoline3').output.value[0].magiclh)",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"tablename_": {
+										"value": {
+											"value": "@pipeline().parameters.headerlogTable",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TIMEI_": {
+										"value": null,
+										"type": "Double"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "DOORGANGEN_PROD_SRV_SQL_00",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "If Autoline4",
+				"type": "IfCondition",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(pipeline().parameters.dms, 'autoline4')",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Copy partslines autoline",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@concat('SELECT ''',pipeline().parameters.dms,''' as DMS, ''',pipeline().parameters.bedrijf,''' as BEDRIJF,ACCOUNT ,DATEIN,DISCOUNT ,INVSTAT ,LINE ,ORDERQTY ,ORDSTAT ,PRODGRP ,SELLPRCE ,WIPNO ,PART ,ACTLINE ,INVOICE ,DESCRIPN ,DECARDED ,DEPT,CONTRIB,EXTPRICE ,TARMAGIC FROM ',pipeline().parameters.partlinesTable,' where WIPNO in (', pipeline().parameters.werkorders, ')' )",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@{concat('delete from autoline_partslines where DMS =''',pipeline().parameters.dms,''' and BEDRIJF = ',pipeline().parameters.bedrijf,' and WIPNO in (',pipeline().parameters.werkorders,')')}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"parallelCopies": 32,
+								"dataIntegrationUnits": 32
+							},
+							"inputs": [
+								{
+									"referenceName": "Autoline4_Table",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_partslines",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "Copy labourlines autoline4",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@concat('SELECT ''',pipeline().parameters.dms,''' as DMS, ''',pipeline().parameters.bedrijf,''' as BEDRIJF, ACCOUNT ,ACTLINE ,ALLOWED ,BONUSTIM ,CONTRIB ,DATECOST ,DEPT ,DESC_ ,DISCPC ,EXTPRICE ,FRANCODE ,INVOICE ,INVSTAT ,LINE ,LOADSTAT ,MENU ,MENUCODE ,MENUFLAG ,MENUPRCE ,RATE ,RTSCODE ,RTSCOMPY ,SALTYPE ,TAKEN ,TYPEANAL ,TYPECODE ,WIPNO ,WLCLOCKR FROM ',pipeline().parameters.labourlinesTable,' where WIPNO in (', pipeline().parameters.werkorders, ')' )",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@{concat('delete from autoline_labourlines where DMS =''',pipeline().parameters.dms,''' and BEDRIJF = ',pipeline().parameters.bedrijf,' and WIPNO in (',pipeline().parameters.werkorders,')')}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"parallelCopies": 32,
+								"dataIntegrationUnits": 32
+							},
+							"inputs": [
+								{
+									"referenceName": "Autoline4_Table",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_labourlines",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "Copy headerrecords autoline4",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@concat('SELECT ''',pipeline().parameters.dms,''' as DMS, ''',pipeline().parameters.bedrijf,''' as BEDRIJF, ACCOUNT ,CHASSIS ,CREATED ,CUSTCONT ,CUSTNAME ,DATEIN ,DATEOUT, DATEREG ,DELFLAG ,DEPT ,FRANCODE ,INVNO ,MAGICT ,MAGICV ,MODEL ,OPBOOKIN ,PHONE ,REGNO ,REPREP ,SALTYPE ,SERTEXT ,SERVCODE ,TEXT001 ,TEXT002 ,TEXT003 ,TEXT004 ,TIMEIN ,TIMEOUT ,WIPNO ,VSBNO ,WTIMEOUT ,WDATEOUT ,MILEAGE, WDATEIN, WTIMEIN ,WLINOUT, OPCREATE, OPBOOKOU, OPINVOIC, CUSTWAIT, COURTREQ, WIPPARTS FROM ',pipeline().parameters.headerrecordsTable,' WHERE WIPNO in (', pipeline().parameters.werkorders, ') ' )",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@{concat('delete from autoline_headerrecords where DMS =''',pipeline().parameters.dms,''' and BEDRIJF = ',pipeline().parameters.bedrijf,' and WIPNO in (',pipeline().parameters.werkorders,')')}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"parallelCopies": 32,
+								"dataIntegrationUnits": 32
+							},
+							"inputs": [
+								{
+									"referenceName": "Autoline4_Table",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_headerrecords",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "Select MAX Magiclh autoline4",
+							"type": "Lookup",
+							"dependsOn": [
+								{
+									"activity": "Copy headerrecords autoline4",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@{concat('SELECT MAX(MAGICLH) as magiclh FROM autoline_headerlog\nWHERE bedrijf = ''',pipeline().parameters.bedrijf,'''\n      AND DMS = ''',pipeline().parameters.dms,'''\n      ')}",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "SQL_Doorgangen_autoline_headerlog",
+									"type": "DatasetReference"
+								},
+								"firstRowOnly": false
+							}
+						},
+						{
+							"name": "SqlServerStoredProcedure4",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Select MAX Magiclh autoline4",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[autoline_update_sync_status]",
+								"storedProcedureParameters": {
+									"DATEI_": {
+										"value": null,
+										"type": "String"
+									},
+									"DMS": {
+										"value": {
+											"value": "@pipeline().parameters.dms",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"MAGICLH_": {
+										"value": {
+											"value": "@string(activity('Select MAX Magiclh autoline4').output.value[0].magiclh)",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"tablename_": {
+										"value": {
+											"value": "@pipeline().parameters.headerlogTable",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TIMEI_": {
+										"value": null,
+										"type": "Double"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "DOORGANGEN_PROD_SRV_SQL_00",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "If Autoline5",
+				"type": "IfCondition",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(pipeline().parameters.dms, 'autoline5')",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Copy partslines autoline5",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@concat('SELECT ''',pipeline().parameters.dms,''' as DMS, ''',pipeline().parameters.bedrijf,''' as BEDRIJF,ACCOUNT ,DATEIN,DISCOUNT ,INVSTAT ,LINE ,ORDERQTY ,ORDSTAT ,PRODGRP ,SELLPRCE ,WIPNO ,PART ,ACTLINE ,INVOICE ,DESCRIPN ,DECARDED ,DEPT,CONTRIB,EXTPRICE ,TARMAGIC FROM ',pipeline().parameters.partlinesTable,' where WIPNO in (', pipeline().parameters.werkorders, ')' )",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@{concat('delete from autoline_partslines where DMS =''',pipeline().parameters.dms,''' and BEDRIJF = ',pipeline().parameters.bedrijf,' and WIPNO in (',pipeline().parameters.werkorders,')')}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"parallelCopies": 32,
+								"dataIntegrationUnits": 32
+							},
+							"inputs": [
+								{
+									"referenceName": "autoline5_tables_prod_srv_apps06",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_partslines",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "Copy labourlines autoline5",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@concat('SELECT ''',pipeline().parameters.dms,''' as DMS, ''',pipeline().parameters.bedrijf,''' as BEDRIJF, ACCOUNT ,ACTLINE ,ALLOWED ,BONUSTIM ,CONTRIB ,DATECOST ,DEPT ,DESC_ ,DISCPC ,EXTPRICE ,FRANCODE ,INVOICE ,INVSTAT ,LINE ,LOADSTAT ,MENU ,MENUCODE ,MENUFLAG ,MENUPRCE ,RATE ,RTSCODE ,RTSCOMPY ,SALTYPE ,TAKEN ,TYPEANAL ,TYPECODE ,WIPNO ,WLCLOCKR ,TARMAGIC FROM ',pipeline().parameters.labourlinesTable,' where WIPNO in (', pipeline().parameters.werkorders, ')' )",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@{concat('delete from autoline_labourlines where DMS =''',pipeline().parameters.dms,''' and BEDRIJF = ',pipeline().parameters.bedrijf,' and WIPNO in (',pipeline().parameters.werkorders,')')}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"parallelCopies": 32,
+								"dataIntegrationUnits": 32
+							},
+							"inputs": [
+								{
+									"referenceName": "autoline5_tables_prod_srv_apps06",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_labourlines",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "Copy headerrecords autoline5",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@concat('SELECT ''',pipeline().parameters.dms,''' as DMS, ''',pipeline().parameters.bedrijf,''' as BEDRIJF, ACCOUNT ,CHASSIS ,CREATED ,CUSTCONT ,CUSTNAME ,DATEIN ,DATEOUT, DATEREG ,DELFLAG ,DEPT ,FRANCODE ,INVNO ,MAGICT ,MAGICV ,MODEL ,OPBOOKIN ,PHONE ,REGNO ,REPREP ,SALTYPE ,SERTEXT ,SERVCODE ,TEXT001 ,TEXT002 ,TEXT003 ,TEXT004 ,TIMEIN ,TIMEOUT ,WIPNO ,VSBNO ,WTIMEOUT ,WDATEOUT ,MILEAGE, WDATEIN, WTIMEIN ,WLINOUT, OPCREATE, OPBOOKOU, OPINVOIC, CUSTWAIT, COURTREQ, WIPPARTS FROM ',pipeline().parameters.headerrecordsTable,' WHERE WIPNO in (', pipeline().parameters.werkorders, ') ' )",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@{concat('delete from autoline_headerrecords where DMS =''',pipeline().parameters.dms,''' and BEDRIJF = ',pipeline().parameters.bedrijf,' and WIPNO in (',pipeline().parameters.werkorders,')')}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"parallelCopies": 32,
+								"dataIntegrationUnits": 32
+							},
+							"inputs": [
+								{
+									"referenceName": "autoline5_tables_prod_srv_apps06",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_headerrecords",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "Select MAX Magiclh autoline5",
+							"type": "Lookup",
+							"dependsOn": [
+								{
+									"activity": "Copy headerrecords autoline5",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@{concat('SELECT MAX(MAGICLH) as magiclh FROM autoline_headerlog\nWHERE bedrijf = ''',pipeline().parameters.bedrijf,'''\n      AND DMS = ''',pipeline().parameters.dms,'''\n      ')}",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "SQL_Doorgangen_autoline_headerlog",
+									"type": "DatasetReference"
+								},
+								"firstRowOnly": false
+							}
+						},
+						{
+							"name": "SqlServerStoredProcedure5",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Select MAX Magiclh autoline5",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[autoline_update_sync_status]",
+								"storedProcedureParameters": {
+									"DATEI_": {
+										"value": null,
+										"type": "String"
+									},
+									"DMS": {
+										"value": {
+											"value": "@pipeline().parameters.dms",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"MAGICLH_": {
+										"value": {
+											"value": "@string(activity('Select MAX Magiclh autoline5').output.value[0].magiclh)",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"tablename_": {
+										"value": {
+											"value": "@pipeline().parameters.headerlogTable",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TIMEI_": {
+										"value": null,
+										"type": "Double"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "DOORGANGEN_PROD_SRV_SQL_00",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"dms": {
+				"type": "string"
+			},
+			"werkorders": {
+				"type": "string"
+			},
+			"bedrijf": {
+				"type": "string"
+			},
+			"headerrecordsTable": {
+				"type": "string"
+			},
+			"labourlinesTable": {
+				"type": "string"
+			},
+			"partlinesTable": {
+				"type": "string"
+			},
+			"headerlogTable": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"QuerySync": {
+				"type": "String"
+			},
+			"QueryDelete": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Doorgangen/temp"
+		},
+		"annotations": [],
+		"lastPublishTime": "2019-11-06T10:32:18Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

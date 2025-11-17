@@ -1,0 +1,350 @@
+{
+	"name": "Sync Clockentries Part 1",
+	"properties": {
+		"activities": [
+			{
+				"name": "If Autoline1",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Set Variable QueryDelete",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(pipeline().parameters.dms, 'autoline1')",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Sync clockentries autoline1",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@variables('QuerySync')",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"sqlWriterStoredProcedureName": "[dbo].[autoline_insert_into_autoline_clockentries_temp]",
+									"sqlWriterTableType": "autoline_upload_clockentries",
+									"storedProcedureTableTypeParameterName": "uploadTable",
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "Autoline1_Table",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_clockentries_temp",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "If Autoline2",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Set Variable QueryDelete",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(pipeline().parameters.dms, 'autoline2')",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Sync clockentries autoline2",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@variables('QuerySync')",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"sqlWriterStoredProcedureName": "[dbo].[autoline_insert_into_autoline_clockentries_temp]",
+									"sqlWriterTableType": "autoline_upload_clockentries",
+									"storedProcedureTableTypeParameterName": "uploadTable",
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "Autoline2_Table",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_clockentries_temp",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "If Autoline3",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Set Variable QueryDelete",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(pipeline().parameters.dms, 'autoline3')",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Sync clockentries Autoline3",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@variables('QuerySync')",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"sqlWriterStoredProcedureName": "[dbo].[autoline_insert_into_autoline_clockentries_temp]",
+									"sqlWriterTableType": "autoline_upload_clockentries",
+									"storedProcedureTableTypeParameterName": "uploadTable",
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "autoline3_tables_prod_srv_apps06",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_clockentries_temp",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "If Autoline4",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Set Variable QueryDelete",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(pipeline().parameters.dms, 'autoline4')",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Sync clockentries autoline4",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@variables('QuerySync')",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"sqlWriterStoredProcedureName": "[dbo].[autoline_insert_into_autoline_clockentries_temp]",
+									"sqlWriterTableType": "autoline_upload_clockentries",
+									"storedProcedureTableTypeParameterName": "uploadTable",
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "Autoline4_Table",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_clockentries_temp",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "If Autoline5",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Set Variable QueryDelete",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(pipeline().parameters.dms, 'autoline5')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set Variable QuerySync",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "QuerySync",
+					"value": {
+						"value": "@concat('SELECT ''', pipeline().parameters.dms,''' as DMS, ''',pipeline().parameters.bedrijf,''' as BEDRIJF, ADJDATE ,ADJDESC ,ADJMODE ,ADJTIME ,ADJUSER ,ALLOWED ,ANALYSIS ,DATEI ,DATEO ,FACTOR ,IDLE ,REASON ,RESOURCE ,SEQ ,SHIFT ,STATE ,TAKEN ,TEAM ,TERMID ,TIMEI ,TIMEO ,WIPLINE,WIPNO FROM ',pipeline().parameters.clockentriesTable, ' where DATEI >= ''',pipeline().parameters.date, ''' or (DATEI >= ''',pipeline().parameters.date, ''' and (TIMEI >= ''',pipeline().parameters.time, ''' OR (ADJDATE >= ''',pipeline().parameters.date, ''' and ADJTIME >= ''',pipeline().parameters.time, ''')))')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set Variable QueryDelete",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Set Variable QuerySync",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "QueryDelete",
+					"value": {
+						"value": "@{concat('delete from autoline_clockentries_temp where DMS =''',pipeline().parameters.dms,''' and BEDRIJF = ',pipeline().parameters.bedrijf)}",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"clockentriesTable": {
+				"type": "string"
+			},
+			"dms": {
+				"type": "string"
+			},
+			"bedrijf": {
+				"type": "string"
+			},
+			"time": {
+				"type": "string"
+			},
+			"date": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"QuerySync": {
+				"type": "String"
+			},
+			"QueryDelete": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Doorgangen/Sync direct"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-08-17T09:59:55Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

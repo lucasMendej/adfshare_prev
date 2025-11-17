@@ -1,0 +1,35 @@
+{
+	"name": "DailyRun_Datamodel_WPL_Finance",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Datamodel_WPL_Finance",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Week",
+				"interval": 1,
+				"startTime": "2023-05-15T21:30:00",
+				"timeZone": "W. Europe Standard Time",
+				"schedule": {
+					"minutes": [
+						30
+					],
+					"hours": [
+						6
+					],
+					"weekDays": [
+						"Wednesday"
+					]
+				}
+			}
+		}
+	}
+}

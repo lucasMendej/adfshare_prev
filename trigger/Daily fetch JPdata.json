@@ -1,0 +1,33 @@
+{
+	"name": "Daily fetch JPdata",
+	"properties": {
+		"description": "Fetch data from JP webservice",
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "JP Cars consume webservice",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2023-08-17T09:15:00Z",
+				"timeZone": "UTC",
+				"schedule": {
+					"minutes": [
+						15
+					],
+					"hours": [
+						6
+					]
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,16 @@
+{
+	"name": "dbcm_inst05_db05",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=False;data source=dbcm-inst05\\db05;initial catalog=autoline;user id=downloadmanager",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI0Yzg2NDAyMC1mM2M0LTRhMTItOWU2ZC01ZDExNDIxMTcxMjciLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "WRK9011",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

@@ -1,0 +1,650 @@
+{
+	"name": "Full sync Autoline DMS",
+	"properties": {
+		"description": "Summary of actions\n\nRetrieves table metadata (DESCU, COMPANY) from the Autoline DMS via a linked server to get the right tablename independent of usages of long or short table names in autoline.\n\nLooks up all non-system columns from the destination Azure SQL table.\n\nIterates through each Autoline table (DESCU) to sync so when a table is present n multiple locations they will all be fetched.\n\nDynamically builds a SELECT query using resolved columns and filters.\n\nCopies source data into a staging table in Azure SQL.\n\nIf the destination table has a primary key, deletes matching records using a JOIN.\n\nIf no primary key, deletes by _set, _company, and optional destinationfilters.\n\nInserts fresh data from the temp table into the destination with metadata.\n\nDrops the temp table after successful sync.",
+		"activities": [
+			{
+				"name": "LookupTableName",
+				"description": "Builds a dynamic SQL query to retrieve DESCU and COMPANY from the Autoline catalogue. If the autolineModule is 'GB', 'SU', it applies a simple filename filter. Otherwise, it includes additional filters on module, company, user, and priority to enforce data access rules.",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Set Catalogue tablename",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Set odbcUser",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Set autolineFilename",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": {
+							"value": "@if(contains(\n        createArray('GB', 'SU'), variables('autolineModule')),\n    concat(\n        'select * from openquery([', pipeline().parameters.linkedServer, \n        '], ''select c.DESCU, c.COMPANY from ', variables('catalogueTableName'), \n        ' where filename like ''''%', variables('autolineFilename'), '%'''' '')'\n    ),\n    concat(\n        'select * from openquery([', pipeline().parameters.linkedServer, \n        '], ''select c.DESCU, c.COMPANY from ', variables('catalogueTableName'), \n        ' where filename like ''''%', variables('autolineFilename'), '%'''' and c.module_ = p.module_ and c.company = p.company and p.user_ = ''''', variables('odbcUser'), ''''' and p.priority > 0'')'\n    )\n)",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "clntap149_server_connection",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Fetch Tables in catalogue",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Set finaladdedfilterSource",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Set variable columnList",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Set finaladdedfilterDestination",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Report failure if no tables found in catalogue",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('LookupTableName').output.value",
+						"type": "Expression"
+					},
+					"batchCount": 3,
+					"activities": [
+						{
+							"name": "Actual data Copy",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "Lookup number of rows",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "tableName",
+									"value": "@{item().DESCU}_@{pipeline().parameters.linkedServer}_guid()"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"sqlReaderQuery": {
+										"value": "select '@{pipeline().parameters.linkedServer}' as _set, '@{item().COMPANY}' as _company, * from openquery(@{pipeline().parameters.linkedServer}, \n      'SELECT @{replace(replace(join(activity('Lookup Columns').output.value, ','), '{\"COLUMN_NAME\":\"', ''), '\"}','')}\n from @{item().DESCU} @{variables('finalAddedFilterSource')}') ",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "IF OBJECT_ID(N'[dbo].[_temp_@{item().DESCU}_@{pipeline().parameters.linkedServer}]', N'U') IS NOT NULL\nBEGIN\n    DROP TABLE [dbo].[_temp_@{item().DESCU}_@{pipeline().parameters.linkedServer}];\nEND",
+										"type": "Expression"
+									},
+									"writeBehavior": "insert",
+									"sqlWriterUseTableLock": false,
+									"tableOption": "autoCreate",
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"enableSkipIncompatibleRow": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "clntap149_server_connection",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "AZURE_DMS_PROD_SRV_SQL00",
+									"type": "DatasetReference",
+									"parameters": {
+										"OutputTable": {
+											"value": "_temp_@{item().DESCU}_@{pipeline().parameters.linkedServer}",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "Replace into Data into",
+							"type": "Script",
+							"dependsOn": [
+								{
+									"activity": "Actual data Copy",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 2,
+								"retryIntervalInSeconds": 300,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"linkedServiceName": {
+								"referenceName": "DMS_PROD_SRV_SQL_00",
+								"type": "LinkedServiceReference"
+							},
+							"typeProperties": {
+								"scripts": [
+									{
+										"type": "Query",
+										"text": {
+											"value": "\n-- ========================================\n-- Dynamic merge-like operation for ADF\n-- Deletes and reinserts data from a temp source table into a target table\n-- Behavior depends on whether the destination table has a primary key\n-- ========================================\n\n-- Declare input variables using ADF pipeline expressions\nDECLARE @TargetTable SYSNAME = '@{pipeline().parameters.targetTable}'; -- Destination table name\nDECLARE @TempTable SYSNAME = 'dbo._temp_@{item().DESCU}_@{pipeline().parameters.linkedServer}'; -- Staging temp table\nDECLARE @LinkedServer NVARCHAR(100) = '@{pipeline().parameters.linkedServer}'; -- Source identifier\nDECLARE @Company NVARCHAR(100) = '@{item().COMPANY}'; -- Company identifier\nDECLARE @FinalFilterDestination NVARCHAR(MAX) = '@{variables('finalAddedFilterDestination')}'; -- Optional dynamic WHERE clause filter\nDECLARE @clearBeforeLoad BIT = '@{pipeline().parameters.clearBeforeLoad}'; -- Optional dynamic WHERE clause filter\n\n--Declare output Variables\nDECLARE @write_count INT = 0;\n\n\n-- Variables for internal logic\nDECLARE @PKJoin NVARCHAR(MAX) = ''; -- To hold generated primary key join condition\nDECLARE @HasPK BIT = 0; -- Flag to determine if destination table has a primary key\n\n-- ========================================\n-- Step 1: Check for a primary key on the destination table\n-- If it exists, build a JOIN clause using all key columns\n-- ========================================\nIF EXISTS (\n    SELECT 1\n    FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc\n    WHERE tc.TABLE_NAME = @TargetTable\n      AND tc.CONSTRAINT_TYPE = 'PRIMARY KEY'\n) and @clearBeforeLoad = 0\nBEGIN\n    SET @HasPK = 1;\n    \n    -- Generate dynamic ON clause: A.pk1 = B.pk1 AND A.pk2 = B.pk2 ...\n    SELECT @PKJoin = STRING_AGG('A.' + QUOTENAME(kcu.COLUMN_NAME) + ' = B.' + QUOTENAME(kcu.COLUMN_NAME), ' AND ')\n    FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc\n    JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE kcu \n        ON tc.CONSTRAINT_NAME = kcu.CONSTRAINT_NAME\n    WHERE tc.CONSTRAINT_TYPE = 'PRIMARY KEY'\n      AND tc.TABLE_NAME = @TargetTable;\nEND\n\n-- ========================================\n-- Step 2: DELETE logic depending on PK presence\n-- If PK exists: delete matching rows using JOIN\n-- If no PK: delete based on _set, _company, and optional filters\n-- ========================================\nDECLARE @DeleteSQL NVARCHAR(MAX);\n\nBEGIN TRY\n    IF @HasPK = 1\n    BEGIN\n        -- DELETE using primary key match\n        SET @DeleteSQL = '\n        DELETE A\n        FROM ' + QUOTENAME(@TargetTable) + ' A\n        JOIN ' + @TempTable + ' B\n          ON ' + @PKJoin + ';';\n        EXEC sp_executesql @DeleteSQL;\n        print @DeleteSQL;\n    END\n    ELSE\n    BEGIN\n          -- DELETE using fallback logic (_set, _company, filter)\n        SET @DeleteSQL = '\n        DELETE FROM ' + QUOTENAME(@TargetTable) + '\n        WHERE _set = ''' + @LinkedServer + '''\n          AND _company = ''' + @Company + ''' ' + @FinalFilterDestination + ';';\n        EXEC sp_executesql @DeleteSQL;\n        print @DeleteSQL; \n    END\n\n    -- Capture row count before insert\n    SET @write_count = @@ROWCOUNT;\n\n-- ========================================\n-- Step 3: INSERT all rows from temp table into the destination\n-- Includes fixed columns (_set, _company, _LTSTUPDATE, _LTSTCHECK)\n-- Plus dynamically injected column list from ADF\n-- ========================================\n    INSERT INTO @{pipeline().parameters.targetTable}\n    SELECT\n        '@{pipeline().parameters.linkedServer}' AS _set,\n        '@{item().COMPANY}' AS _company,\n        GETDATE() AS [_LTSTUPDATE],\n        GETDATE() AS [_LTSTCHECK],\n        @{variables('columnList')}\n    FROM dbo._temp_@{item().DESCU}_@{pipeline().parameters.linkedServer};\n\n\n-- ========================================\n-- Step 4: return the number of rows for validation\n-- ========================================\n    -- Capture row count\n    SET @write_count = @@ROWCOUNT - @write_count;\n\n    -- Return write_count to ADF\n    SELECT @write_count AS write_count;\n\nEND TRY\nBEGIN CATCH\n    PRINT 'Error occurred: ' + ERROR_MESSAGE();\n    THROW;\nEND CATCH\n",
+											"type": "Expression"
+										}
+									}
+								],
+								"scriptBlockExecutionTimeout": "02:00:00"
+							}
+						},
+						{
+							"name": "Drop tempTable",
+							"type": "Script",
+							"dependsOn": [
+								{
+									"activity": "Replace into Data into",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"linkedServiceName": {
+								"referenceName": "DMS_PROD_SRV_SQL_00",
+								"type": "LinkedServiceReference"
+							},
+							"typeProperties": {
+								"scripts": [
+									{
+										"type": "NonQuery",
+										"text": {
+											"value": "\n-- ========================================\n-- Drop table\n-- ========================================\n\nDECLARE @TempTable SYSNAME = 'dbo._temp_@{item().DESCU}_@{pipeline().parameters.linkedServer}'; -- Staging temp table\nBEGIN TRY\n\n-- ========================================\n-- Step 1: Drop the temporary table\n-- ========================================\n    DECLARE @DropSQL NVARCHAR(MAX) = 'DROP TABLE ' + @TempTable + ';';\n    EXEC sp_executesql @DropSQL;\n    print @DropSQL;\nEND TRY\nBEGIN CATCH\n    PRINT 'Error occurred: ' + ERROR_MESSAGE();\n    THROW;\nEND CATCH\n",
+											"type": "Expression"
+										}
+									}
+								],
+								"scriptBlockExecutionTimeout": "02:00:00"
+							}
+						},
+						{
+							"name": "Lookup number of rows",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"sqlReaderQuery": {
+										"value": "select [row_count] from openquery(@{pipeline().parameters.linkedServer}, \r\n      'SELECT count(*) as [row_count] from @{item().DESCU} @{variables('finalAddedFilterSource')}') ",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "clntap149_server_connection",
+									"type": "DatasetReference"
+								}
+							}
+						},
+						{
+							"name": "Report failure if number of rows not equal",
+							"type": "IfCondition",
+							"dependsOn": [
+								{
+									"activity": "Replace into Data into",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@and(\n    equals(activity('Lookup number of rows').output.firstRow.row_count, activity('Replace into Data into').output.resultSets[0].rows[0].write_count),\n    equals(activity('Lookup number of rows').output.firstRow.row_count, activity('Actual data Copy').output.rowsCopied)\n)\n",
+									"type": "Expression"
+								},
+								"ifFalseActivities": [
+									{
+										"name": "Fail1",
+										"type": "Fail",
+										"dependsOn": [],
+										"userProperties": [],
+										"typeProperties": {
+											"message": "number of rows not equal",
+											"errorCode": "500"
+										}
+									}
+								],
+								"ifTrueActivities": [
+									{
+										"name": "Log run success",
+										"type": "Script",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "0.12:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"linkedServiceName": {
+											"referenceName": "DMS_PROD_SRV_SQL_00",
+											"type": "LinkedServiceReference"
+										},
+										"typeProperties": {
+											"scripts": [
+												{
+													"type": "NonQuery",
+													"text": {
+														"value": "INSERT INTO [dbo].[_SyncLog]\n           ([timestamp]\n           ,[pipelineRunId]\n           ,[pipelineName]\n           ,[tableName]\n           ,[linkedServer]\n           ,[count]\n           ,[triggerTime]\n           ,[details])\n     VALUES\n           (getdate()\n           ,'@{pipeline().RunId}'\n           ,'@{pipeline().Pipeline}'\n           ,'@{item().DESCU}'\n           ,'@{pipeline().parameters.linkedServer}'\n           ,@{activity('Replace into Data into').output.resultSets[0].rows[0].write_count}\n           ,cast('@{pipeline().TriggerTime}' as datetime2)\n           ,(SELECT *\n                  FROM [dbo].[_SyncIndex]\n                  WHERE sourceTable = '@{pipeline().parameters.sourceTable}' AND (linkedServer = '@{pipeline().parameters.linkedServer}' or linkedServer = '**')  \n                  FOR JSON PATH, WITHOUT_ARRAY_WRAPPER)\n)\n",
+														"type": "Expression"
+													}
+												}
+											],
+											"scriptBlockExecutionTimeout": "02:00:00"
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Lookup Columns",
+				"description": "Select all columnames from the destination table that do not start with '_\"",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '@{pipeline().parameters.targetTable}' and left(COLUMN_NAME, 1) <> '_' \n",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "AZURE_DMS_PROD_SRV_SQL00",
+						"type": "DatasetReference",
+						"parameters": {
+							"OutputTable": {
+								"value": "@pipeline().parameters.targetTable",
+								"type": "Expression"
+							}
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Set finaladdedfilterSource",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "finalAddedFilterSource",
+					"value": {
+						"value": "@if(\n    equals(pipeline().parameters.addedFilterSource, null),\n    '',\n    if(\n        startsWith(toLower(trim(pipeline().parameters.addedFilterSource)), 'where'),\n        replace(pipeline().parameters.addedFilterSource, '''', ''''''),\n        concat('WHERE ', replace(pipeline().parameters.addedFilterSource, '''', ''''''))\n    )\n)\n",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set variable columnList",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Lookup Columns",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "columnList",
+					"value": {
+						"value": "@replace(replace(join(activity('Lookup Columns').output.value, ','), '{\"COLUMN_NAME\":\"', ''), '\"}','')\n",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set finaladdedfilterDestination",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "finalAddedFilterDestination",
+					"value": {
+						"value": "@if(\n    or(\n        or(\n            equals(pipeline().parameters.addedFilterDestination, ''),\n            equals(pipeline().parameters.addedFilterDestination, null)\n        ),\n        startsWith(pipeline().parameters.addedFilterDestination, 'and ')\n    ),\n    pipeline().parameters.addedFilterDestination,\n    concat('and (', pipeline().parameters.addedFilterDestination, ')')\n)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set Catalogue tablename",
+				"description": "based on the linkedserver we need to switch between long or short table names",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Set linkedServer",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Set autolineModule",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "catalogueTableName",
+					"value": {
+						"value": "@if(contains(\n        createArray('GB', 'SU'), variables('autolineModule')),\n   if(contains(\n        createArray('autoline7','autoline_liverenova','autolineb'),\n               variables('linkedServer')),                        \n            'gb_00_catlg c', \n            'gb_00_odbccatalogue c'),\n   if(contains(createArray('autoline7','autoline_liverenova','autolineb'),\n               variables('linkedServer')),                        \n            'gb_00_catlg c, gb_00_perms p', \n            'gb_00_odbccatalogue c, gb_00_permissions p')\n)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set odbcUser",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Set linkedServer",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "odbcUser",
+					"value": {
+						"value": "@if(\n    contains(createArray('autoline7','autoline_liverenova'),variables('linkedServer')),'renodbc4'\n    ,if(equals(variables('linkedServer'),'autoline4')\n    ,'odbc4'\n    ,if(equals(variables('linkedServer'),'autolineb')\n    ,'odbc01'\n    ,if(\n    equals(variables('linkedServer'),'autoline2'),'odbc2'\n    ,'odbc'))))",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set linkedServer",
+				"description": "clean up the incoming parameter tolower and trim",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "linkedServer",
+					"value": {
+						"value": "@trim(toLower(pipeline().parameters.linkedServer))",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Report failure if no tables found in catalogue",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "LookupTableName",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(activity('LookupTableName').output.count, 0)",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "TableCountFailure",
+							"type": "Fail",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"message": "No Tables selected",
+								"errorCode": "500"
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Set autolineModule",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "autolineModule",
+					"value": {
+						"value": "@split(pipeline().parameters.sourceTable, '.')[0]",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set autolineFilename",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Set autolineModule",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "autolineFilename",
+					"value": {
+						"value": "@{concat(\ntoUpper(string(split(pipeline().parameters.sourceTable, '.')[0])), \n'.',\n    toLower(string(split(pipeline().parameters.sourceTable, '.')[1]))\n)}",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Read me",
+				"description": "✅ Summary: Full sync Autoline DMS\nThis pipeline performs a full synchronization of data from the Autoline DMS system into an Azure SQL database. It:\n\n1. Identifies source tables from the Autoline catalogue, adjusting for naming conventions and access filters.\n\n2. Looks up active target tables and their non-system columns to build dynamic SELECT statements.\n\n3. Iterates through all matching source tables (including multiple linked servers if needed).\n\n4. Copies data into temporary staging tables in Azure SQL.\n\n5. Performs a conditional data merge:\n      Deletes existing records by primary key (if present), or by _set, _company, and optional filters.\n\n6. Inserts updated data from the temp table into the target table with audit metadata.\n\n7. Validates record counts to ensure completeness.\n\n8. Cleans up staging tables post-load.\n\n9. Fails the pipeline if data is missing or mismatched.\n\nThis ensures accurate, filtered, and scalable data synchronization across multiple companies or environments in Autoline.",
+				"type": "Script",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"scripts": [],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			}
+		],
+		"parameters": {
+			"linkedServer": {
+				"type": "string",
+				"defaultValue": "autoline7"
+			},
+			"sourceTable": {
+				"type": "string",
+				"defaultValue": "NL.atran"
+			},
+			"targetTable": {
+				"type": "string",
+				"defaultValue": "autoline_trans"
+			},
+			"addedFilterSource": {
+				"type": "string",
+				"defaultValue": "WHERE TIMESTAMPADD(SQL_TSI_DAY, 0, curdate()) < TIMESTAMPADD(SQL_TSI_YEAR, 1, POSTDATE)"
+			},
+			"addedFilterDestination": {
+				"type": "string"
+			},
+			"clearBeforeLoad": {
+				"type": "bool",
+				"defaultValue": false
+			}
+		},
+		"variables": {
+			"finalAddedFilterSource": {
+				"type": "String"
+			},
+			"columnList": {
+				"type": "String"
+			},
+			"finalAddedFilterDestination": {
+				"type": "String"
+			},
+			"catalogueTableName": {
+				"type": "String"
+			},
+			"odbcUser": {
+				"type": "String"
+			},
+			"linkedServer": {
+				"type": "String"
+			},
+			"autolineModule": {
+				"type": "String"
+			},
+			"autolineFilename": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Autoline"
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-09-04T15:40:35Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

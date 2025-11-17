@@ -1,0 +1,122 @@
+{
+	"name": "DL_idas_filma",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStoreYGROUP",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureDataLakeStoreLocation",
+				"fileName": "filma.parquet",
+				"folderPath": "sternData/dataFactoryLandingZone/idas"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "FIBRNO",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "FIADRS",
+				"type": "UTF8"
+			},
+			{
+				"name": "FIHSNR",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "FIHSNT",
+				"type": "UTF8"
+			},
+			{
+				"name": "FIPOCO",
+				"type": "UTF8"
+			},
+			{
+				"name": "FICITY",
+				"type": "UTF8"
+			},
+			{
+				"name": "FITELO",
+				"type": "UTF8"
+			},
+			{
+				"name": "FIBTWN",
+				"type": "UTF8"
+			},
+			{
+				"name": "FIBNKR",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "FICTCP",
+				"type": "UTF8"
+			},
+			{
+				"name": "FIROBE",
+				"type": "UTF8"
+			},
+			{
+				"name": "FIRDCN",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "FIRDCK",
+				"type": "UTF8"
+			},
+			{
+				"name": "FIRDCP",
+				"type": "UTF8"
+			},
+			{
+				"name": "FIONDP",
+				"type": "UTF8"
+			},
+			{
+				"name": "FIIBAN",
+				"type": "UTF8"
+			},
+			{
+				"name": "FIBIC",
+				"type": "UTF8"
+			},
+			{
+				"name": "FIRDWN",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "FIDQST",
+				"type": "UTF8"
+			},
+			{
+				"name": "FIROBK",
+				"type": "UTF8"
+			},
+			{
+				"name": "FIROBP",
+				"type": "UTF8"
+			},
+			{
+				"name": "FIKVK",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

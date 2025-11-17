@@ -1,0 +1,894 @@
+{
+	"name": "DMS - Sync Autoline Tables Deel 1",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get lowest MAGICLH_",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "@concat('SELECT CASE WHEN MAGICLH_ = '''' THEN NULL ELSE MAGICLH_ END AS MAGICLH_ FROM autoline_sync_status where tablename_ = ''',pipeline().parameters.headerlogTable, ''' and dms =''',pipeline().parameters.dms,'''')",
+							"type": "Expression"
+						},
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SQL_Doorgangen_autoline_sync_status",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "If MAGICLH_ is not empty",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Get lowest MAGICLH_",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@and(and(not(equals(activity('Get lowest MAGICLH_').output.count,0)),not(equals(activity('Get lowest MAGICLH_').output.value[0].MAGICLH_,null))),not(equals(activity('Get lowest MAGICLH_').output.value[0].MAGICLH_,'''')))",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Set Variable werkorders",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "select werkorders",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "werkorders",
+								"value": {
+									"value": "@string(activity('select werkorders').output.value[0].werkorders)",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "select werkorders",
+							"type": "Lookup",
+							"dependsOn": [
+								{
+									"activity": "Execute Pipeline Sync Autoline Tables Deel 2",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@concat('\nSELECT DISTINCT STUFF(\n(\n    SELECT '','' + CAST(wipno AS VARCHAR)\n    FROM\n    (\nSELECT DISTINCT wipno FROM  autoline_headerlog\nwhere doctype <> '''' and bedrijf = ',pipeline().parameters.bedrijf,'\n      AND DMS = ''',pipeline().parameters.dms,'''\n      AND magiclh >= ', activity('Get lowest MAGICLH_').output.value[0].MAGICLH_, '\nunion\nselect wipno FROM autoline_headerlog\nwhere doctype = '''' and bedrijf = ',pipeline().parameters.bedrijf,'\n      AND DMS = ''',pipeline().parameters.dms,''' \n\t  and time_ >  datepart(hour, getdate()) - 2\n) sub FOR XML PATH('''')\n), 1, 1, '''') as werkorders\n\t \n\t \n\t ')",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "SQL_Doorgangen_autoline_headerlog_temp",
+									"type": "DatasetReference"
+								},
+								"firstRowOnly": false
+							}
+						},
+						{
+							"name": "Execute Pipeline Sync Autoline Tables Deel 2",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Sync Autoline Tables Deel 2",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"bedrijf": {
+										"value": "@pipeline().parameters.bedrijf",
+										"type": "Expression"
+									},
+									"dms": {
+										"value": "@pipeline().parameters.dms",
+										"type": "Expression"
+									},
+									"headerlogTable": {
+										"value": "@pipeline().parameters.headerlogTable",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Get DATEI_",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "@concat('SELECT cast(DATEI_ as varchar) as DATEI_ FROM autoline_sync_status where tablename_ = ''',pipeline().parameters.clockentriesTable, ''' and dms =''',pipeline().parameters.dms,'''')",
+							"type": "Expression"
+						},
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SQL_Doorgangen_autoline_sync_status",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "If DATEI_ is smaller then today",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Get DATEI_",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@less(activity('Get DATEI_').output.value[0].DATEI_,string(formatDateTime(utcnow(),'yyyy-MM-dd')))",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "SqlServerStoredProcedure1",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[autoline_update_sync_status]",
+								"storedProcedureParameters": {
+									"DATEI_": {
+										"value": {
+											"value": "@formatDateTime(utcnow(),'yyyy-MM-dd')",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"DMS": {
+										"value": {
+											"value": "@pipeline().parameters.dms",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"MAGICLH_": {
+										"value": null,
+										"type": "String"
+									},
+									"tablename_": {
+										"value": {
+											"value": "@pipeline().parameters.clockentriesTable",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TIMEI_": {
+										"value": "0.1",
+										"type": "Double"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "DOORGANGEN_PROD_SRV_SQL_00",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Set Variable Time",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Set Variable Date",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "time",
+					"value": {
+						"value": "@string(activity('Get Datei_ and Timei_').output.firstRow.TIMEI_)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "If werkorder is not null or empty",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "If MAGICLH_ is not empty",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@and(not(equals(variables('werkorders'),null)),not(equals(variables('werkorders'),'')))",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Execute Pipeline Sync Autoline Tables Deel 3",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Sync Autoline Tables Deel 3",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"dms": {
+										"value": "@pipeline().parameters.dms",
+										"type": "Expression"
+									},
+									"werkorders": {
+										"value": "@variables('werkorders')",
+										"type": "Expression"
+									},
+									"bedrijf": {
+										"value": "@pipeline().parameters.bedrijf",
+										"type": "Expression"
+									},
+									"headerrecordsTable": {
+										"value": "@pipeline().parameters.headerrecordsTable",
+										"type": "Expression"
+									},
+									"labourlinesTable": {
+										"value": "@pipeline().parameters.labourlinesTable",
+										"type": "Expression"
+									},
+									"partlinesTable": {
+										"value": "@pipeline().parameters.partlinesTable",
+										"type": "Expression"
+									},
+									"headerlogTable": {
+										"value": "@pipeline().parameters.headerlogTable",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Set Variable Date",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Get Datei_ and Timei_",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "date",
+					"value": {
+						"value": "@string(activity('Get Datei_ and Timei_').output.firstRow.DATEI_)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Get Datei_ and Timei_",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "If DATEI_ is smaller then today",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "@concat('SELECT cast(DATEI_ as varchar) as DATEI_, CASE\n           WHEN DATEI_ <> CAST(sysdatetimeoffset() AT TIME ZONE ''W. Europe Standard Time'' AS DATE)\n           THEN 0.01\n           ELSE ISNULL(TIMEI_, 2.00) -1 \n       END AS TIMEI_\n FROM autoline_sync_status where tablename_ = ''',pipeline().parameters.clockentriesTable, ''' and dms =''',pipeline().parameters.dms,'''')",
+							"type": "Expression"
+						},
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SQL_Doorgangen_autoline_sync_status",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "SqlServerStoredProcedure2",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Get Max DATEI and TIMEI",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[autoline_update_sync_status]",
+					"storedProcedureParameters": {
+						"DATEI_": {
+							"value": {
+								"value": "@activity('Get Max DATEI and TIMEI').output.value[0].DATEI",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"DMS": {
+							"value": {
+								"value": "@pipeline().parameters.dms",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"MAGICLH_": {
+							"value": null,
+							"type": "String"
+						},
+						"tablename_": {
+							"value": {
+								"value": "@pipeline().parameters.clockentriesTable",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"TIMEI_": {
+							"value": {
+								"value": "@activity('Get Max DATEI and TIMEI').output.value[0].TIMEI",
+								"type": "Expression"
+							},
+							"type": "Double"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "DOORGANGEN_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Get Max DATEI and TIMEI",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "If autoline1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "If autoline2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "If autoline3",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "If autoline4",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "If autoline5",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "@concat('\n    SELECT ISNULL(MAX(cast(cast(DATEI as date) as varchar)), ''',variables('date'),''') as DATEI,\ncast( DATEPART(HOUR, dateadd(minute,-15,cast(sysdatetimeoffset() AT TIME ZONE ''W. Europe Standard Time'' as datetime))) as numeric(4,2)) + cast(datepart(minute, dateadd(minute,-15,cast(sysdatetimeoffset() AT TIME ZONE ''W. Europe Standard Time'' as datetime))) as numeric(4,2)) / 100 as TIMEI\n    FROM autoline_clockentries WHERE DMS = ''',pipeline().parameters.dms,''' and BEDRIJF = ''',pipeline().parameters.bedrijf,'''')",
+							"type": "Expression"
+						},
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SQL_Doorgangen_autoline_clockentries",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "If autoline1",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Set Variable Time",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@and(not(equals(activity('Get DATEI_').output.value[0].DATEI_,null)),equals(pipeline().parameters.dms, 'autoline1'))",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Copy to CLOCKENTRIES autoline1",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@concat('SELECT ''', pipeline().parameters.dms, ''' as DMS, ''',pipeline().parameters.bedrijf,''' as BEDRIJF, ADJDATE ,ADJDESC ,ADJMODE ,ADJTIME ,ADJUSER ,ALLOWED ,ANALYSIS ,DATEI ,DATEO ,FACTOR ,IDLE ,REASON ,RESOURCE ,SEQ ,SHIFT ,STATE ,TAKEN ,TEAM ,TERMID ,TIMEI ,TIMEO ,WIPLINE,WIPNO FROM ',pipeline().parameters.clockentriesTable,' where DATEI >= ''',variables('date'),''' and TIMEI>= ',variables('time'),'or ADJDATE >= ''',variables('date'),''' and ADJTIME >= ',variables('time'),' or DATEO >= ''',variables('date'),'''  and TIMEO>= ',variables('time'),' ')",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"sqlWriterStoredProcedureName": "[dbo].[autoline_insert_into_autoline_clockentries]",
+									"sqlWriterTableType": "autoline_upload_clockentries",
+									"storedProcedureTableTypeParameterName": "uploadTable",
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"parallelCopies": 32,
+								"dataIntegrationUnits": 32
+							},
+							"inputs": [
+								{
+									"referenceName": "autoline1_tables_prod_srv_apps06",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_clockentries",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "If autoline2",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Set Variable Time",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@and(not(equals(activity('Get DATEI_').output.value[0].DATEI_,null)),equals(pipeline().parameters.dms, 'autoline2'))",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Copy to CLOCKENTRIES autoline2",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@concat('SELECT ''', pipeline().parameters.dms, ''' as DMS, ''',pipeline().parameters.bedrijf,''' as BEDRIJF, ADJDATE ,ADJDESC ,ADJMODE ,ADJTIME ,ADJUSER ,ALLOWED ,ANALYSIS ,DATEI ,DATEO ,FACTOR ,IDLE ,REASON ,RESOURCE ,SEQ ,SHIFT ,STATE ,TAKEN ,TEAM ,TERMID ,TIMEI ,TIMEO ,WIPLINE,WIPNO FROM ',pipeline().parameters.clockentriesTable,' where DATEI >= ''',variables('date'),''' and TIMEI>= ',variables('time'),'or ADJDATE >= ''',variables('date'),''' and ADJTIME >= ',variables('time'),' or DATEO >= ''',variables('date'),'''  and TIMEO>= ',variables('time'),' ')",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"sqlWriterStoredProcedureName": "[dbo].[autoline_insert_into_autoline_clockentries]",
+									"sqlWriterTableType": "autoline_upload_clockentries",
+									"storedProcedureTableTypeParameterName": "uploadTable",
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"parallelCopies": 32,
+								"dataIntegrationUnits": 32
+							},
+							"inputs": [
+								{
+									"referenceName": "autoline2_tables_prod_srv_apps06",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_clockentries",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "If autoline3",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Set Variable Time",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@and(not(equals(activity('Get DATEI_').output.value[0].DATEI_,null)),equals(pipeline().parameters.dms, 'autoline3'))",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Copy to CLOCKENTRIES autoline3",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@concat('SELECT ''', pipeline().parameters.dms, ''' as DMS, ''',pipeline().parameters.bedrijf,''' as BEDRIJF, ADJDATE ,ADJDESC ,ADJMODE ,ADJTIME ,ADJUSER ,ALLOWED ,ANALYSIS ,DATEI ,DATEO ,FACTOR ,IDLE ,REASON ,RESOURCE ,SEQ ,SHIFT ,STATE ,TAKEN ,TEAM ,TERMID ,TIMEI ,TIMEO ,WIPLINE,WIPNO FROM ',pipeline().parameters.clockentriesTable,' where DATEI >= ''',variables('date'),''' and TIMEI>= ',variables('time'),'or ADJDATE >= ''',variables('date'),''' and ADJTIME >= ',variables('time'),' or DATEO >= ''',variables('date'),'''  and TIMEO>= ',variables('time'),' ')",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"sqlWriterStoredProcedureName": "[dbo].[autoline_insert_into_autoline_clockentries]",
+									"sqlWriterTableType": "autoline_upload_clockentries",
+									"storedProcedureTableTypeParameterName": "uploadTable",
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"parallelCopies": 32,
+								"dataIntegrationUnits": 32
+							},
+							"inputs": [
+								{
+									"referenceName": "autoline3_tables_prod_srv_apps06",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_clockentries",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "If autoline4",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Set Variable Time",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@and(not(equals(activity('Get DATEI_').output.value[0].DATEI_,null)),equals(pipeline().parameters.dms, 'autoline4'))",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Copy to CLOCKENTRIES autoline4",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@concat('SELECT ''', pipeline().parameters.dms, ''' as DMS, ''',pipeline().parameters.bedrijf,''' as BEDRIJF, ADJDATE ,ADJDESC ,ADJMODE ,ADJTIME ,ADJUSER ,ALLOWED ,ANALYSIS ,DATEI ,DATEO ,FACTOR ,IDLE ,REASON ,RESOURCE ,SEQ ,SHIFT ,STATE ,TAKEN ,TEAM ,TERMID ,TIMEI ,TIMEO ,WIPLINE,WIPNO FROM ',pipeline().parameters.clockentriesTable,' where DATEI >= ''',variables('date'),''' and TIMEI>= ',variables('time'),'or ADJDATE >= ''',variables('date'),''' and ADJTIME >= ',variables('time'),' or DATEO >= ''',variables('date'),'''  and TIMEO>= ',variables('time'),' ')",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"sqlWriterStoredProcedureName": "[dbo].[autoline_insert_into_autoline_clockentries]",
+									"sqlWriterTableType": "autoline_upload_clockentries",
+									"storedProcedureTableTypeParameterName": "uploadTable",
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"parallelCopies": 32,
+								"dataIntegrationUnits": 32
+							},
+							"inputs": [
+								{
+									"referenceName": "autoline4_tables_prod_srv_apps06",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_clockentries",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "If autoline5",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Set Variable Time",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@and(not(equals(activity('Get DATEI_').output.value[0].DATEI_,null)),equals(pipeline().parameters.dms, 'autoline5'))",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Copy to CLOCKENTRIES autoline5",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OdbcSource",
+									"query": {
+										"value": "@concat('SELECT ''', pipeline().parameters.dms, ''' as DMS, ''',pipeline().parameters.bedrijf,''' as BEDRIJF, ADJDATE ,ADJDESC ,ADJMODE ,ADJTIME ,ADJUSER ,ALLOWED ,ANALYSIS ,DATEI ,DATEO ,FACTOR ,IDLE ,REASON ,RESOURCE ,SEQ ,SHIFT ,STATE ,TAKEN ,TEAM ,TERMID ,TIMEI ,TIMEO ,WIPLINE,WIPNO FROM ',pipeline().parameters.clockentriesTable,' where DATEI >= ''',variables('date'),''' and TIMEI>= ',variables('time'),'or ADJDATE >= ''',variables('date'),''' and ADJTIME >= ',variables('time'),' or DATEO >= ''',variables('date'),'''  and TIMEO>= ',variables('time'),' ')",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"sqlWriterStoredProcedureName": "[dbo].[autoline_insert_into_autoline_clockentries]",
+									"sqlWriterTableType": "autoline_upload_clockentries",
+									"storedProcedureTableTypeParameterName": "uploadTable",
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"parallelCopies": 32,
+								"dataIntegrationUnits": 32
+							},
+							"inputs": [
+								{
+									"referenceName": "autoline5_tables_prod_srv_apps06",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_clockentries",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"bedrijf": {
+				"type": "string"
+			},
+			"dms": {
+				"type": "string"
+			},
+			"headerrecordsTable": {
+				"type": "string"
+			},
+			"headerlogTable": {
+				"type": "string"
+			},
+			"labourlinesTable": {
+				"type": "string"
+			},
+			"partlinesTable": {
+				"type": "string"
+			},
+			"clockentriesTable": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"magiclh_": {
+				"type": "String"
+			},
+			"werkorders": {
+				"type": "String"
+			},
+			"magiclh": {
+				"type": "String"
+			},
+			"maxMagiclh": {
+				"type": "String"
+			},
+			"date": {
+				"type": "String"
+			},
+			"time": {
+				"type": "String"
+			},
+			"rows": {
+				"type": "String"
+			},
+			"UpdatesyncStatus": {
+				"type": "Boolean"
+			}
+		},
+		"folder": {
+			"name": "DMS"
+		},
+		"annotations": [],
+		"lastPublishTime": "2020-02-10T14:15:19Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

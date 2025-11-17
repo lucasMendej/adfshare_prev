@@ -1,0 +1,205 @@
+{
+	"name": "Start Sync tables",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get DMS and Bedrijf Autoline",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT DISTINCT \n       [DMS], \n       [bedrijf]\nFROM [dbo].[autoline_sync_status]\nWHERE bedrijf <> '00'\n      AND DMS NOT IN('autoline5')\nAND DMS + bedrijf NOT IN('autoline681', 'autoline682');",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SQL_Doorgangen_autoline_sync_status",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach Autoline",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get DMS and Bedrijf Autoline",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get DMS and Bedrijf Autoline').output.value",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"batchCount": 50,
+					"activities": [
+						{
+							"name": "If autoline",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@startswith(item().DMS,'autoline')",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "ExecutePipeline Sync Autoline Tables",
+										"type": "ExecutePipeline",
+										"dependsOn": [],
+										"policy": {
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"pipeline": {
+												"referenceName": "Sync Autoline Tables Deel 1",
+												"type": "PipelineReference"
+											},
+											"waitOnCompletion": true,
+											"parameters": {
+												"bedrijf": {
+													"value": "@item().bedrijf",
+													"type": "Expression"
+												},
+												"dms": {
+													"value": "@item().DMS",
+													"type": "Expression"
+												},
+												"headerrecordsTable": {
+													"value": "@concat('so_',item().bedrijf,if(equals(item().DMS,'autoline5'),'_headr','_headerrecords'))",
+													"type": "Expression"
+												},
+												"headerlogTable": {
+													"value": "@concat('so_',item().bedrijf,if(equals(item().DMS,'autoline5'),'_loghd','_headerlog'))",
+													"type": "Expression"
+												},
+												"labourlinesTable": {
+													"value": "@concat('so_',item().bedrijf,if(equals(item().DMS,'autoline5'),'_labor','_labourlines'))",
+													"type": "Expression"
+												},
+												"partlinesTable": {
+													"value": "@concat('so_',item().bedrijf,if(equals(item().DMS,'autoline5'),'_parts','_partslines'))",
+													"type": "Expression"
+												},
+												"clockentriesTable": {
+													"value": "@concat('wl_',item().bedrijf,if(equals(item().DMS,'autoline5'),'_clock','_clockentries'))",
+													"type": "Expression"
+												}
+											}
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Get DMS and Bedrijf iDas",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT DISTINCT \n       'idas' AS dms, \n       [vestigingnr] AS bedrijf\nFROM [dbo].[doorgangenVestigingen]\nWHERE dms = 'idas';",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SQL_Doorgangen_autoline_sync_status",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach iDas",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get DMS and Bedrijf iDas",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get DMS and Bedrijf iDas').output.value",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"batchCount": 50,
+					"activities": [
+						{
+							"name": "If idas",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@startswith(item().DMS,'idas')",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "ExecutePipeline Copy idas tables",
+										"type": "ExecutePipeline",
+										"dependsOn": [],
+										"policy": {
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"pipeline": {
+												"referenceName": "Copy idas tables",
+												"type": "PipelineReference"
+											},
+											"waitOnCompletion": true,
+											"parameters": {
+												"bedrijf": {
+													"value": "@item().bedrijf",
+													"type": "Expression"
+												}
+											}
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		],
+		"folder": {
+			"name": "Doorgangen"
+		},
+		"annotations": [],
+		"lastPublishTime": "2020-04-09T10:47:20Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

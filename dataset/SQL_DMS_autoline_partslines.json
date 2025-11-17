@@ -1,0 +1,120 @@
+{
+	"name": "SQL_DMS_autoline_partslines",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "DMS",
+				"type": "varchar"
+			},
+			{
+				"name": "BEDRIJF",
+				"type": "varchar"
+			},
+			{
+				"name": "ACCOUNT",
+				"type": "char"
+			},
+			{
+				"name": "DATEIN",
+				"type": "date"
+			},
+			{
+				"name": "DISCOUNT",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 4
+			},
+			{
+				"name": "INVSTAT",
+				"type": "char"
+			},
+			{
+				"name": "LINE",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ORDERQTY",
+				"type": "decimal",
+				"precision": 11,
+				"scale": 4
+			},
+			{
+				"name": "ORDSTAT",
+				"type": "char"
+			},
+			{
+				"name": "PRODGRP",
+				"type": "char"
+			},
+			{
+				"name": "SELLPRCE",
+				"type": "decimal",
+				"precision": 16,
+				"scale": 2
+			},
+			{
+				"name": "WIPNO",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "PART",
+				"type": "char"
+			},
+			{
+				"name": "ACTLINE",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "INVOICE",
+				"type": "decimal",
+				"precision": 8,
+				"scale": 0
+			},
+			{
+				"name": "DESCRIPN",
+				"type": "char"
+			},
+			{
+				"name": "DECARDED",
+				"type": "date"
+			},
+			{
+				"name": "DEPT",
+				"type": "char"
+			},
+			{
+				"name": "CONTRIB",
+				"type": "decimal",
+				"precision": 8,
+				"scale": 4
+			},
+			{
+				"name": "EXTPRICE",
+				"type": "decimal",
+				"precision": 15,
+				"scale": 2
+			},
+			{
+				"name": "TARMAGIC",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "autoline_partslines"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

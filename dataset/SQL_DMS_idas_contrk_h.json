@@ -1,0 +1,66 @@
+{
+	"name": "SQL_DMS_idas_contrk_h",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "_SET",
+				"type": "varchar"
+			},
+			{
+				"name": "_COMPANY",
+				"type": "varchar"
+			},
+			{
+				"name": "_LTSTUPDATE",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "_LTSTCHECK",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "RKRCCD",
+				"type": "varchar"
+			},
+			{
+				"name": "RKKCTK",
+				"type": "varchar"
+			},
+			{
+				"name": "RKLNTX",
+				"type": "varchar"
+			},
+			{
+				"name": "F137#1",
+				"type": "varchar"
+			},
+			{
+				"name": "RKWSID",
+				"type": "varchar"
+			},
+			{
+				"name": "F030#1",
+				"type": "varchar"
+			},
+			{
+				"name": "RKKCTL2",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "idas_contrk_h"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

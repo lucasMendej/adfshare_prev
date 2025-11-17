@@ -1,0 +1,37 @@
+{
+	"name": "pipeline11",
+	"properties": {
+		"activities": [
+			{
+				"name": "Lookup1",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "OdbcSource",
+						"query": "SELECT  'autoline1' as DMS, '11' as vestiging,magiclh, wipno, doctype, postdate, time_  FROM so_65_headerlog where magiclh >= 1794170"
+					},
+					"dataset": {
+						"referenceName": "autoline1_tables_prod_srv_apps06",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			}
+		],
+		"folder": {
+			"name": "Doorgangen/temp"
+		},
+		"annotations": [],
+		"lastPublishTime": "2019-11-06T10:16:31Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,72 @@
+{
+	"name": "SQL_DMS_idas_carvar_e",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "_SET",
+				"type": "varchar"
+			},
+			{
+				"name": "_COMPANY",
+				"type": "varchar"
+			},
+			{
+				"name": "_LTSTUPDATE",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "_LTSTCHECK",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "CVRCTP",
+				"type": "varchar"
+			},
+			{
+				"name": "CVPRCD",
+				"type": "varchar"
+			},
+			{
+				"name": "CVMOJJ",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "CVVRSE",
+				"type": "varchar"
+			},
+			{
+				"name": "F5#1",
+				"type": "varchar"
+			},
+			{
+				"name": "CVVERD",
+				"type": "varchar"
+			},
+			{
+				"name": "F6#1",
+				"type": "varchar"
+			},
+			{
+				"name": "CVWSID",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "idas_carvar_e"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

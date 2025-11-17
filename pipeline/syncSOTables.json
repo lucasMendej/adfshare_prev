@@ -1,0 +1,684 @@
+{
+	"name": "syncSOTables",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get lowest MAGICLH_",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "@concat('SELECT MAGICLH_ FROM autoline_sync_status where tablename_ = ''',pipeline().parameters.headerlogTable, ''' and dms =''',pipeline().parameters.dms,'''')",
+							"type": "Expression"
+						},
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SQL_Doorgangen_autoline_sync_status",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "If MAGICLH_ is not empty",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Get lowest MAGICLH_",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@not(equals(activity('Get lowest MAGICLH_').output.count,0))",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "SetVariable MAGICLH_",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Check if syncStatus contains data from yesterday",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "magiclh_",
+								"value": {
+									"value": "@string(activity('Check if syncStatus contains data from yesterday').output.value[0].MAGICLH_)\n\n",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Check if syncStatus contains data from yesterday",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@concat('if (select count(*) FROM dbo.autoline_sync_status WHERE cast(timestamp_ as date) <> cast(getdate() as date) and dms = ''',pipeline().parameters.dms,''') <> 0 \n\t\tdelete from [dbo].[autoline_headerlog] where postdate < cast(getdate() as date) and dms = ''',pipeline().parameters.dms,'''\n\nselect min(magiclh) as [MAGICLH_] from (\n\t\tselect min(magiclh) as magiclh from [dbo].[autoline_headerlog] where bedrijf = ',pipeline().parameters.bedrijf,' and doctype = ''''  and dms = ''',pipeline().parameters.dms,''' and time_ > cast( DATEPART(HOUR, GETDATE()) - 1 as numeric(4,2))\n\t\tunion select [MAGICLH_] + 1 from dbo.autoline_sync_status WHERE tablename_ = ''', pipeline().parameters.headerlogTable,'''  and dms = ''',pipeline().parameters.dms,''') a')",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "SQL_Doorgangen_autoline_sync_status",
+									"type": "DatasetReference"
+								},
+								"firstRowOnly": false
+							}
+						},
+						{
+							"name": "Execute Pipeline Sync Headerlog",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "SetVariable MAGICLH_",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Sync Headerlog",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"dms": {
+										"value": "@pipeline().parameters.dms",
+										"type": "Expression"
+									},
+									"bedrijf": {
+										"value": "@pipeline().parameters.bedrijf",
+										"type": "Expression"
+									},
+									"headerlogTable": {
+										"value": "@pipeline().parameters.headerlogTable",
+										"type": "Expression"
+									},
+									"magiclh_": {
+										"value": "@variables('magiclh_')",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Get werkorders",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "If MAGICLH_ is not empty",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "@concat('SELECT new.*\nFROM autoline_headerlog_temp new\n     LEFT JOIN autoline_headerlog prev ON prev.bedrijf = ', pipeline().parameters.bedrijf, ' \n                                      AND prev.dms = new.dms\n                                      AND prev.Magiclh = new.magiclh\n                                      AND prev.doctype = new.doctype\nWHERE prev.Magiclh IS NULL\n      AND new.dms = ''',pipeline().parameters.dms,''' and new.bedrijf = ',pipeline().parameters.bedrijf)",
+							"type": "Expression"
+						},
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SQL_Doorgangen_autoline_headerlog_temp",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Set Variable werkorders",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "select werkorders",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "werkorders",
+					"value": {
+						"value": "@string(activity('select werkorders').output.value[0].werkorders)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "select werkorders",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Get werkorders",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "@concat('DECLARE @json NVARCHAR(MAX)\nset @json = N''',string(activity('Get werkorders').output.value),'''\n\nSELECT DISTINCT STUFF(\n(\n    SELECT '','' + CAST(wipno AS VARCHAR)\n    FROM\n    (\nSELECT DISTINCT wipno FROM  \n OPENJSON ( @json ) \nWITH (   \n              DMS   varchar(200) ''$.DMS'' ,  \n              bedrijf     varchar(20)     ''$.bedrijf'',  \n              magiclh numeric(20,0) ''$.magiclh'',  \n              wipno numeric(20,0)    ''$.wipno'',\n\t\t    doctype varchar(5) ''$.doctype'',\n\t\t    postdate date ''$.postdate'',\n\t\t    time_ numeric(4,2) ''$.time_''\n )  where doctype <> ''''\n) sub FOR XML PATH('''')\n), 1, 1, '''') as werkorders\n\t \n\t \n\t ')",
+							"type": "Expression"
+						},
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SQL_Doorgangen_autoline_headerlog_temp",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Select magiclh",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Get werkorders",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "@concat('DECLARE @json NVARCHAR(MAX)\nset @json = N''',string(activity('Get werkorders').output.value),'''\n\nDECLARE @magiclh VARCHAR(MAX)\n\nSELECT DISTINCT STUFF(\n(\n    SELECT '','' + CAST(magiclh AS VARCHAR)\n    FROM\n    (\nSELECT DISTINCT magiclh FROM  \n OPENJSON ( @json ) \nWITH (   \n              magiclh numeric(10,0) ''$.magiclh''\n             \n )  \n) sub FOR XML PATH('''')\n), 1, 1, '''') as magiclh\n\n\n\n\t ')",
+							"type": "Expression"
+						},
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SQL_Doorgangen_autoline_headerlog_temp",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Copy Data sync_headerlog",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Select magiclh",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "@concat('DECLARE @json NVARCHAR(MAX)\nset @json = N''',string(activity('Get werkorders').output.value),'''\n\n\nSELECT DISTINCT * FROM  \n OPENJSON ( @json ) \nWITH (   \n              DMS   varchar(200) ''$.DMS'' ,  \n              bedrijf     varchar(20)     ''$.bedrijf'',  \n              magiclh numeric(20,0) ''$.magiclh'',  \n              wipno numeric(20,0)    ''$.wipno'',\n\t\t    doctype varchar(5) ''$.doctype'',\n\t\t    postdate date ''$.postdate'',\n\t\t    time_ numeric(4,2) ''$.time_''\n ) ') ",
+							"type": "Expression"
+						},
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"preCopyScript": {
+							"value": "@{concat('DELETE FROM autoline_headerlog\nWHERE bedrijf = ',pipeline().parameters.bedrijf,'\n      AND DMS = ''',pipeline().parameters.dms,'''\n      AND magiclh IN\n(',activity('Select magiclh').output.value[0].magiclh,')')}",
+							"type": "Expression"
+						},
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "DMS",
+									"type": "String"
+								},
+								"sink": {
+									"name": "DMS",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "bedrijf",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "bedrijf",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "magiclh",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "magiclh",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "wipno",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "wipno",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "doctype",
+									"type": "String"
+								},
+								"sink": {
+									"name": "doctype",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "postdate",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "postdate",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "time_",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "time_",
+									"type": "Decimal"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SQL_Doorgangen_autoline_headerlog_temp",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQL_Doorgangen_autoline_headerlog",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Execute Sync Headerrecords",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Set Variable werkorders",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Sync Headerrecords",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"dms": {
+							"value": "@pipeline().parameters.dms",
+							"type": "Expression"
+						},
+						"bedrijf": {
+							"value": "@pipeline().parameters.bedrijf",
+							"type": "Expression"
+						},
+						"headerrecordsTable": {
+							"value": "@pipeline().parameters.headerrecordsTable",
+							"type": "Expression"
+						},
+						"werkorders": {
+							"value": "@variables('werkorders')",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Execute Sync LabourLines",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Set Variable werkorders",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Sync Labourlines",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"dms": {
+							"value": "@pipeline().parameters.dms",
+							"type": "Expression"
+						},
+						"bedrijf": {
+							"value": "@pipeline().parameters.bedrijf",
+							"type": "Expression"
+						},
+						"labourlinesTable": {
+							"value": "@pipeline().parameters.labourlinesTable",
+							"type": "Expression"
+						},
+						"werkorders": {
+							"value": "@variables('werkorders')",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Execute Sync Partslines",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Set Variable werkorders",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Sync Partslines",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"dms": {
+							"value": "@pipeline().parameters.dms",
+							"type": "Expression"
+						},
+						"bedrijf": {
+							"value": "@pipeline().parameters.bedrijf",
+							"type": "Expression"
+						},
+						"partlinesTable": {
+							"value": "@pipeline().parameters.partlinesTable",
+							"type": "Expression"
+						},
+						"werkorders": {
+							"value": "@variables('werkorders')",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Select MAX Magiclh",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Execute Sync Headerrecords",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "@{concat('SELECT MAX(MAGICLH) as magiclh FROM autoline_headerlog\nWHERE bedrijf = ',pipeline().parameters.bedrijf,'\n      AND DMS = ''',pipeline().parameters.dms,'''\n      ')}",
+							"type": "Expression"
+						},
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SQL_Doorgangen_autoline_headerlog",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Set Variable MaxMagiclh",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Select MAX Magiclh",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "maxMagiclh",
+					"value": {
+						"value": "@string(activity('Select MAX Magiclh').output.value[0].magiclh)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Stored Procedure UpdateSyncStatus",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Set Variable MaxMagiclh",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[autoline_update_sync_status]",
+					"storedProcedureParameters": {
+						"DATEI_": {
+							"value": null,
+							"type": "String"
+						},
+						"DMS": {
+							"value": {
+								"value": "@pipeline().parameters.dms",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"MAGICLH_": {
+							"value": {
+								"value": "@variables('maxMagiclh')",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"tablename_": {
+							"value": {
+								"value": "@pipeline().parameters.headerlogTable",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"TIMEI_": {
+							"value": null,
+							"type": "Double"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "DOORGANGEN_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"parameters": {
+			"bedrijf": {
+				"type": "string"
+			},
+			"dms": {
+				"type": "string"
+			},
+			"headerrecordsTable": {
+				"type": "string"
+			},
+			"headerlogTable": {
+				"type": "string"
+			},
+			"labourlinesTable": {
+				"type": "string"
+			},
+			"partlinesTable": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"magiclh_": {
+				"type": "String"
+			},
+			"werkorders": {
+				"type": "String"
+			},
+			"magiclh": {
+				"type": "String"
+			},
+			"maxMagiclh": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Doorgangen/Sync direct"
+		},
+		"annotations": [],
+		"lastPublishTime": "2019-10-07T11:10:19Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

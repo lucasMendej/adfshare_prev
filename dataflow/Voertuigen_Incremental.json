@@ -1,0 +1,189 @@
+{
+	"name": "Voertuigen_Incremental",
+	"properties": {
+		"folder": {
+			"name": "CRM"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SQL_DMS_autoline_vehiclerecords",
+						"type": "DatasetReference"
+					},
+					"name": "VehiclerecordsAutolineLst30dgn"
+				},
+				{
+					"dataset": {
+						"referenceName": "CRM_SQL_RdwData",
+						"type": "DatasetReference"
+					},
+					"name": "RdwData"
+				},
+				{
+					"dataset": {
+						"referenceName": "SQL_DMS_idas_carveh",
+						"type": "DatasetReference"
+					},
+					"name": "VehiclerecordsIdas"
+				},
+				{
+					"dataset": {
+						"referenceName": "SQL_DMS_idas_carvar_b",
+						"type": "DatasetReference"
+					},
+					"name": "VehiclerecordsIdasCarvarB"
+				},
+				{
+					"dataset": {
+						"referenceName": "SQL_DMS_idas_carvar_c",
+						"type": "DatasetReference"
+					},
+					"name": "VehiclerecordsIdasCarvarC"
+				},
+				{
+					"dataset": {
+						"referenceName": "SQL_DMS_idas_carvar_e",
+						"type": "DatasetReference"
+					},
+					"name": "VehiclerecordsIdasCarvarE"
+				},
+				{
+					"dataset": {
+						"referenceName": "SQL_DMS_idas_avstam",
+						"type": "DatasetReference"
+					},
+					"name": "VehiclerecordsIdasAvstam"
+				},
+				{
+					"dataset": {
+						"referenceName": "SQL_DMS_idas_dvia",
+						"type": "DatasetReference"
+					},
+					"name": "VehiclerecordsIdasDvia"
+				},
+				{
+					"dataset": {
+						"referenceName": "SQL_DMS_idas_dvi",
+						"type": "DatasetReference"
+					},
+					"name": "VehiclerecordsIdasDvi"
+				},
+				{
+					"dataset": {
+						"referenceName": "SQL_DMS_idas_custm",
+						"type": "DatasetReference"
+					},
+					"name": "VehiclerecordsIdasCustm"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "CRM_SQL_Voertuigen",
+						"type": "DatasetReference"
+					},
+					"name": "sinkVoertuigenAutoline"
+				},
+				{
+					"dataset": {
+						"referenceName": "CRM_SQL_Voertuigen",
+						"type": "DatasetReference"
+					},
+					"name": "sinkVoertuigenIdas"
+				}
+			],
+			"transformations": [
+				{
+					"name": "SelectColumnsFromVehiclerecords"
+				},
+				{
+					"name": "FilterVehiclerecords"
+				},
+				{
+					"name": "JoinRdwData"
+				},
+				{
+					"name": "AddColumnBekendBijRdw"
+				},
+				{
+					"name": "AddColumns"
+				},
+				{
+					"name": "FilterVoertuigen"
+				},
+				{
+					"name": "LeftJoinCarvarB"
+				},
+				{
+					"name": "LeftJoinCarvarC"
+				},
+				{
+					"name": "LeftJoinCarvarE"
+				},
+				{
+					"name": "SelectColumnsFromAvstam"
+				},
+				{
+					"name": "FilterAvstam"
+				},
+				{
+					"name": "SelectColumnsDvia"
+				},
+				{
+					"name": "AggregateDvia"
+				},
+				{
+					"name": "LeftJoinDvia"
+				},
+				{
+					"name": "LeftJoinDvi"
+				},
+				{
+					"name": "SelectColumnsCustm"
+				},
+				{
+					"name": "FilterCustm"
+				},
+				{
+					"name": "InnerJoinCustm"
+				},
+				{
+					"name": "LeftJoinRdwData"
+				},
+				{
+					"name": "SelectColumnsIdas"
+				},
+				{
+					"name": "DerivedColumn1"
+				},
+				{
+					"name": "Select1"
+				},
+				{
+					"name": "DerivedColumn2"
+				},
+				{
+					"name": "Window1"
+				},
+				{
+					"name": "Select2"
+				},
+				{
+					"name": "Filter2"
+				},
+				{
+					"name": "SelectColumnsFromAvstam2"
+				},
+				{
+					"name": "LeftJoinAvstam"
+				},
+				{
+					"name": "AlterRow1"
+				}
+			],
+			"script": "source(output(\n\t\t{_SET} as string,\n\t\t{_COMPANY} as string,\n\t\t{_LTSTUPDATE} as timestamp,\n\t\t{_LTSTCHECK} as timestamp,\n\t\tREGNO as string,\n\t\tMAGIC as decimal(10,0),\n\t\tMODELVAR as string,\n\t\tFRAN as string,\n\t\tMODEL as string,\n\t\tVARIANT as string,\n\t\tSTYLE as string,\n\t\tCC as decimal(10,0),\n\t\tFUEL as string,\n\t\tINSGROUP as decimal(1,0),\n\t\tCOLOUR as string,\n\t\tTRIM_ as string,\n\t\tNU as string,\n\t\tREGMONTH as decimal(2,0),\n\t\tDELETE_ as string,\n\t\tREGDATE as date,\n\t\tENGINE as string,\n\t\tBY018800 as string,\n\t\tCONREF as string,\n\t\tVSBREF as decimal(6,0),\n\t\tDELDATE as date,\n\t\tLTC as boolean,\n\t\tDESC_ as string,\n\t\tSALEDATE as date,\n\t\tSALEDISC as decimal(4,0),\n\t\tSALEEXEC as string,\n\t\tSALEGP as decimal(5,0),\n\t\tSALENET as decimal(6,0),\n\t\tSTATUS as string,\n\t\tRADIO as string,\n\t\tFINCODE as string,\n\t\tFINEXPD as date,\n\t\tFINRATE as decimal(4,2),\n\t\tCOMMAGIC001 as decimal(10,0),\n\t\tCOMMAGIC002 as decimal(10,0),\n\t\tCOMMAGIC003 as decimal(10,0),\n\t\tCOMMAGIC004 as decimal(10,0),\n\t\tTARMAGIC001 as decimal(10,0),\n\t\tTARMAGIC002 as decimal(10,0),\n\t\tTARMAGIC003 as decimal(10,0),\n\t\tTARMAGIC004 as decimal(10,0),\n\t\tSALMAGIC as decimal(10,0),\n\t\tAFTMAGIC as decimal(10,0),\n\t\tDRVMAGIC as decimal(10,0),\n\t\tEXEC_ as string,\n\t\tCHASSIS as string,\n\t\tCHPREFIX as string,\n\t\tCHSERIAL as string,\n\t\tCHASSWS2 as string,\n\t\tCHASSWS as string,\n\t\tTYPE_ as string,\n\t\tCREATED as date,\n\t\tEDITED as date,\n\t\tFINCOMP as string,\n\t\tFINREF as string,\n\t\tAPRDATE as date,\n\t\tAPREXEC as string,\n\t\tAPRREF as string,\n\t\tAPRVALUE as decimal(15,2),\n\t\tSELLDEAL as string,\n\t\tFLEETNO as string,\n\t\tSECURENO as string,\n\t\tWAREXPDT as date,\n\t\tWAREXTDT as date,\n\t\tMILEAGE as decimal(8,0),\n\t\tLASTSERV as date,\n\t\tOTHERMLG as decimal(8,0),\n\t\tNEXTSERV as date,\n\t\tMOTDATE as date,\n\t\tLOCN as string,\n\t\tLOCN001 as string,\n\t\tLOCN002 as string,\n\t\tLOCN003 as string,\n\t\tSALELOCN as string,\n\t\tAFTLOCN as string,\n\t\tBY057900 as string,\n\t\tSERVIVLM as decimal(2,0),\n\t\tMTDVALUE as decimal(15,2),\n\t\tYTDVALUE as decimal(15,2),\n\t\tOWNER as string,\n\t\tACCNO as string,\n\t\tLASTWORK as date,\n\t\tMODELGRP as string,\n\t\tBY062600 as string,\n\t\tOPTIONS as string,\n\t\tWARRANTY as string,\n\t\tSALETYPE as string,\n\t\tTRUCK as boolean,\n\t\tCVAX1REF as string,\n\t\tUSERID as string,\n\t\tBACKCHAS as string,\n\t\tCVAX1EXP as date,\n\t\tCVAX2REF as string,\n\t\tCVAX2EXP as date,\n\t\tCVBODREF as string,\n\t\tCVBODEXP as date,\n\t\tCVENGREF as string,\n\t\tCVENGEXP as date,\n\t\tCVTRAREF as string,\n\t\tCVTRAEXP as date,\n\t\tCVHAZARD as string,\n\t\tCVNXTSAF as date,\n\t\tCVNXTB as date,\n\t\tCVNXTC as date,\n\t\tCVNXTTAC as date,\n\t\tCVNXTREC as date,\n\t\tCVDATE001 as date,\n\t\tCVDATE002 as date,\n\t\tCVDATE003 as date,\n\t\tCVDATE004 as date,\n\t\tCVDATE005 as date,\n\t\tCVTEXT as string,\n\t\tCVTEXT001 as string,\n\t\tCVTEXT002 as string,\n\t\tCVTEXT003 as string,\n\t\tCVTEXT004 as string,\n\t\tCVTEXT005 as string,\n\t\tCVINTVAL as decimal(2,0),\n\t\tOTHLINKT001 as decimal(10,0),\n\t\tOTHLINKT002 as decimal(10,0),\n\t\tOTHLINKT003 as decimal(10,0),\n\t\tOTHLINKT004 as decimal(10,0),\n\t\tOTHLINKT005 as decimal(10,0),\n\t\tOTHLINKT006 as decimal(10,0),\n\t\tOTHLINKT007 as decimal(10,0),\n\t\tOTHLINKC001 as decimal(10,0),\n\t\tOTHLINKC002 as decimal(10,0),\n\t\tOTHLINKC003 as decimal(10,0),\n\t\tOTHLINKC004 as decimal(10,0),\n\t\tOTHLINKC005 as decimal(10,0),\n\t\tOTHLINKC006 as decimal(10,0),\n\t\tOTHLINKC007 as decimal(10,0),\n\t\tPTSYTD as decimal(15,2),\n\t\tPTSLTD as decimal(15,2),\n\t\tCPSYTD as decimal(15,2),\n\t\tCPSLTD as decimal(15,2),\n\t\tLABYTD as decimal(15,2),\n\t\tLABLTD as decimal(15,2),\n\t\tSUBYTD as decimal(15,2),\n\t\tSUBLTD as decimal(15,2),\n\t\tVSBCOMP as string,\n\t\tPSFACTOR as decimal(4,2),\n\t\tEDUSERID as string,\n\t\tLASTMLG as decimal(8,0),\n\t\tFMVMAGIC as decimal(8,0),\n\t\tTANKCAP as decimal(4,0),\n\t\tCVINT001 as decimal(4,0),\n\t\tCVINT002 as decimal(4,0),\n\t\tCVINT003 as decimal(4,0),\n\t\tCVINT004 as decimal(4,0),\n\t\tCVINT005 as decimal(4,0),\n\t\tCVRECINT as decimal(4,0),\n\t\tCVSAFINT as decimal(4,0),\n\t\tCVTACINT as decimal(4,0),\n\t\tCVCYCLE as string,\n\t\tPROGRESS as decimal(10,0),\n\t\tPREVPROG as decimal(10,0),\n\t\tSPEC as string,\n\t\tCAPCODE as string,\n\t\tGLASCODE as string,\n\t\tFLEETNET as string,\n\t\tGENCOL as string,\n\t\tGENTRIM as string,\n\t\tMODELYR as decimal(4,0),\n\t\tMODANAL as string,\n\t\tDLRCODE as string,\n\t\tOLOCN as string,\n\t\tOLOCN001 as string,\n\t\tOLOCN002 as string,\n\t\tOLOCN003 as string,\n\t\tWARSTOP as date,\n\t\tREPDUE as date,\n\t\tINSREF as string,\n\t\tBUYBMILE as decimal(8,0),\n\t\tBUYBEXCE as decimal(15,2),\n\t\tINSEXP as date,\n\t\tBUYBDATE as date,\n\t\tEICOLOUR as string,\n\t\tBUYBVAL as decimal(15,2),\n\t\tTXSTATUS as string,\n\t\tSERMODEL as string,\n\t\tCHGTIME as decimal(10,0),\n\t\tLOTIME as decimal(10,0),\n\t\tINVDATE as date,\n\t\tINVNO as decimal(8,0),\n\t\tDEALER as decimal(10,0),\n\t\tVPURDATE as date,\n\t\tVPURPRIC as decimal(15,2),\n\t\tCTSTART as date,\n\t\tCTATNEW as decimal(16,2),\n\t\tPCODE as string,\n\t\tAVMPG as decimal(4,1),\n\t\tWAREXPML as decimal(8,0),\n\t\tWAREXTML as decimal(8,0),\n\t\tWARBODDT as date,\n\t\tWARBODML as decimal(8,0),\n\t\tVEHSUP as decimal(10,0),\n\t\tPREVREGN as string,\n\t\tPREVREGD as date,\n\t\tPREVREGL as string,\n\t\tVEHPURP as string,\n\t\tGEARS as string,\n\t\tRFLEXP as date,\n\t\tCREDIT as string,\n\t\tFROZEN as string,\n\t\tCREDNUM as decimal(8,0),\n\t\tCREDDATE as date,\n\t\tLASTMOT as date,\n\t\tDESCLETT as string,\n\t\tPICTURE as string,\n\t\tREGYEAR as decimal(4,0),\n\t\tMANUFACT as string,\n\t\tWARRSTAT as string,\n\t\tNEXTSMIL as decimal(8,0),\n\t\tSERVICEC as string,\n\t\tTBELTML as decimal(8,0),\n\t\tBY162600 as string,\n\t\tMSCO as string,\n\t\tRTNPARTS as boolean,\n\t\tCMISALES as string,\n\t\tKARDEX as string,\n\t\tPROGMON as string,\n\t\tWAREXTST as date,\n\t\tWAREXTLN as decimal(4,0),\n\t\tWAREXTCD as string,\n\t\tMNTSTART as date,\n\t\tMNTLEN as decimal(4,0),\n\t\tMNTEND as date,\n\t\tMNTCODE as string,\n\t\tMNTMILE as decimal(8,0),\n\t\tMNTREF as string,\n\t\tMSINFO as string,\n\t\tMSINFO001 as string,\n\t\tMSINFO002 as string,\n\t\tECHECK as date,\n\t\tMILETYPE as string,\n\t\tFRANCOMP as string,\n\t\tCOMPDATE as date,\n\t\tBHP as decimal(10,0),\n\t\tCO2 as decimal(4,1),\n\t\tDDCO as string,\n\t\tCOMM as string,\n\t\tACCIDENT as string,\n\t\tGOVTNUM as string,\n\t\tASSOCVEH as decimal(10,0),\n\t\tMNTSMILE as decimal(8,0),\n\t\tLOYALCOD as string,\n\t\tLOYALNUM as string,\n\t\tLOYALEXP as date,\n\t\tIMMOBIL as string,\n\t\tDRIVSIDE as string,\n\t\tWRITEOFF as boolean,\n\t\tSALVVAL as decimal(10,0),\n\t\tTALLWGHT as decimal(10,0),\n\t\tABTANKC as decimal(4,0),\n\t\tTBELTDT as decimal(4,0),\n\t\tKEY_ as string,\n\t\tKEY001 as string,\n\t\tKEY002 as string,\n\t\tSERVIVL as decimal(10,0),\n\t\tCOLCODE as string,\n\t\tTRIMCODE as string,\n\t\tCTATUSED as decimal(16,2),\n\t\tCTSTUSED as date\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\trowUrlColumn: 'filename',\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\twildcardPaths:['sternData/dataFactoryLandingZone/autoline*/mk_00_vehiclerecords_lst30dgn.parquet']) ~> VehiclerecordsAutolineLst30dgn\nsource(output(\n\t\tKenteken as string,\n\t\tMerk as string,\n\t\tHandelsbenaming as string,\n\t\tDatumaanvangtenaamstelling as date,\n\t\tDatumeersteafgifteNederland as date,\n\t\tDatumeerstetoelating as date,\n\t\tVervaldatumAPK as date,\n\t\tupdated as date\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> RdwData\nsource(output(\n\t\t{_SET} as string,\n\t\t{_COMPANY} as string,\n\t\t{_LTSTUPDATE} as timestamp,\n\t\t{_LTSTCHECK} as timestamp,\n\t\tBDELCD as decimal(18,4),\n\t\tBBRNCH as decimal(18,4),\n\t\tBCUSNO as decimal(18,4),\n\t\tBREGNO as string,\n\t\tBFILL1 as string,\n\t\tBCHAVA as string,\n\t\tBMODYR as decimal(18,4),\n\t\tBCHANO as string,\n\t\tBVINUM as string,\n\t\tBENGNO as string,\n\t\tBMRKCD as string,\n\t\tBCOL as string,\n\t\tBINT as string,\n\t\tBOPT as string,\n\t\tBSCODE as string,\n\t\tBDKEY as string,\n\t\tBIKEY as string,\n\t\tBVOPER as string,\n\t\tBWARMO as decimal(18,4),\n\t\tBREDAT as decimal(18,4),\n\t\tBLSDAT as decimal(18,4),\n\t\tBNEWUS as string,\n\t\tBAFMIL as string,\n\t\tBLMILE as decimal(18,4),\n\t\tBLVDAT as decimal(18,4),\n\t\tBLVCD as string,\n\t\tBNVDAT as decimal(18,4),\n\t\tBCREMD as decimal(18,4),\n\t\tBLCALL as decimal(18,4),\n\t\tBINACT as string,\n\t\tBCAMP as string,\n\t\tBNSDAT as decimal(18,4),\n\t\tBLU as string,\n\t\tBUSER as decimal(18,4),\n\t\tBPRCDE as string,\n\t\tBLBEE as decimal(18,4),\n\t\tBOWDIC as string,\n\t\tBSALM as string,\n\t\tBFILL3 as string,\n\t\tBINCAR as string,\n\t\tBINMYR as decimal(18,4),\n\t\tBINMIL as decimal(18,4),\n\t\tBINTYP as string,\n\t\tBINCHA as string,\n\t\tBINCD as string,\n\t\tBNCFIN as string,\n\t\tBLSMIL as decimal(18,4),\n\t\tBPRMIL as decimal(18,4),\n\t\tBFILL5 as string,\n\t\tBCOCD as string,\n\t\tBCOFDT as decimal(18,4),\n\t\tBCOTAR as decimal(18,4),\n\t\tBCOMXM as decimal(18,4),\n\t\tBCOMXA as decimal(18,4),\n\t\tBYEINS as decimal(18,4),\n\t\tBINDT1 as decimal(18,4),\n\t\tBINAP1 as string,\n\t\tBINDT2 as decimal(18,4),\n\t\tBINAP2 as string,\n\t\tBGRDAT as decimal(18,4),\n\t\tBGRMIL as decimal(18,4),\n\t\tBAPMIL as decimal(18,4),\n\t\tBWSNO as string,\n\t\tBPUSR as decimal(18,4),\n\t\tBKMPJ as decimal(18,4)\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> VehiclerecordsIdas\nsource(output(\n\t\t{_SET} as string,\n\t\t{_COMPANY} as string,\n\t\t{_LTSTUPDATE} as timestamp,\n\t\t{_LTSTCHECK} as timestamp,\n\t\tCVRCTP as string,\n\t\tCVPRCD as string,\n\t\tCVMOJJ as decimal(2,0),\n\t\tCVMDEL as string,\n\t\t{F5#1} as string,\n\t\tCVMDES as string,\n\t\t{F6#2} as string,\n\t\tCVWSID as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> VehiclerecordsIdasCarvarB\nsource(output(\n\t\t{_SET} as string,\n\t\t{_COMPANY} as string,\n\t\t{_LTSTUPDATE} as timestamp,\n\t\t{_LTSTCHECK} as timestamp,\n\t\tCVRCTP as string,\n\t\tCVPRCD as string,\n\t\tCVMOJJ as decimal(2,0),\n\t\tCVENGT as string,\n\t\t{F5#1} as string,\n\t\tCVENGD as string,\n\t\t{F6#2} as string,\n\t\tCVWSID as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> VehiclerecordsIdasCarvarC\nsource(output(\n\t\t{_SET} as string,\n\t\t{_COMPANY} as string,\n\t\t{_LTSTUPDATE} as timestamp,\n\t\t{_LTSTCHECK} as timestamp,\n\t\tCVRCTP as string,\n\t\tCVPRCD as string,\n\t\tCVMOJJ as decimal(2,0),\n\t\tCVVRSE as string,\n\t\t{F5#1} as string,\n\t\tCVVERD as string,\n\t\t{F6#1} as string,\n\t\tCVWSID as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> VehiclerecordsIdasCarvarE\nsource(output(\n\t\t{_SET} as string,\n\t\t{_COMPANY} as string,\n\t\t{_LTSTUPDATE} as timestamp,\n\t\t{_LTSTCHECK} as timestamp,\n\t\tAGFIL as decimal(2,0),\n\t\tAGTRNP as decimal(7,0),\n\t\tAGKLNR as decimal(6,0),\n\t\tAGMERK as string,\n\t\tAGTYP as string,\n\t\tAGBMJJ as decimal(2,0),\n\t\t{F4#1} as string,\n\t\tAGFKEE as decimal(2,0),\n\t\tAGKENT as string,\n\t\tAGEXKL as decimal(6,0),\n\t\tAGFKJJ as decimal(2,0),\n\t\tAGFKMM as decimal(2,0),\n\t\tAGFKDD as decimal(2,0),\n\t\tAGSTAS as string,\n\t\tAGBPMB as decimal(9,2),\n\t\tAGWSNS as decimal(9,0),\n\t\tAGMVKD as string,\n\t\tAGBLOK as string,\n\t\tAGBDNR as decimal(6,0),\n\t\tAGBENR as decimal(6,0),\n\t\t{F4#2} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> VehiclerecordsIdasAvstam\nsource(output(\n\t\t{_SET} as string,\n\t\t{_COMPANY} as string,\n\t\t{_LTSTUPDATE} as timestamp,\n\t\t{_LTSTCHECK} as timestamp,\n\t\tVICCAT as decimal(2,0),\n\t\tVICUST as decimal(6,0),\n\t\tVIREGN as string,\n\t\tVIFUEL as string,\n\t\tVIAPKL as string,\n\t\tVIAPKN as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> VehiclerecordsIdasDvia\nsource(output(\n\t\t{_SET} as string,\n\t\t{_COMPANY} as string,\n\t\t{_LTSTUPDATE} as timestamp,\n\t\t{_LTSTCHECK} as timestamp,\n\t\tVICCAT as decimal(2,0),\n\t\tVICUST as decimal(6,0),\n\t\tVIREGN as string,\n\t\tVIRACD as string,\n\t\tVIRACH as string,\n\t\tVICNFL as string,\n\t\tVICNCD as string,\n\t\tVIEXCC as decimal(2,0),\n\t\tVIEXYY as decimal(2,0),\n\t\tVIEXMM as decimal(2,0),\n\t\tVIEXDD as decimal(2,0),\n\t\tVIMILE as decimal(6,0),\n\t\tVIALCD as string,\n\t\tVIINNM as string,\n\t\tVIINPN as string,\n\t\tVICNTN as decimal(10,0),\n\t\tVILPI as string,\n\t\tVIAIRC as string,\n\t\tVISRVS as string,\n\t\tVIABS as string,\n\t\tVIINTF as string,\n\t\tVIDRIV as string,\n\t\tVITEXT as string,\n\t\tVITXT2 as string,\n\t\tVISLOT as string,\n\t\tVIBIXE as string,\n\t\tVIBMAT as string,\n\t\tVIBMRK as string,\n\t\tVIWINB as string,\n\t\tVIBDNR as decimal(6,0),\n\t\tVILMNR as decimal(6,0),\n\t\tVILCNR as string,\n\t\tVILSED as string,\n\t\tVILKM as decimal(6,0),\n\t\tVILLPT as decimal(2,0),\n\t\tVIFISW as decimal(9,0)\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> VehiclerecordsIdasDvi\nsource(output(\n\t\t{_SET} as string,\n\t\t{_COMPANY} as string,\n\t\t{_LTSTUPDATE} as timestamp,\n\t\t{_LTSTCHECK} as timestamp,\n\t\tCBRCO as decimal(2,0),\n\t\tCCUSNO as decimal(6,0),\n\t\tCPBX as string,\n\t\tCAANH as string,\n\t\tCTITL as string,\n\t\tCVLET as string,\n\t\tCVOEG as string,\n\t\tCNAAM1 as string,\n\t\tCNAAM2 as string,\n\t\tCADRES as string,\n\t\tCHUISN as decimal(5,0),\n\t\tCHUIST as string,\n\t\tCPOCO as string,\n\t\tCCITY as string,\n\t\tCLANDK as string,\n\t\tCTAALK as decimal(2,0),\n\t\tCFICAT as string,\n\t\tCAROB as string,\n\t\tCGESL as string,\n\t\tCFILL5 as string,\n\t\tCDCAT as decimal(2,0),\n\t\tCOWDI as string,\n\t\tCCACR as decimal(1,0),\n\t\tCINVC as decimal(1,0),\n\t\tCVAT as decimal(1,0),\n\t\tCPROF as string,\n\t\tCTIT as string,\n\t\tCCAT as decimal(2,0),\n\t\tCSTAT as decimal(1,0),\n\t\tCFILL4 as decimal(14,0),\n\t\tCFAKT as decimal(1,0),\n\t\tCSALEM as string,\n\t\tCBGKD as string,\n\t\tCBGNR as decimal(9,0),\n\t\tCCSP as string,\n\t\tCCSPA as decimal(8,0),\n\t\tCDMAIL as string,\n\t\tCFIL as decimal(2,0),\n\t\tCNAWN1 as decimal(6,0),\n\t\tCNAWN2 as decimal(6,0),\n\t\tCCWNEW as decimal(4,0),\n\t\tCCWNER as string,\n\t\tCCSINT as decimal(3,0),\n\t\tCCSLAW as decimal(4,0),\n\t\tCCSNEW as decimal(4,0),\n\t\tCCSNER as string,\n\t\tCSEGKD as string,\n\t\tCCDGE as string,\n\t\tCWSNO as string,\n\t\tCTELO as string,\n\t\tCTELR as string,\n\t\tCFAXNR as string,\n\t\tCBTWNR as string,\n\t\tCLIM as decimal(5,0),\n\t\tCCOINV as string,\n\t\tCBRUPR as string,\n\t\tCRELT as string,\n\t\tCSDX as string,\n\t\tCPST as decimal(4,0)\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> VehiclerecordsIdasCustm\nAddColumns select(mapColumn(\n\t\tvoertuignr = MAGIC,\n\t\tkenteken = REGNO,\n\t\tmerkletter_dms = FRAN,\n\t\tmodel = MODEL,\n\t\tvariant = VARIANT,\n\t\tomschrijving = DESC_,\n\t\tlaatste_service,\n\t\tlaatste_bezoek,\n\t\tnext_service,\n\t\tlaatste_km_stand = MILEAGE,\n\t\tgarantie_datum,\n\t\tchassisnummer = CHASSIS,\n\t\tdebiteurennr = ACCNO,\n\t\tservicec = SERVICEC,\n\t\tbedrijf = LOCN002,\n\t\tapk_datum_dms,\n\t\tdatum_deel1_dms,\n\t\tdatum_deel2_dms,\n\t\tdms,\n\t\tprospectnummer,\n\t\tbedrijfsnummer,\n\t\tkenteken_,\n\t\tedited = AddColumns@edited\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> SelectColumnsFromVehiclerecords\nVehiclerecordsAutolineLst30dgn filter(STATUS == 'C') ~> FilterVehiclerecords\nSelectColumnsFromVehiclerecords, RdwData join(kenteken_ == RdwData@Kenteken,\n\tjoinType:'left',\n\tmatchType:'exact',\n\tignoreSpaces: false,\n\tbroadcast: 'auto')~> JoinRdwData\nJoinRdwData derive(Bekend_bij_rdw = case(isNull(RdwData@Kenteken), false(), true())) ~> AddColumnBekendBijRdw\nFilterVehiclerecords derive(dms = {_SET},\n\t\tkenteken_ = trim(replace(REGNO, '-', '')),\n\t\tprospectnummer = case(DRVMAGIC != 0, DRVMAGIC, case(AFTMAGIC != 0, AFTMAGIC, SALMAGIC)),\n\t\tbedrijfsnummer = case(COMMAGIC003 != 0, COMMAGIC003, case(COMMAGIC002 != 0, COMMAGIC002, COMMAGIC001)),\n\t\tdatum_deel1_dms = REGDATE,\n\t\tdatum_deel2_dms = DELDATE,\n\t\tapk_datum_dms = MOTDATE,\n\t\tgarantie_datum = WAREXPDT,\n\t\tnext_service = NEXTSERV,\n\t\tlaatste_bezoek = LASTWORK,\n\t\tlaatste_service = case(year(LASTSERV)>= 1753, LASTSERV),\n\t\tbedrijf = coalesce(right(LOCN001, 2),right(AFTLOCN, 2)),\n\t\tedited = case(isNull(EDITED),case(isNull(CREATED),addDays(currentDate(), -365) , CREATED) , EDITED)) ~> AddColumns\nAddColumnBekendBijRdw filter(isNull(voertuignr) == false()) ~> FilterVoertuigen\nVehiclerecordsIdas, VehiclerecordsIdasCarvarB join(left(BCHAVA, 3) == CVMDEL\n\t&& BMODYR == CVMOJJ\n\t&& BPRCDE == CVPRCD,\n\tjoinType:'left',\n\tmatchType:'exact',\n\tignoreSpaces: false,\n\tbroadcast: 'auto')~> LeftJoinCarvarB\nLeftJoinCarvarB, VehiclerecordsIdasCarvarC join(substring(BCHAVA, 4, 2) == right( toString(CVENGT),2)\n\t&& BMODYR == VehiclerecordsIdasCarvarC@CVMOJJ\n\t&& BPRCDE == VehiclerecordsIdasCarvarC@CVPRCD,\n\tjoinType:'left',\n\tmatchType:'exact',\n\tignoreSpaces: false,\n\tbroadcast: 'auto')~> LeftJoinCarvarC\nLeftJoinCarvarC, VehiclerecordsIdasCarvarE join(substring(BCHAVA, 6, 2) == right( toString(CVVRSE),2)\n\t&& BMODYR == VehiclerecordsIdasCarvarE@CVMOJJ\n\t&& BPRCDE == VehiclerecordsIdasCarvarE@CVPRCD,\n\tjoinType:'left',\n\tmatchType:'exact',\n\tignoreSpaces: false,\n\tbroadcast: 'auto')~> LeftJoinCarvarE\nFilterAvstam select(mapColumn(\n\t\tAGMERK,\n\t\tAGKENT,\n\t\tAGFKJJ,\n\t\tAGFKEE,\n\t\tAGFIL,\n\t\tAGFKMM,\n\t\tAGFKDD,\n\t\tAGKLNR\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: true) ~> SelectColumnsFromAvstam\nVehiclerecordsIdasAvstam filter(AGBLOK == 'N') ~> FilterAvstam\nVehiclerecordsIdasDvia select(mapColumn(\n\t\tVICUST,\n\t\tVIREGN,\n\t\tVIAPKN\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> SelectColumnsDvia\nSelectColumnsDvia aggregate(groupBy(VICUST,\n\t\tVIREGN),\n\tVIAPKN = max(VIAPKN)) ~> AggregateDvia\nLeftJoinAvstam, AggregateDvia join(BCUSNO == VICUST\n\t&& BREGNO == VIREGN,\n\tjoinType:'left',\n\tmatchType:'exact',\n\tignoreSpaces: false,\n\tbroadcast: 'auto')~> LeftJoinDvia\nLeftJoinDvia, VehiclerecordsIdasDvi join(BREGNO == VehiclerecordsIdasDvi@VIREGN\n\t&& BCUSNO == VehiclerecordsIdasDvi@VICUST,\n\tjoinType:'left',\n\tmatchType:'exact',\n\tignoreSpaces: false,\n\tbroadcast: 'auto')~> LeftJoinDvi\nFilterCustm select(mapColumn(\n\t\tccusno = CCUSNO,\n\t\tcfil = CFIL\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> SelectColumnsCustm\nVehiclerecordsIdasCustm filter(CRELT == 'KLT') ~> FilterCustm\nLeftJoinRdwData, SelectColumnsCustm join(BCUSNO == ccusno,\n\tjoinType:'inner',\n\tmatchType:'exact',\n\tignoreSpaces: false,\n\tbroadcast: 'auto')~> InnerJoinCustm\nLeftJoinDvi, RdwData join(trim(replace(BREGNO, '-', '')) == Kenteken,\n\tjoinType:'left',\n\tmatchType:'exact',\n\tignoreSpaces: false,\n\tbroadcast: 'auto')~> LeftJoinRdwData\nDerivedColumn1 select(mapColumn(\n\t\tvoertuignr,\n\t\tkenteken = BREGNO,\n\t\tkenteken_,\n\t\tmerkletter_dms,\n\t\tmodel,\n\t\tvariant,\n\t\tomschrijving,\n\t\tprospectnummer,\n\t\tbedrijfsnummer,\n\t\tlaatste_service,\n\t\tlaatste_bezoek,\n\t\tnext_service,\n\t\tlaatste_km_stand = BLMILE,\n\t\tgarantie_datum,\n\t\tchassisnummer = BVINUM,\n\t\tdebiteurennr,\n\t\tservicec,\n\t\tbedrijf,\n\t\tapk_datum_dms,\n\t\tdatum_deel1_dms,\n\t\tdatum_deel2_dms,\n\t\tmerk = Merk,\n\t\thandelsbenaming = Handelsbenaming,\n\t\tdatumaanvangtenaamstelling = Datumaanvangtenaamstelling,\n\t\tdatumeersteafgifteNederland = DatumeersteafgifteNederland,\n\t\tdatumeerstetoelating = Datumeerstetoelating,\n\t\tvervaldatumAPK = VervaldatumAPK,\n\t\tbekend_bij_rdw,\n\t\tdms = VehiclerecordsIdas@{_SET},\n\t\tedited\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> SelectColumnsIdas\nInnerJoinCustm derive(voertuignr = toInteger(0),\n\t\tkenteken_ = trim(replace(BREGNO, '-', '')),\n\t\tomschrijving = case(concat(case(isNull(CVMDES), '', trim(CVMDES)),' ',case(isNull(CVENGD), '', trim(CVENGD)),' ',case(isNull(CVVERD), '', trim(CVVERD))) == '',trim(BCHAVA),concat(case(isNull(CVMDES), '', trim(CVMDES)),' ',case(isNull(CVENGD), '', trim(CVENGD)),' ',case(isNull(CVVERD), '', trim(CVVERD))) ),\n\t\tprospectnummer = case(BUSER == 0,BCUSNO,BUSER),\n\t\tbedrijfsnummer = case(isNull(VIBDNR) == true(), 0, toInteger(VIBDNR)),\n\t\tlaatste_bezoek = toDate(\r\n    case(\r\n         equals(toString(BLBEE),'0') == true(),\r\n                                                  '',\r\n                                                 case(\r\n                                                     equals(toInteger(BLVDAT),0),\r\n                                                     '',\r\n                                                     case(\r\n                                                         or(\r\n                                                             toInteger(substring(lpad(toString(BLVDAT),6,'0'), 3, 2)) > 12,\r\n                                                             toInteger(substring(lpad(toString(BLVDAT),6,'0'), 5, 2)) > 31\r\n                                                            ),\r\n                                                            '',\r\n                                                            case(\r\n                                                                toInteger(substring(lpad(toString(BLVDAT),6,'0'), 1, 2)) <= year(currentTimestamp()) -1995,\r\n                                                                concat('20', substring(lpad(toString(toInteger(BLVDAT)),6,'0'), 1, 2),'-',substring(lpad(toString(toInteger(BLVDAT)),6,'0'), 3, 2),'-',substring(lpad(toString(toInteger(BLVDAT)),6,'0'), 5, 2)),\r\n                                                                concat('19', substring(lpad(toString(toInteger(BLVDAT)),6,'0'), 1, 2),'-',substring(lpad(toString(toInteger(BLVDAT)),6,'0'), 3, 2),'-',substring(lpad(toString(toInteger(BLVDAT)),6,'0'), 5, 2))\r\n                                                                )\r\n                                                        )\r\n                                                    )\r\n        )\r\n),\n\t\tgarantie_datum = toDate(\r\n    case(\r\n        equals(toInteger(BGRDAT),0),\r\n        '',\r\n        case(\r\n            or(\r\n                toInteger(substring(lpad(toString(BGRDAT),6,'0'), 3, 2)) > 12,\r\n                toInteger(substring(lpad(toString(BGRDAT),6,'0'), 5, 2)) > 31\r\n             ),\r\n             '',\r\n             case(\r\n                 toInteger(substring(lpad(toString(BGRDAT),6,'0'), 1, 2)) <= year(currentTimestamp()) -1995,\r\n                 concat('20', substring(lpad(toString(toInteger(BGRDAT)),6,'0'), 1, 2),'-',substring(lpad(toString(toInteger(BGRDAT)),6,'0'), 3, 2),'-',substring(lpad(toString(toInteger(BGRDAT)),6,'0'), 5, 2)),\r\n                 concat('19', substring(lpad(toString(toInteger(BGRDAT)),6,'0'), 1, 2),'-',substring(lpad(toString(toInteger(BGRDAT)),6,'0'), 3, 2),'-',substring(lpad(toString(toInteger(BGRDAT)),6,'0'), 5, 2))\r\n                 )\r\n            )\r\n        )\r\n        \r\n),\n\t\tbedrijf = toString(toInteger(cfil)),\n\t\tapk_datum_dms = toDate(toTimestamp('')),\n\t\tdatum_deel1_dms = toDate(\r\n    case(\r\n        equals(toInteger(BREDAT),0),\r\n        '',\r\n        case(\r\n            or(\r\n                toInteger(substring(lpad(toString(BREDAT),6,'0'), 3, 2)) > 12,\r\n                toInteger(substring(lpad(toString(BREDAT),6,'0'), 5, 2)) > 31\r\n             ),\r\n             '',\r\n             case(\r\n                 toInteger(substring(lpad(toString(BREDAT),6,'0'), 1, 2)) <= year(currentTimestamp()) -1995,\r\n                 concat('20', substring(lpad(toString(toInteger(BREDAT)),6,'0'), 1, 2),'-',substring(lpad(toString(toInteger(BREDAT)),6,'0'), 3, 2),'-',substring(lpad(toString(toInteger(BREDAT)),6,'0'), 5, 2)),\r\n                 concat('19', substring(lpad(toString(toInteger(BREDAT)),6,'0'), 1, 2),'-',substring(lpad(toString(toInteger(BREDAT)),6,'0'), 3, 2),'-',substring(lpad(toString(toInteger(BREDAT)),6,'0'), 5, 2))\r\n                 )\r\n            )\r\n        )\r\n        \r\n),\n\t\tdatum_deel2_dms = toDate(\r\n    case(\r\n        equals(toInteger(BLSDAT),0),\r\n        '',\r\n        case(\r\n            or(\r\n                toInteger(substring(lpad(toString(BLSDAT),6,'0'), 3, 2)) > 12,\r\n                toInteger(substring(lpad(toString(BLSDAT),6,'0'), 5, 2)) > 31\r\n             ),\r\n             '',\r\n             case(\r\n                 toInteger(substring(lpad(toString(BLSDAT),6,'0'), 1, 2)) <= year(currentTimestamp()) -1995,\r\n                 concat('20', substring(lpad(toString(toInteger(BLSDAT)),6,'0'), 1, 2),'-',substring(lpad(toString(toInteger(BLSDAT)),6,'0'), 3, 2),'-',substring(lpad(toString(toInteger(BLSDAT)),6,'0'), 5, 2)),\r\n                 concat('19', substring(lpad(toString(toInteger(BLSDAT)),6,'0'), 1, 2),'-',substring(lpad(toString(toInteger(BLSDAT)),6,'0'), 3, 2),'-',substring(lpad(toString(toInteger(BLSDAT)),6,'0'), 5, 2))\r\n                 )\r\n            )\r\n        )\r\n        \r\n),\n\t\tbekend_bij_rdw = case(isNull(Kenteken), false(), true()),\n\t\tmerkletter_dms = case(isNull(Merk),case(isNull(AGMERK), case(isNull(CVMDES), '', 'VOLVO'), AGMERK),Merk),\n\t\tmodel = case(isNull(CVMDES),case(isNull(Handelsbenaming), '',Handelsbenaming), CVMDES),\n\t\tvariant = case(isNull(BCHAVA), '', BCHAVA),\n\t\tlaatste_service = toDate(toTimestamp('')),\n\t\tdebiteurennr = toString(null()),\n\t\tservicec = toString(null()),\n\t\tnext_service = toDate(toTimestamp('')),\n\t\tkenteken = trim(BREGNO),\n\t\tedited = toDate(currentTimestamp())) ~> DerivedColumn1\nFilterVoertuigen select(mapColumn(\n\t\tvoertuignr,\n\t\tkenteken = SelectColumnsFromVehiclerecords@kenteken,\n\t\tmerkletter_dms,\n\t\tmodel,\n\t\tvariant,\n\t\tomschrijving,\n\t\tlaatste_service,\n\t\tlaatste_bezoek,\n\t\tnext_service,\n\t\tlaatste_km_stand,\n\t\tgarantie_datum,\n\t\tchassisnummer,\n\t\tdebiteurennr,\n\t\tservicec,\n\t\tbedrijf,\n\t\tapk_datum_dms,\n\t\tdatum_deel1_dms,\n\t\tdatum_deel2_dms,\n\t\tdms,\n\t\tprospectnummer,\n\t\tbedrijfsnummer,\n\t\tkenteken_,\n\t\tmerk = Merk,\n\t\thandelsbenaming = Handelsbenaming,\n\t\tdatumaanvangtenaamstelling = Datumaanvangtenaamstelling,\n\t\tdatumeersteafgifteNederland = DatumeersteafgifteNederland,\n\t\tdatumeerstetoelating = Datumeerstetoelating,\n\t\tvervaldatumAPK = VervaldatumAPK,\n\t\tbekend_bij_rdw = Bekend_bij_rdw,\n\t\tedited\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> Select1\nSelectColumnsFromAvstam derive(Factuur = toDate(\r\n    case(\r\n        equals(toInteger(AGFKDD),0),\r\n        '',\r\n        case(\r\n            or(\r\n                toInteger(lpad(toString(AGFKMM),2,'0')) > 12,\r\n                toInteger(lpad(toString(AGFKDD),2,'0')) > 31\r\n                ),\r\n                '',\r\n                case(\r\n                    equals(toString(AGFKEE),'0') == true(),\r\n                  case(\r\n                        toInteger(lpad(toString(AGFKJJ),2,'0')) <= year(currentTimestamp()) -1995,\r\n                        concat('20', lpad(toString(toInteger(AGFKJJ)),2,'0'),'-',lpad(toString(toInteger(AGFKMM)),2,'0'),'-',lpad(toString(toInteger(AGFKDD)),2,'0')),\r\n                        concat('19', lpad(toString(toInteger(AGFKJJ)),2,'0'),'-',lpad(toString(toInteger(AGFKMM)),2,'0'),'-',lpad(toString(toInteger(AGFKDD)),2,'0'))\r\n                        )\r\n                  ,\r\n                    case(\r\n                        toInteger(lpad(toString(AGFKJJ),2,'0')) <= year(currentTimestamp()) -1995,\r\n                        concat('20', lpad(toString(toInteger(AGFKJJ)),2,'0'),'-',lpad(toString(toInteger(AGFKMM)),2,'0'),'-',lpad(toString(toInteger(AGFKDD)),2,'0')),\r\n                        concat('19', lpad(toString(toInteger(AGFKJJ)),2,'0'),'-',lpad(toString(toInteger(AGFKMM)),2,'0'),'-',lpad(toString(toInteger(AGFKDD)),2,'0'))\r\n                        )\r\n                    )\r\n            )\r\n        )\r\n)) ~> DerivedColumn2\nSelect2 window(over(AGKENT),\n\tdesc(Factuur, true),\n\tasc(AGKENT, true),\n\tcount = rowNumber()) ~> Window1\nDerivedColumn2 select(mapColumn(\n\t\tAGMERK,\n\t\tAGKENT,\n\t\tAGFIL,\n\t\tAGKLNR,\n\t\tFactuur\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select2\nWindow1 filter(count == 1) ~> Filter2\nFilter2 select(mapColumn(\n\t\tAGMERK,\n\t\tAGKENT,\n\t\tAGFIL,\n\t\tAGKLNR\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SelectColumnsFromAvstam2\nLeftJoinCarvarE, SelectColumnsFromAvstam2 join(BREGNO == AGKENT\n\t&& BCUSNO == AGKLNR,\n\tjoinType:'left',\n\tmatchType:'exact',\n\tignoreSpaces: false,\n\tbroadcast: 'auto')~> LeftJoinAvstam\nSelect1 alterRow(upsertIf(edited>=toDate(addDays(currentTimestamp(),-30)))) ~> AlterRow1\nAlterRow1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tdms as string,\n\t\tbedrijf as string,\n\t\tvoertuignr as decimal(38,0),\n\t\tkenteken as string,\n\t\tkenteken_ as string,\n\t\tmerkletter_dms as string,\n\t\tmodel as string,\n\t\tvariant as string,\n\t\tomschrijving as string,\n\t\tprospectnummer as decimal(20,0),\n\t\tbedrijfsnummer as decimal(20,0),\n\t\tlaatste_service as timestamp,\n\t\tlaatste_bezoek as timestamp,\n\t\tnext_service as timestamp,\n\t\tlaatste_km_stand as decimal(10,0),\n\t\tgarantie_datum as date,\n\t\tchassisnummer as string,\n\t\tdebiteurennr as string,\n\t\tservicecontract as string,\n\t\tapk_datum_dms as timestamp,\n\t\tdatum_deel1_dms as date,\n\t\tdatum_deel2_dms as date,\n\t\tmerk as string,\n\t\thandelsbenaming as string,\n\t\tdatumaanvangtenaamstelling as date,\n\t\tdatumeersteafgifteNederland as date,\n\t\tdatumeerstetoelating as date,\n\t\tvervaldatumAPK as date,\n\t\tbekend_bij_rdw as boolean,\n\t\tedited as timestamp,\n\t\tverlengde_garantie_datum as date,\n\t\tverlengde_garantie_code as string,\n\t\tsalelocn as string,\n\t\taftlocn as string,\n\t\tprefferedbranch as string,\n\t\tsalespersonid as string,\n\t\tnu as string,\n\t\tversnellingsbak as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:false,\n\tupsertable:true,\n\tkeys:['dms','bedrijf','voertuignr'],\n\tformat: 'table',\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tdms,\n\t\tbedrijf,\n\t\tvoertuignr,\n\t\tkenteken,\n\t\tkenteken_,\n\t\tmerkletter_dms,\n\t\tmodel,\n\t\tvariant,\n\t\tomschrijving,\n\t\tprospectnummer,\n\t\tbedrijfsnummer,\n\t\tlaatste_service,\n\t\tlaatste_bezoek,\n\t\tnext_service,\n\t\tlaatste_km_stand,\n\t\tgarantie_datum,\n\t\tchassisnummer,\n\t\tdebiteurennr,\n\t\tservicecontract = servicec,\n\t\tapk_datum_dms,\n\t\tdatum_deel1_dms,\n\t\tdatum_deel2_dms,\n\t\tmerk,\n\t\thandelsbenaming,\n\t\tdatumaanvangtenaamstelling,\n\t\tdatumeersteafgifteNederland,\n\t\tdatumeerstetoelating,\n\t\tvervaldatumAPK,\n\t\tbekend_bij_rdw,\n\t\tedited\n\t)) ~> sinkVoertuigenAutoline\nSelectColumnsIdas sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tdms as string,\n\t\tbedrijf as string,\n\t\tvoertuignr as decimal(38,0),\n\t\tkenteken as string,\n\t\tkenteken_ as string,\n\t\tmerkletter_dms as string,\n\t\tmodel as string,\n\t\tvariant as string,\n\t\tomschrijving as string,\n\t\tprospectnummer as decimal(20,0),\n\t\tbedrijfsnummer as decimal(20,0),\n\t\tlaatste_service as timestamp,\n\t\tlaatste_bezoek as timestamp,\n\t\tnext_service as timestamp,\n\t\tlaatste_km_stand as decimal(10,0),\n\t\tgarantie_datum as date,\n\t\tchassisnummer as string,\n\t\tdebiteurennr as string,\n\t\tservicecontract as string,\n\t\tapk_datum_dms as timestamp,\n\t\tdatum_deel1_dms as date,\n\t\tdatum_deel2_dms as date,\n\t\tmerk as string,\n\t\thandelsbenaming as string,\n\t\tdatumaanvangtenaamstelling as date,\n\t\tdatumeersteafgifteNederland as date,\n\t\tdatumeerstetoelating as date,\n\t\tvervaldatumAPK as date,\n\t\tbekend_bij_rdw as boolean,\n\t\tedited as timestamp,\n\t\tverlengde_garantie_datum as date,\n\t\tverlengde_garantie_code as string,\n\t\tsalelocn as string,\n\t\taftlocn as string,\n\t\tprefferedbranch as string,\n\t\tsalespersonid as string,\n\t\tnu as string,\n\t\tversnellingsbak as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tpreSQLs:['delete from [dbo].[voertuigen] where dms = \\'idas\\''],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sinkVoertuigenIdas"
+		}
+	}
+}

@@ -1,0 +1,36 @@
+{
+	"name": "JLR_SAVE_TOXML_delete",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Sftp_JLR",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"filename": {
+				"type": "string",
+				"defaultValue": "BUSINESS_PARTNER"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "SftpLocation",
+				"fileName": {
+					"value": "@concat('42029', dataset().filename, '.xml')",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().filename",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "",
+			"firstRowAsHeader": false,
+			"quoteChar": ""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

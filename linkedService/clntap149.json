@@ -1,0 +1,16 @@
+{
+	"name": "clntap149",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=False;data source=clntap149.hedin.net;initial catalog=autoline;user id=SQL_SA_DataTransferApp",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI1OTNhMThkNC03ZGE1LTQ1YTAtOTRmZS01YjkzMTgzYWFmNTMiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "clntap149",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

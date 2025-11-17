@@ -1,0 +1,25 @@
+{
+	"name": "JP_cars",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "JP cars API",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"page_size": {
+				"type": "string",
+				"defaultValue": "25"
+			}
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": {
+				"value": "@concat('cars/list?page_index={page_index}&include_unvaluated=true&include_hidden=true&include_sold=false&include_proposal_cars=false&extended=true&page_size=',dataset().page_size)",
+				"type": "Expression"
+			}
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,21 @@
+{
+	"name": "Selligent FTP",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "FtpServer",
+		"typeProperties": {
+			"host": "saasfs1.slgnt.eu",
+			"port": "38021",
+			"enableSsl": true,
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Basic",
+			"userName": "pub-stern",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIzNTY4OTNmMS04NzY4LTQ4OTctOWUyYS0yM2IwMTI0Njk0NDEiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "WRK9011",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

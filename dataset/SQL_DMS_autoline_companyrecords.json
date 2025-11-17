@@ -1,0 +1,352 @@
+{
+	"name": "SQL_DMS_autoline_companyrecords",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "_SET",
+				"type": "varchar"
+			},
+			{
+				"name": "_COMPANY",
+				"type": "char"
+			},
+			{
+				"name": "_LTSTUPDATE",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "_LTSTCHECK",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "MAGIC",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "NAME_",
+				"type": "char"
+			},
+			{
+				"name": "ADDRESS",
+				"type": "char"
+			},
+			{
+				"name": "ADDRESS001",
+				"type": "char"
+			},
+			{
+				"name": "ADDRESS002",
+				"type": "char"
+			},
+			{
+				"name": "ADDRESS003",
+				"type": "char"
+			},
+			{
+				"name": "ADDRESS004",
+				"type": "char"
+			},
+			{
+				"name": "ADDRESS005",
+				"type": "char"
+			},
+			{
+				"name": "CREATED",
+				"type": "date"
+			},
+			{
+				"name": "EDITED",
+				"type": "date"
+			},
+			{
+				"name": "EXEC_",
+				"type": "char"
+			},
+			{
+				"name": "PHONE",
+				"type": "char"
+			},
+			{
+				"name": "PHONE001",
+				"type": "char"
+			},
+			{
+				"name": "PHONE002",
+				"type": "char"
+			},
+			{
+				"name": "PHONE003",
+				"type": "char"
+			},
+			{
+				"name": "PHONE004",
+				"type": "char"
+			},
+			{
+				"name": "SHORT",
+				"type": "char"
+			},
+			{
+				"name": "POSTCODE",
+				"type": "char"
+			},
+			{
+				"name": "BY032400",
+				"type": "char"
+			},
+			{
+				"name": "NATFLEET",
+				"type": "char"
+			},
+			{
+				"name": "SOURCE",
+				"type": "char"
+			},
+			{
+				"name": "SALCONT",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "ASALCONT",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "PARENT",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "ACCOUNT",
+				"type": "char"
+			},
+			{
+				"name": "USERID",
+				"type": "char"
+			},
+			{
+				"name": "EDUSERID",
+				"type": "char"
+			},
+			{
+				"name": "DEALER",
+				"type": "char"
+			},
+			{
+				"name": "STATUS",
+				"type": "char"
+			},
+			{
+				"name": "DBTMAGIC",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "FLEETCUS",
+				"type": "char"
+			},
+			{
+				"name": "TXSTATUS",
+				"type": "char"
+			},
+			{
+				"name": "CHGTIME",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "LOTIME",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "LANGUAGE_",
+				"type": "char"
+			},
+			{
+				"name": "VATREG",
+				"type": "char"
+			},
+			{
+				"name": "DELETE_",
+				"type": "char"
+			},
+			{
+				"name": "MANUFACT",
+				"type": "char"
+			},
+			{
+				"name": "KARDEX",
+				"type": "char"
+			},
+			{
+				"name": "ADDRESS2",
+				"type": "char"
+			},
+			{
+				"name": "ADDRESS2001",
+				"type": "char"
+			},
+			{
+				"name": "ADDRESS2002",
+				"type": "char"
+			},
+			{
+				"name": "ADDRESS2003",
+				"type": "char"
+			},
+			{
+				"name": "ADDRESS2004",
+				"type": "char"
+			},
+			{
+				"name": "ADDRESS2005",
+				"type": "char"
+			},
+			{
+				"name": "POSTCOD2",
+				"type": "char"
+			},
+			{
+				"name": "ONAME",
+				"type": "char"
+			},
+			{
+				"name": "ONAME001",
+				"type": "char"
+			},
+			{
+				"name": "ONAME002",
+				"type": "char"
+			},
+			{
+				"name": "ONAME003",
+				"type": "char"
+			},
+			{
+				"name": "ONAME004",
+				"type": "char"
+			},
+			{
+				"name": "WORKAREA",
+				"type": "char"
+			},
+			{
+				"name": "WORKCODE",
+				"type": "char"
+			},
+			{
+				"name": "WORKNAME",
+				"type": "char"
+			},
+			{
+				"name": "WORKADDR",
+				"type": "char"
+			},
+			{
+				"name": "WORKADDR001",
+				"type": "char"
+			},
+			{
+				"name": "WORKADDR002",
+				"type": "char"
+			},
+			{
+				"name": "WORKADDR003",
+				"type": "char"
+			},
+			{
+				"name": "WORKADDR004",
+				"type": "char"
+			},
+			{
+				"name": "WEBSITE",
+				"type": "char"
+			},
+			{
+				"name": "LOYALCOD",
+				"type": "char"
+			},
+			{
+				"name": "LOYALNUM",
+				"type": "char"
+			},
+			{
+				"name": "LOYALEXP",
+				"type": "date"
+			},
+			{
+				"name": "COUNTRYC",
+				"type": "char"
+			},
+			{
+				"name": "ESTABLIS",
+				"type": "char"
+			},
+			{
+				"name": "COREGIST",
+				"type": "char"
+			},
+			{
+				"name": "BY107100",
+				"type": "char"
+			},
+			{
+				"name": "BUSTYPE",
+				"type": "char"
+			},
+			{
+				"name": "SUPPLIER",
+				"type": "char"
+			},
+			{
+				"name": "BACS",
+				"type": "bit"
+			},
+			{
+				"name": "BY109600",
+				"type": "char"
+			},
+			{
+				"name": "BANKREGC",
+				"type": "char"
+			},
+			{
+				"name": "ORGSCODE",
+				"type": "char"
+			},
+			{
+				"name": "BXBANKAC",
+				"type": "char"
+			},
+			{
+				"name": "VATREG2",
+				"type": "char"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "autoline_companyrecords"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

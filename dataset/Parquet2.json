@@ -1,0 +1,1884 @@
+{
+	"name": "Parquet2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DevDataFactorySink",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Filename": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@concat(dataset().Filename, '.parquet')",
+					"type": "Expression"
+				},
+				"container": "autoline1"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "VEHICLE",
+				"type": "INT64"
+			},
+			{
+				"name": "FRAN",
+				"type": "UTF8"
+			},
+			{
+				"name": "MODEL",
+				"type": "UTF8"
+			},
+			{
+				"name": "STATUS",
+				"type": "UTF8"
+			},
+			{
+				"name": "VARIANT",
+				"type": "UTF8"
+			},
+			{
+				"name": "DESC_",
+				"type": "UTF8"
+			},
+			{
+				"name": "DESC001",
+				"type": "UTF8"
+			},
+			{
+				"name": "DESC002",
+				"type": "UTF8"
+			},
+			{
+				"name": "DESC003",
+				"type": "UTF8"
+			},
+			{
+				"name": "DESC004",
+				"type": "UTF8"
+			},
+			{
+				"name": "DESC005",
+				"type": "UTF8"
+			},
+			{
+				"name": "DESC006",
+				"type": "UTF8"
+			},
+			{
+				"name": "DESC007",
+				"type": "UTF8"
+			},
+			{
+				"name": "DESC008",
+				"type": "UTF8"
+			},
+			{
+				"name": "DESC009",
+				"type": "UTF8"
+			},
+			{
+				"name": "BY048700",
+				"type": "UTF8"
+			},
+			{
+				"name": "COLOUR",
+				"type": "UTF8"
+			},
+			{
+				"name": "BY054200",
+				"type": "UTF8"
+			},
+			{
+				"name": "TRIM_",
+				"type": "UTF8"
+			},
+			{
+				"name": "ADDRFROM",
+				"type": "UTF8"
+			},
+			{
+				"name": "ADDRFROM001",
+				"type": "UTF8"
+			},
+			{
+				"name": "ADDRFROM002",
+				"type": "UTF8"
+			},
+			{
+				"name": "LOCN",
+				"type": "UTF8"
+			},
+			{
+				"name": "PROGRESS",
+				"type": "UTF8"
+			},
+			{
+				"name": "CHASSIS",
+				"type": "UTF8"
+			},
+			{
+				"name": "ENGINE",
+				"type": "UTF8"
+			},
+			{
+				"name": "BY065300",
+				"type": "UTF8"
+			},
+			{
+				"name": "SUPPLIER",
+				"type": "UTF8"
+			},
+			{
+				"name": "SADDRESS",
+				"type": "UTF8"
+			},
+			{
+				"name": "SADDRESS001",
+				"type": "UTF8"
+			},
+			{
+				"name": "SADDRESS002",
+				"type": "UTF8"
+			},
+			{
+				"name": "SADDRESS003",
+				"type": "UTF8"
+			},
+			{
+				"name": "SADDRESS004",
+				"type": "UTF8"
+			},
+			{
+				"name": "SADDRESS005",
+				"type": "UTF8"
+			},
+			{
+				"name": "SPOSTCDE",
+				"type": "UTF8"
+			},
+			{
+				"name": "NRCOST001",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "NRCOST002",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "NRCOST003",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "REGN",
+				"type": "UTF8"
+			},
+			{
+				"name": "REGDATE",
+				"type": "INT96"
+			},
+			{
+				"name": "INVAT",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "NAME_",
+				"type": "UTF8"
+			},
+			{
+				"name": "ADDRESS",
+				"type": "UTF8"
+			},
+			{
+				"name": "ADDRESS001",
+				"type": "UTF8"
+			},
+			{
+				"name": "ADDRESS002",
+				"type": "UTF8"
+			},
+			{
+				"name": "ADDRESS003",
+				"type": "UTF8"
+			},
+			{
+				"name": "ADDRESS004",
+				"type": "UTF8"
+			},
+			{
+				"name": "ADDRESS005",
+				"type": "UTF8"
+			},
+			{
+				"name": "POSTCODE",
+				"type": "UTF8"
+			},
+			{
+				"name": "PHONE",
+				"type": "UTF8"
+			},
+			{
+				"name": "INAME",
+				"type": "UTF8"
+			},
+			{
+				"name": "IADDRESS",
+				"type": "UTF8"
+			},
+			{
+				"name": "IADDRESS001",
+				"type": "UTF8"
+			},
+			{
+				"name": "IADDRESS002",
+				"type": "UTF8"
+			},
+			{
+				"name": "IADDRESS003",
+				"type": "UTF8"
+			},
+			{
+				"name": "IADDRESS004",
+				"type": "UTF8"
+			},
+			{
+				"name": "IADDRESS005",
+				"type": "UTF8"
+			},
+			{
+				"name": "IPOSTCDE",
+				"type": "UTF8"
+			},
+			{
+				"name": "CUSTORD",
+				"type": "UTF8"
+			},
+			{
+				"name": "CUSDATE",
+				"type": "INT96"
+			},
+			{
+				"name": "STYPE",
+				"type": "UTF8"
+			},
+			{
+				"name": "EXEC_",
+				"type": "UTF8"
+			},
+			{
+				"name": "EXEC001",
+				"type": "UTF8"
+			},
+			{
+				"name": "EXEC002",
+				"type": "UTF8"
+			},
+			{
+				"name": "EXEC003",
+				"type": "UTF8"
+			},
+			{
+				"name": "EXEC004",
+				"type": "UTF8"
+			},
+			{
+				"name": "DELDATE",
+				"type": "INT96"
+			},
+			{
+				"name": "INVOICE",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "INVDATE",
+				"type": "INT96"
+			},
+			{
+				"name": "SALENET",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "SALEDISC",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "SALEVAT",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "COST",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "SALEGRO",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "PXNO001",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "PXNO002",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "PXNO003",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "TOTALLOW",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "DEPREC",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "FINDUE",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "CUSTDUE",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "COSTS001",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "COSTS002",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "COSTS003",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "COSTS004",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "COSTS005",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "COSTS006",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "COSTS007",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "COSTS008",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "COSTS009",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "COSTS010",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "COSTS011",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "COSTS012",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "COSTS013",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "COSTS014",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "COSTS015",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "TOTNRCST",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "OVALLOW001",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "OVALLOW002",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "OVALLOW003",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "LPROFITV",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "IPROFITV",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "IPROFITD",
+				"type": "INT96"
+			},
+			{
+				"name": "VPROFITV",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VPROFITD",
+				"type": "INT96"
+			},
+			{
+				"name": "NPROFITV",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "NPROFITD",
+				"type": "INT96"
+			},
+			{
+				"name": "ESTCOST",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "LATECOST",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "LOCATOR",
+				"type": "UTF8"
+			},
+			{
+				"name": "PICTURE",
+				"type": "UTF8"
+			},
+			{
+				"name": "LSPECIAL",
+				"type": "UTF8"
+			},
+			{
+				"name": "PRERES",
+				"type": "UTF8"
+			},
+			{
+				"name": "RESVDATE",
+				"type": "INT96"
+			},
+			{
+				"name": "RESVTIME",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "RESVEXEC",
+				"type": "UTF8"
+			},
+			{
+				"name": "SUPACC",
+				"type": "UTF8"
+			},
+			{
+				"name": "INVACC",
+				"type": "UTF8"
+			},
+			{
+				"name": "CUSACC",
+				"type": "UTF8"
+			},
+			{
+				"name": "DEPEST",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "INVTOT",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "CUSAMT",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "DEPAMT001",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "DEPAMT002",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "DEPAMT003",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "DEPREF001",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "DEPREF002",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "DEPREF003",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "DEPTOTAL",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "INVAMT",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "NATOTAL",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "NETALLOW001",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "NETALLOW002",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "NETALLOW003",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "OVTOTAL",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "SITOTAL",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "TOTMAIN",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VTABCODE",
+				"type": "UTF8"
+			},
+			{
+				"name": "VTABCODE001",
+				"type": "UTF8"
+			},
+			{
+				"name": "VTABCODE002",
+				"type": "UTF8"
+			},
+			{
+				"name": "VTABCODE003",
+				"type": "UTF8"
+			},
+			{
+				"name": "VTABCODE004",
+				"type": "UTF8"
+			},
+			{
+				"name": "VTABCODE005",
+				"type": "UTF8"
+			},
+			{
+				"name": "VTABCODE006",
+				"type": "UTF8"
+			},
+			{
+				"name": "VTABCODE007",
+				"type": "UTF8"
+			},
+			{
+				"name": "VTABCODE008",
+				"type": "UTF8"
+			},
+			{
+				"name": "VTABCODE009",
+				"type": "UTF8"
+			},
+			{
+				"name": "VTABCODE010",
+				"type": "UTF8"
+			},
+			{
+				"name": "VTABTO001",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VTABTO002",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VTABTO003",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VTABTO004",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VTABTO005",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VTABTO006",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VTABTO007",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VTABTO008",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VTABTO009",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VTABTO010",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VTABVAT001",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VTABVAT002",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VTABVAT003",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VTABVAT004",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VTABVAT005",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VTABVAT006",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VTABVAT007",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VTABVAT008",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VTABVAT009",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VTABVAT010",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "PLMAGIC",
+				"type": "INT64"
+			},
+			{
+				"name": "SLMAGIC",
+				"type": "INT64"
+			},
+			{
+				"name": "INVOICED",
+				"type": "BOOLEAN"
+			},
+			{
+				"name": "LIST",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "COMM",
+				"type": "UTF8"
+			},
+			{
+				"name": "NOTES",
+				"type": "UTF8"
+			},
+			{
+				"name": "NOTES001",
+				"type": "UTF8"
+			},
+			{
+				"name": "NOTES002",
+				"type": "UTF8"
+			},
+			{
+				"name": "NOTES003",
+				"type": "UTF8"
+			},
+			{
+				"name": "NOTES004",
+				"type": "UTF8"
+			},
+			{
+				"name": "ORDER_",
+				"type": "UTF8"
+			},
+			{
+				"name": "ORDATE",
+				"type": "INT96"
+			},
+			{
+				"name": "ORTYPE",
+				"type": "UTF8"
+			},
+			{
+				"name": "ORDERED",
+				"type": "UTF8"
+			},
+			{
+				"name": "BUILD",
+				"type": "INT96"
+			},
+			{
+				"name": "DELNOTE",
+				"type": "UTF8"
+			},
+			{
+				"name": "CONDATE",
+				"type": "INT96"
+			},
+			{
+				"name": "CONNOTE",
+				"type": "UTF8"
+			},
+			{
+				"name": "ADDATE",
+				"type": "INT96"
+			},
+			{
+				"name": "CONS",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "DELIVER",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "NETCONS",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "CARTAX",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "CARCOST",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "RECOPRIC001",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "RECOPRIC002",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "RECOPRIC003",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "RECOPRIC004",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "RECOPRIC005",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "RECOPRIC006",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "RECOPRIC007",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "RECOPRIC008",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "RECOPRIC009",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "RECOPRIC010",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "RECOPRIC011",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "RECOPRIC012",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "RECOPRIC013",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "RECOPRIC014",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "RECOPRIC015",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "TOTALOPT",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "TOTOPVAT",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BASIC",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "TAXVATCD",
+				"type": "UTF8"
+			},
+			{
+				"name": "TAXVAT",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "DELCOST",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "PDI",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "CONSADJ",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BASCOST",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "V55",
+				"type": "INT96"
+			},
+			{
+				"name": "WARRANTY",
+				"type": "UTF8"
+			},
+			{
+				"name": "CTAXSALE",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "TSALENET",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "TSALEDIS",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "TSALEVAT",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "TSALEGRO",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "OROADATE",
+				"type": "INT96"
+			},
+			{
+				"name": "RADIO",
+				"type": "UTF8"
+			},
+			{
+				"name": "CDSEC",
+				"type": "UTF8"
+			},
+			{
+				"name": "IFDATE",
+				"type": "INT96"
+			},
+			{
+				"name": "RELDATE",
+				"type": "INT96"
+			},
+			{
+				"name": "PREVVEH",
+				"type": "UTF8"
+			},
+			{
+				"name": "RECDATE",
+				"type": "INT96"
+			},
+			{
+				"name": "RECOCOST001",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "RECOCOST002",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "RECOCOST003",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "RECOCOST004",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "RECOCOST005",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "RECOCOST006",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "RECOCOST007",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "RECOCOST008",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "RECOCOST009",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "RECOCOST010",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "RECOCOST011",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "RECOCOST012",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "RECOCOST013",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "RECOCOST014",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "RECOCOST015",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "FLEETNET",
+				"type": "UTF8"
+			},
+			{
+				"name": "FLEETNID",
+				"type": "INT64"
+			},
+			{
+				"name": "LOT",
+				"type": "INT64"
+			},
+			{
+				"name": "SCHKDATE",
+				"type": "INT96"
+			},
+			{
+				"name": "ICTREF",
+				"type": "UTF8"
+			},
+			{
+				"name": "SCHKPERS",
+				"type": "UTF8"
+			},
+			{
+				"name": "SCHKREF",
+				"type": "UTF8"
+			},
+			{
+				"name": "DELDATEE",
+				"type": "INT96"
+			},
+			{
+				"name": "RECDATEE",
+				"type": "INT96"
+			},
+			{
+				"name": "BUYLOCN",
+				"type": "UTF8"
+			},
+			{
+				"name": "USTAX",
+				"type": "UTF8"
+			},
+			{
+				"name": "USTAX001",
+				"type": "UTF8"
+			},
+			{
+				"name": "USTAX002",
+				"type": "UTF8"
+			},
+			{
+				"name": "SELLLOCN",
+				"type": "UTF8"
+			},
+			{
+				"name": "TARMAGIC",
+				"type": "INT64"
+			},
+			{
+				"name": "VEHMAGIC",
+				"type": "INT64"
+			},
+			{
+				"name": "PCODE",
+				"type": "UTF8"
+			},
+			{
+				"name": "SUSPSTCK",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "RECALC",
+				"type": "UTF8"
+			},
+			{
+				"name": "OPTSALE",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "DELSALE",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VEHCOST",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "OPTCOST",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "TRANCOST",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "TRANTAX",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VEHTAX",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "TAXADJ",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "PURCHADJ",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "SALETAX",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "TSALETAX",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "PRICTYPE",
+				"type": "UTF8"
+			},
+			{
+				"name": "EFFECTIV",
+				"type": "INT96"
+			},
+			{
+				"name": "BY323500",
+				"type": "UTF8"
+			},
+			{
+				"name": "ESTVALUE",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "COSTDIFF",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "UNIT",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "LTC",
+				"type": "BOOLEAN"
+			},
+			{
+				"name": "BACKCHAS",
+				"type": "UTF8"
+			},
+			{
+				"name": "CVWEIGHT",
+				"type": "UTF8"
+			},
+			{
+				"name": "CC",
+				"type": "INT64"
+			},
+			{
+				"name": "DISCOUNT001",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "DISCOUNT002",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "DISCOUNT003",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "DISCOUNT004",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "DISCOUNT005",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "DISCOUNT006",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "DISCOUNT007",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "DISCOUNT008",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "DISCOUNT009",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "DISCOUNT010",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "DISCOUNT011",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "DISCOUNT012",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "DISCOUNT013",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "DISCOUNT014",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "DISCOUNT015",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VEHDISC",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "OPTDISC",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "DELDISC",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "CURRCODE",
+				"type": "UTF8"
+			},
+			{
+				"name": "CURRRATE",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BULKINV",
+				"type": "BOOLEAN"
+			},
+			{
+				"name": "MODELYR",
+				"type": "UTF8"
+			},
+			{
+				"name": "MODANAL",
+				"type": "UTF8"
+			},
+			{
+				"name": "GENCO",
+				"type": "UTF8"
+			},
+			{
+				"name": "GENTR",
+				"type": "UTF8"
+			},
+			{
+				"name": "SHIPNO",
+				"type": "UTF8"
+			},
+			{
+				"name": "CRNDATE",
+				"type": "INT96"
+			},
+			{
+				"name": "CAPCODE",
+				"type": "UTF8"
+			},
+			{
+				"name": "CAPKEY",
+				"type": "UTF8"
+			},
+			{
+				"name": "CAPYEAR",
+				"type": "UTF8"
+			},
+			{
+				"name": "CAPLETT",
+				"type": "UTF8"
+			},
+			{
+				"name": "CAPVIN",
+				"type": "UTF8"
+			},
+			{
+				"name": "CSPECIAL",
+				"type": "UTF8"
+			},
+			{
+				"name": "FUEL",
+				"type": "UTF8"
+			},
+			{
+				"name": "PXSETTLE001",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "PXSETTLE002",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "PXSETTLE003",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "PXSETTOT",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "DELTIME",
+				"type": "UTF8"
+			},
+			{
+				"name": "GEARS",
+				"type": "UTF8"
+			},
+			{
+				"name": "SALECTV",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "TSALECTV",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "TAXADJUS",
+				"type": "BOOLEAN"
+			},
+			{
+				"name": "GLSCODE",
+				"type": "UTF8"
+			},
+			{
+				"name": "DEPMAGIC001",
+				"type": "INT64"
+			},
+			{
+				"name": "DEPMAGIC002",
+				"type": "INT64"
+			},
+			{
+				"name": "DEPMAGIC003",
+				"type": "INT64"
+			},
+			{
+				"name": "SVATNO",
+				"type": "UTF8"
+			},
+			{
+				"name": "PINVOICE",
+				"type": "UTF8"
+			},
+			{
+				"name": "BUYEXCH",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "TAGPRICE",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "BUYCURR",
+				"type": "UTF8"
+			},
+			{
+				"name": "CUSTOMS",
+				"type": "UTF8"
+			},
+			{
+				"name": "LETCRED",
+				"type": "UTF8"
+			},
+			{
+				"name": "ORDNO",
+				"type": "UTF8"
+			},
+			{
+				"name": "PINVDATE",
+				"type": "INT96"
+			},
+			{
+				"name": "PINVNO",
+				"type": "UTF8"
+			},
+			{
+				"name": "SHIPDATE",
+				"type": "INT96"
+			},
+			{
+				"name": "XFERDATE",
+				"type": "INT96"
+			},
+			{
+				"name": "XFERLOC",
+				"type": "UTF8"
+			},
+			{
+				"name": "SHIPNAME",
+				"type": "UTF8"
+			},
+			{
+				"name": "RESVTILL",
+				"type": "INT96"
+			},
+			{
+				"name": "DEPVAT001",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "DEPVAT002",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "DEPVAT003",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "CO2",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "LOCLDESC",
+				"type": "UTF8"
+			},
+			{
+				"name": "LOCLCOLD",
+				"type": "UTF8"
+			},
+			{
+				"name": "LOCLTRMD",
+				"type": "UTF8"
+			},
+			{
+				"name": "XFERREF",
+				"type": "UTF8"
+			},
+			{
+				"name": "COMPDATE",
+				"type": "INT96"
+			},
+			{
+				"name": "BHP",
+				"type": "INT64"
+			},
+			{
+				"name": "SRCO",
+				"type": "UTF8"
+			},
+			{
+				"name": "SRMAGIC",
+				"type": "INT64"
+			},
+			{
+				"name": "ACCIDENT",
+				"type": "UTF8"
+			},
+			{
+				"name": "GOVTNUM",
+				"type": "UTF8"
+			},
+			{
+				"name": "SMILEAGE",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "FINAL",
+				"type": "BOOLEAN"
+			},
+			{
+				"name": "IMMOBIL",
+				"type": "UTF8"
+			},
+			{
+				"name": "DRIVSIDE",
+				"type": "UTF8"
+			},
+			{
+				"name": "TALLWGHT",
+				"type": "INT64"
+			},
+			{
+				"name": "ICTOLD",
+				"type": "UTF8"
+			},
+			{
+				"name": "SUBMODEL",
+				"type": "UTF8"
+			},
+			{
+				"name": "SUPPSTAT",
+				"type": "UTF8"
+			},
+			{
+				"name": "OPTIONS",
+				"type": "UTF8"
+			},
+			{
+				"name": "VIDEO",
+				"type": "UTF8"
+			},
+			{
+				"name": "KEY_",
+				"type": "UTF8"
+			},
+			{
+				"name": "KEY2",
+				"type": "UTF8"
+			},
+			{
+				"name": "COLCODE",
+				"type": "UTF8"
+			},
+			{
+				"name": "TRIMCODE",
+				"type": "UTF8"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

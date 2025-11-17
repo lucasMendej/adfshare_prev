@@ -1,0 +1,17 @@
+{
+	"name": "DMS_PROD_SRV_APPS72",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "connectie naar de dms databse op de prod-srv-apps72",
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=False;data source=prod-srv-apps72;initial catalog=DMS;user id=SQL_SA_DMS_Writer",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIxNDk2ZWM1Zi03ODVjLTQ4NmQtYmVjOC1lZmU0ZWQwMjQ3OWUiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "APPS72",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

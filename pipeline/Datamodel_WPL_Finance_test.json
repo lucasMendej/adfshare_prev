@@ -1,0 +1,334 @@
+{
+	"name": "Datamodel_WPL_Finance_test",
+	"properties": {
+		"activities": [
+			{
+				"name": "Wegingsfactor",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "/* in PSA_excel_NORMEN_VERDEELD Autoline4 has Vestiging_id with 1 digit it should be filled with 0. IDAS has all vestiging_id with 1 digit. It is not needed to fill with 0*/ \n\nupdate  dbo.[PSA_excel_WEGINGSFACTOR]\nset Vestigingnr = right('0' + Vestigingnr, 2)\nwhere Autoline = '4'\n\nTruncate table [dbo].[Dim_WegingsFactor@{pipeline().parameters.aftfix}]\n\n\ninsert into [dbo].[Dim_WegingsFactor@{pipeline().parameters.aftfix}] \n  (WegingsFactor_id,Vestiging_id,Afdeling,WegingsFactor)\n  SELECT \n    WegingsFactor_id, Vestiging_id, Afdeling, WegingsFactor   \n  FROM(\n    SELECT CASE WHEN [Autoline] = '1' THEN 'autoline1|'\n      WHEN [Autoline] = '2' THEN 'autoline2|'\n      WHEN [Autoline] = '3' THEN 'autoline3|'\n      WHEN [Autoline] = '4' THEN 'autoline4|'\n      WHEN [Autoline] = '5' THEN 'autoline5|'\n      WHEN [Autoline] = '6' THEN 'autoline6|'\n      WHEN lower([Autoline]) = 'idas' THEN 'IDAS|' END \n      + cast(Vestigingnr as varchar) \n      + '|' +\n      CASE WHEN upper(Afdeling) = 'W' THEN 'Personenwagen'\n        WHEN upper(Afdeling) = 'V' THEN 'Bedrijfswagen'\n        WHEN upper(Afdeling) = 'M' THEN 'Magazijn'\n      WHEN upper(Afdeling) = 'AUDI' THEN 'Audi'\n        ELSE '' END        as WegingsFactor_id\n      ,CASE WHEN [Autoline] = '1' THEN 'autoline1|'\n      WHEN [Autoline] = '2' THEN 'autoline2|'\n      WHEN [Autoline] = '3' THEN 'autoline3|'\n      WHEN [Autoline] = '4' THEN 'autoline4|'\n      WHEN [Autoline] = '5' THEN 'autoline5|' \n      WHEN [Autoline] = '6' THEN 'autoline6|' \n      WHEN lower([Autoline]) = 'idas' THEN 'IDAS|'END \n      + CASE when lower([Autoline ]) <> 'idas' then (RIGHT('00'+ cast([Vestigingnr] as varchar),2)) else\n      cast([Vestigingnr] as varchar) end  as Vestiging_id\n          ,CASE WHEN upper(Afdeling) = 'W' THEN 'Personenwagen'\n        WHEN upper(Afdeling) = 'V' THEN 'Bedrijfswagen'\n        WHEN upper(Afdeling) = 'M' THEN 'Magazijn'\n      WHEN upper(Afdeling) = 'AUDI' THEN 'Audi'  ELSE '' END        as [Afdeling]\n          ,[WegingsFactor]\n    FROM dbo.[PSA_excel_WEGINGSFACTOR]\n    WHERE [$_Active] = 1 \n   )x\n  WHERE WegingsFactor_id is not null\n  ",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Dim_afdeling",
+				"description": "Op basis van de afdeling ID wordt een tabel gemaakt van afdelingen met de benamingen daarbij. \n\nAfhankelijkheid van \nFact_finance.\nDim_Monteur\nFact_Orders",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "BEGIN TRY\n  Truncate table [dbo].[Dim_Afdeling@{pipeline().parameters.aftfix}];\nEND TRY\nBEGIN CATCH\nEND CATCH\n\n\n\ninsert into [dbo].[Dim_Afdeling@{pipeline().parameters.aftfix}]\n  (Afdeling_id, Afdeling, Vestiging_id)\n  Select distinct \n    Afdeling_id,\n    Afdeling,\n    Vestiging_id\n  From (\n    Select distinct \n      Afdeling_id, \n      CASE WHEN  Afdeling_id like 'autoline1|%'\n        and (upper(right(rtrim(Afdeling_id),1))= 'E' \n                or upper(right(rtrim(Afdeling_id),1))= 'H' )THEN 'Bedrijfswagen' \n            Else 'Personenwagen' End as Afdeling,\n      -- IDAS is altijd personenwagen\n      Vestiging_id collate Latin1_General_CS_AS as Vestiging_id\n    From [dbo].[Dim_Monteur@{pipeline().parameters.aftfix}]\n\n    Union \n    Select distinct  \n      Afdeling_id, \n      CASE WHEN  Afdeling_id like 'autoline1|%'\n        and upper(right(rtrim(Afdeling_id),1))= 'V' THEN 'Bedrijfswagen'\n            WHEN  Afdeling_id like 'autoline2|%B' THEN 'Magazijn' \n              WHEN  Afdeling_id like 'autoline%M' THEN 'Magazijn'\n            Else 'Personenwagen' End as Afdeling,\n      --- IDAS is altijd personenwagen\n      Vestiging_id collate Latin1_General_CS_AS as Vestiging_id\n    From [dbo].[Fact_Orders@{pipeline().parameters.aftfix}]\n    where Afdeling_id is not null\n\n\n    Union\n    Select distinct\n      Afdeling_id,\n      CASE WHEN  Afdeling_id like 'autoline2|%'\n        and RIGHT(rtrim(Afdeling_id),2) = '40' THEN 'Personenwagen'\n        WHEN  Afdeling_id like 'autoline2|%'\n        and RIGHT(rtrim(Afdeling_id),2) = '70' THEN 'Magazijn'\n        \n        WHEN  Afdeling_id like 'autoline3|%'\n        and RIGHT(rtrim(Afdeling_id),2) = '30' THEN 'Magazijn'\n        WHEN  Afdeling_id like 'autoline3|%'\n        and RIGHT(rtrim(Afdeling_id),2) in ('40','41','42') THEN 'Personenwagen'\n\n        WHEN  Afdeling_id like 'autoline1|%'\n        and RIGHT(rtrim(Afdeling_id),2) = '40' THEN 'Personenwagen'\n        WHEN  Afdeling_id like 'autoline1|%'\n        and RIGHT(rtrim(Afdeling_id),2) in ('41','42','43','44') THEN 'Bedrijfswagen'\n        WHEN  Afdeling_id like 'autoline1|%'\n        and RIGHT(rtrim(Afdeling_id),2) in ('30','31','32','33','34') THEN 'Magazijn'\n        \n        WHEN  Afdeling_id like 'autoline4|%'\n        and RIGHT(rtrim(Afdeling_id),2) = '30' THEN 'Magazijn'\n        WHEN  Afdeling_id like 'autoline4|%'\n        and RIGHT(rtrim(Afdeling_id),2) in ('40') THEN 'Personenwagen'\n\n        WHEN  Afdeling_id like 'autoline6|%'\n        and RIGHT(rtrim(Afdeling_id),2) = '30' THEN 'Magazijn'\n        WHEN  Afdeling_id like 'autoline6|%'\n        and RIGHT(rtrim(Afdeling_id),2) in ('40') THEN 'Personenwagen'\n\n        WHEN Afdeling_id like 'IDAS|%' THEN 'Personenwagen'\n        END as Afdeling,\n      Vestiging_id collate Latin1_General_CS_AS as Vestiging_id\n    From [dbo].[Fact_Finance@{pipeline().parameters.aftfix}]\n\n\n  ) x\n",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Update afdeling with factor",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Dim_afdeling",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Wegingsfactor",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "Update [dbo].[Dim_Afdeling@{pipeline().parameters.aftfix}]\nSet WegingsFactor_id = NULL\n\nUpdate A\nSet A.WegingsFactor_id = W.WegingsFactor_id\nFrom [dbo].[Dim_Afdeling@{pipeline().parameters.aftfix}] A\nleft join  [dbo].[Dim_WegingsFactor@{pipeline().parameters.aftfix}] W \non W.Vestiging_id = A.Vestiging_id\nwhere W.Afdeling = ''\n\nUpdate A\nSet A.WegingsFactor_id = W.WegingsFactor_id\nFrom [dbo].[Dim_Afdeling@{pipeline().parameters.aftfix}] A\nleft join  [dbo].[Dim_WegingsFactor@{pipeline().parameters.aftfix}] W \non W.Vestiging_id = A.Vestiging_id\nand W.Afdeling = A.Afdeling\nwhere W.Afdeling <> ''",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Fact Normen fixed",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Update afdeling with factor",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "BEGIN TRY\n      Drop table [dbo].[Normen_Vast_Tussentabel@{pipeline().parameters.aftfix}]\nEND TRY\nBEGIN CATCH\n      -- Table should allready be removed, so no issue when drop table failes\nEND CATCH\n\n\n\nSELECT [Autoline]\n      ,CASE when lower([Autoline]) <> 'idas' then (RIGHT('00'+ cast([Vestigingnr] as varchar),2)) else  cast([Vestigingnr] as varchar) end as [Vestigingnr]\n      ,[Afdeling]\n      ,[Ingangsdatum] as Valid_From\n\t  ,CASE WHEN Afdeling = '' \n\t\t\tTHEN LEAD([Ingangsdatum]) over (partition by Autoline,Vestigingnr order by Ingangsdatum)\t\t\t\t\t\t\t\t\t-- Indien een regel een afdeling '' heeft is deze geldig voor de gehele vestiging. Deze kan worden afgesloten omdat er een nieuwe regel met afdeling '' is aangeleverd. \n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t-- Deze regel kan ook afgeloten worden door een nieuwere aanlevering maar dan afdeling niveau.  \n\t\t\tELSE LEAD([Ingangsdatum]) over (partition by Autoline,Vestigingnr,Afdeling order by Ingangsdatum) END\t\tas Valid_To\n\t  ,[Norm_Geklokt%]\n      ,[Norm_B%]\n      ,[Norm_P%]\n      ,[Norm_F%]\n      ,[Norm_Totaal%]\n      ,[Doel_Conversie%]\n      ,[Gemiddeld_Uurtarief] as [Gemiddeld _Uurtarief]\ninto [dbo].[Normen_Vast_Tussentabel@{pipeline().parameters.aftfix}]\nFROM  dbo.[PSA_excel_NORMEN_VAST] where [$_Active] = 1 and [$_Delete] = 0 and  Autoline > '0'\n\n\n--Indien een regel met een afdeling <> '' zelf geen vervolg heeft zou deze afgesloten kunnen zijn doordat er een vervolg is met afdeling ''\n--In dit geval wordt de eerste volgende regel van die vestiging met afdeling '' gezocht om de regel af te sluiten.\nUpdate u\n      set u.Valid_To = x.Valid_To\nFROM [dbo].[Normen_Vast_Tussentabel@{pipeline().parameters.aftfix}] u\nleft join (\n      select t.autoline, t.vestigingnr, t.afdeling, t.Valid_From, min(t2.Valid_From) as Valid_To \n      From [dbo].[Normen_Vast_Tussentabel@{pipeline().parameters.aftfix}] t\n      left join dbo.[Normen_Vast_Tussentabel@{pipeline().parameters.aftfix}] t2 on t2.autoline = t.autoline and t2.vestigingnr = t.vestigingnr and t2.Valid_From > t.Valid_From\n      WHERE t2.Afdeling = '' \n            and t.Afdeling <> ''\n            and t.Valid_To is null\n            and t2.Valid_From is not null \n      Group by t.Autoline, t.Vestigingnr, t.Afdeling, t.Valid_From\n      ) x\n      on x.autoline = u.autoline and x.vestigingnr = u.vestigingnr and x.afdeling = u.afdeling and x.Valid_From = u.Valid_From\nwhere x.Valid_To is not null\n\n-- Eind table clear.\n-- expande type 2 to 1 row per day.\nTruncate table [dbo].[Fact_Normen_Vast@{pipeline().parameters.aftfix}]\n\nInsert into [dbo].[Fact_Normen_Vast@{pipeline().parameters.aftfix}](\n      [WegingsFactor_id]\n      ,[Date_Norm]\n      ,[Norm_B%]\n      ,[Norm_F%]\n      ,[Norm_Geklokt%]\n      ,[Norm_P%]\n      ,[Norm_Totaal%]\n      ,[Doel_Conversie%]\n      ,[Gemiddeld _Uurtarief])\n      Select CASE WHEN N.[Autoline] = '1' THEN 'autoline1|'\n\t\t\tWHEN N.[Autoline] = '2' THEN 'autoline2|'\n\t\t\tWHEN N.[Autoline] = '3' THEN 'autoline3|'\n\t\t\tWHEN N.[Autoline] = '4' THEN 'autoline4|'\n\t\t\tWHEN N.[Autoline] = '5' THEN 'autoline5|'\n\t\t\tWHEN N.[Autoline] = '6' THEN 'autoline6|'\n\t\t\tWHEN lower(N.[Autoline]) = 'idas' THEN 'IDAS|' END \n\t\t\t+ CASE when lower(n.[Autoline]) <> 'idas' then (RIGHT('00'+ cast(n.[Vestigingnr] as varchar),2)) else  cast(n.[Vestigingnr] as varchar) end\n\t\t\t+ '|' +\n\t\tCASE WHEN upper(N.Afdeling) = 'W' THEN 'Personenwagen'\n\t\t\t WHEN upper(N.Afdeling) = 'V' THEN 'Bedrijfswagen'\n\t\t\t WHEN upper(N.Afdeling) = 'M' THEN 'Magazijn'\n\t\t\t ELSE '' END\t\t\t\t\t\t\t\tas WegingsFactor_id\n            ,D.FullDate as [Date_Norm] \n            ,N.[Norm_B%]\n            ,N.[Norm_F%]\n            ,N.[Norm_Geklokt%]\n            ,N.[Norm_P%]\n            ,N.[Norm_Totaal%]\n            ,N.[Doel_Conversie%]\n            ,N.[Gemiddeld _Uurtarief]\n      From [dbo].[Normen_Vast_Tussentabel@{pipeline().parameters.aftfix}] N\n      left join [dbo].[Dim_Date] D on D.FullDate < DATEADD(year,1,getdate()) and D.FullDate >= N.Valid_From and (D.FullDate < N.Valid_To or N.Valid_To is null)  -- dim date is not specific to _WPL so no aftfix\n      where CASE WHEN N.[Autoline] = '1' THEN 'autoline1|'\n\t\t\tWHEN N.[Autoline] = '2' THEN 'autoline2|'\n\t\t\tWHEN N.[Autoline] = '3' THEN 'autoline3|'\n\t\t\tWHEN N.[Autoline] = '4' THEN 'autoline4|'\n\t\t\tWHEN N.[Autoline] = '5' THEN 'autoline5|'\n\t\t\tWHEN N.[Autoline] = '6' THEN 'autoline6|'\n\t\t\tWHEN lower(N.[Autoline]) = 'idas' THEN 'IDAS|' END \n\t\t\t+ CASE when lower(n.[Autoline]) <> 'idas' then (RIGHT('00'+ cast(n.[Vestigingnr] as varchar),2)) else  cast(n.[Vestigingnr] as varchar) end\n\t\t\t+ '|' \n                  + CASE WHEN upper(N.Afdeling) = 'W' THEN 'Personenwagen'\n\t\t\t WHEN upper(N.Afdeling) = 'V' THEN 'Bedrijfswagen'\n\t\t\t WHEN upper(N.Afdeling) = 'M' THEN 'Magazijn'\n\t\t\t ELSE '' END is not null\n                   and D.FullDate is not null\n\nDrop table [dbo].[Normen_Vast_Tussentabel@{pipeline().parameters.aftfix}]",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Weighting factor",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Fact Normen fixed",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "\nTruncate table [dbo].[Link_Table_WegingsFactor@{pipeline().parameters.aftfix}]\n\nInsert into [dbo].[Link_Table_WegingsFactor@{pipeline().parameters.aftfix}] \n    (WegingsFactor_id)\n    Select WegingsFactor_id\n    From(\n        Select WegingsFactor_id\n        From [dbo].[Fact_Normen_Vast@{pipeline().parameters.aftfix}]\n        Union \n        Select WegingsFactor_id\n        From [dbo].[Dim_Afdeling@{pipeline().parameters.aftfix}]\n        Union\n        Select WegingsFactor_id\n        From [dbo].[Dim_WegingsFactor@{pipeline().parameters.aftfix}]\n    )x \nWhere WegingsFactor_id is not null\n",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Update Afdeling with sector",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Weighting factor",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "Update A\nSet A.Rayon = x.Rayon\nFrom [dbo].[Dim_Afdeling@{pipeline().parameters.aftfix}] A\nLeft join (\n  SELECT A.Afdeling_id\n\t  ,CASE WHEN C.Rayon is null Then left(A.vestiging_id,CHARINDEX('|',A.Vestiging_id)-1) Else C.Rayon collate Latin1_General_CS_AS  end as Rayon\n  FROM [dbo].[Dim_Afdeling@{pipeline().parameters.aftfix}] A\n  left join [dbo].[Dim_Cluster_Rayon@{pipeline().parameters.aftfix}] C\n    on A.Vestiging_id = C.Instance + '|' + cast(C.Vestiging as varchar) collate Latin1_General_CS_AS and (A.Afdeling = C.afdeling or C.afdeling is null)\n  ) x\n  on x.Afdeling_id = A.Afdeling_id",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Fact_Normen Verdeeld",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "\n/* in PSA_excel_NORMEN_VERDEELD Autoline4 has Vestiging_id with 1 digit it should be filled with 0. IDAS has all vestiging_id with 1 digit. It is not needed to fill with 0*/ \n\nupdate dbo.[PSA_excel_NORMEN_VERDEELD]\nset Vestigingnr = RIGHT('0'+ Vestigingnr, 2)\nwhere autoline = '4'\n\nTruncate table [dbo].[Fact_Normen_Verdeeld@{pipeline().parameters.aftfix}]\n\ninsert into [dbo].[Fact_Normen_Verdeeld@{pipeline().parameters.aftfix}] (\n    [NormVerdeeld_id]\n    ,[Vestiging_id]\n    ,[Afdeling]\n    ,[Date_Norm_Verdeeld]\n    ,[Soort]\n    ,[Bedrag]\n    )\n    Select  cast(Case When [Autoline] = '1' Then 'autoline1'\n                    When [Autoline] = '2' Then 'autoline2'\n                    When [Autoline] = '3' Then 'autoline3'\n                    When [Autoline] = '4' Then 'autoline4'\n                    When [Autoline] = '5' Then 'autoline5' \n                    When [Autoline] = '6' Then 'autoline6' \n                    When lower([Autoline]) = 'idas' Then 'IDAS' \n                    End as varchar) \n                    + '|' + cast([Vestigingnr] as varchar)\n                    + '|' + Afdeling              \n                    + '|' + Soort             as [NormVerdeeld_id] \n        ,cast(Case When [Autoline] = '1' Then 'autoline1'\n                    When [Autoline] = '2' Then 'autoline2'\n                    When [Autoline] = '3' Then 'autoline3'\n                    When [Autoline] = '4' Then 'autoline4'\n                    When [Autoline] = '5' Then 'autoline5' \n                    When [Autoline] = '6' Then 'autoline6' \n                    When lower([Autoline]) = 'idas' Then 'IDAS'\n                    End as varchar) \n                    + '|' + cast([Vestigingnr] as varchar)        as Vestiging_id\n        ,Afdeling\n        ,Dag\n        ,[Soort]\n        ,convert(float,N.[Bedrag]) * (convert(float,replace(S.[Percentage],',','.'))/100) as Bedrag\n    FROM dbo.[PSA_excel_NORMEN_VERDEELD] N \n    left join dbo.[PSA_excel_SEIZOENSVERDELING] S \n        on S.Seizoenspatroon = N.Seizoenspatroon and datepart(year,S.[Dag]) = N.Jaar\n    Where N.Bedrag is not null and N.[$_Active] = 1 \n        and N.[$_Delete] = 0\n        and S.[$_Active] = 1 \n        and S.[$_Delete] = 0\n        and lower(N.[Autoline]) in ('1','2','3','4','5','6','idas')\n",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Link Table normverdeeld afdeling",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Fact_Normen Verdeeld",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "Truncate Table [dbo].[Link_Table_NormVerdeeld_Afdeling@{pipeline().parameters.aftfix}];\n\nInsert into [dbo].[Link_Table_NormVerdeeld_Afdeling@{pipeline().parameters.aftfix}] \n    ([Afdeling_id],[NormVerdeeld_id])\n    Select distinct  A.Afdeling_id, N.NormVerdeeld_id\n    From [dbo].[Dim_Afdeling@{pipeline().parameters.aftfix}] A\n    left join  [dbo].[Fact_Normen_Verdeeld@{pipeline().parameters.aftfix}] N on N.Vestiging_id = A.Vestiging_id\n    where N.Afdeling = ''\n\n    Union\n    Select distinct  A.Afdeling_id, N.NormVerdeeld_id\n    From [dbo].[Dim_Afdeling@{pipeline().parameters.aftfix}] A\n    left join  [dbo].[Fact_Normen_Verdeeld@{pipeline().parameters.aftfix}] N on N.Vestiging_id = A.Vestiging_id and N.Afdeling = A.Afdeling\n    where N.Afdeling <> ''\n\n",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Link Table normverdeeld",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Link Table normverdeeld afdeling",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "Truncate table [dbo].[Link_Table_NormVerdeeld@{pipeline().parameters.aftfix}]\n\nInsert into [dbo].[Link_Table_NormVerdeeld@{pipeline().parameters.aftfix}] (NormVerdeeld_id)\n    Select distinct NormVerdeeld_id\n    From(\n        Select distinct NormVerdeeld_id\n        From [dbo].[Fact_Normen_Verdeeld@{pipeline().parameters.aftfix}]\n        Union \n        Select distinct  NormVerdeeld_id\n        From [dbo].[Dim_Afdeling@{pipeline().parameters.aftfix}]\n    )x \n    Where NormVerdeeld_id is not null",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			}
+		],
+		"parameters": {
+			"aftfix": {
+				"type": "string",
+				"defaultValue": "_WPL"
+			}
+		},
+		"variables": {
+			"aftfix": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Dashboard/WPL/test"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-05-17T09:03:16Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

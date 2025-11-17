@@ -1,0 +1,49 @@
+{
+	"name": "SQL_DMS_autoline_sync_status",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "DMS",
+				"type": "varchar"
+			},
+			{
+				"name": "bedrijf",
+				"type": "varchar"
+			},
+			{
+				"name": "tablename_",
+				"type": "varchar"
+			},
+			{
+				"name": "MAGICLH_",
+				"type": "varchar"
+			},
+			{
+				"name": "DATEI_",
+				"type": "varchar"
+			},
+			{
+				"name": "TIMEI_",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "timestamp_",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "autoline_sync_status"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

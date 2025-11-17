@@ -1,0 +1,148 @@
+{
+	"name": "SQL_DMS_idas_avstam",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "_SET",
+				"type": "varchar"
+			},
+			{
+				"name": "_COMPANY",
+				"type": "varchar"
+			},
+			{
+				"name": "_LTSTUPDATE",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "_LTSTCHECK",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "AGFIL",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "AGTRNP",
+				"type": "decimal",
+				"precision": 7,
+				"scale": 0
+			},
+			{
+				"name": "AGKLNR",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 0
+			},
+			{
+				"name": "AGMERK",
+				"type": "varchar"
+			},
+			{
+				"name": "AGTYP",
+				"type": "varchar"
+			},
+			{
+				"name": "AGBMJJ",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "F4#1",
+				"type": "varchar"
+			},
+			{
+				"name": "AGFKEE",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "AGKENT",
+				"type": "varchar"
+			},
+			{
+				"name": "AGEXKL",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 0
+			},
+			{
+				"name": "AGFKJJ",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "AGFKMM",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "AGFKDD",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "AGSTAS",
+				"type": "varchar"
+			},
+			{
+				"name": "AGBPMB",
+				"type": "decimal",
+				"precision": 9,
+				"scale": 2
+			},
+			{
+				"name": "AGWSNS",
+				"type": "decimal",
+				"precision": 9,
+				"scale": 0
+			},
+			{
+				"name": "AGMVKD",
+				"type": "varchar"
+			},
+			{
+				"name": "AGBLOK",
+				"type": "varchar"
+			},
+			{
+				"name": "AGBDNR",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 0
+			},
+			{
+				"name": "AGBENR",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 0
+			},
+			{
+				"name": "F4#2",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "idas_avstam"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

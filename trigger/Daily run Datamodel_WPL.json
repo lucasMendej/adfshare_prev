@@ -1,0 +1,25 @@
+{
+	"name": "Daily run Datamodel_WPL",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2023-05-12T21:48:00",
+				"timeZone": "W. Europe Standard Time",
+				"schedule": {
+					"minutes": [
+						30
+					],
+					"hours": [
+						5
+					]
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,29 @@
+{
+	"name": "autoline5_tables_prod_srv_apps06",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "autoline5_prod_srv_apps06",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "RelationalTable",
+		"structure": [
+			{
+				"name": "DMS                "
+			},
+			{
+				"name": "BEDRIJF"
+			},
+			{
+				"name": ""
+			},
+			{
+				"name": ""
+			},
+			{
+				"name": ""
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

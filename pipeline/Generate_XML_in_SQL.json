@@ -1,0 +1,33 @@
+{
+	"name": "Generate_XML_in_SQL",
+	"properties": {
+		"activities": [
+			{
+				"name": "Create_Dataset",
+				"type": "DatabricksNotebook",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/yanmingt@sterngroep.onmicrosoft.com/JLR_data/Create_Dataset"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks_PROD_BNL_DATABRICKS_01",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"folder": {
+			"name": "Supply to OEM"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-04-16T14:22:37Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

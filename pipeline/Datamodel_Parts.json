@@ -1,0 +1,174 @@
+{
+	"name": "Datamodel_Parts",
+	"properties": {
+		"activities": [
+			{
+				"name": "Keep_history_WO_with_R_no_SV_states",
+				"description": "This workbook identifies and tracks workshop orders that are in 'R' (ready) status but have no associated part lines in status 'S' or 'V', signaling potential delays or processing issues. It maintains a daily historical log of these orders for trend monitoring and reporting in Power BI.",
+				"type": "DatabricksNotebook",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/yanmingt@sterngroep.onmicrosoft.com/Dashboard_Parts/WORstatusOud"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks_PROD_BNL_DATABRICKS_01",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "DataCollection_Dashboard_Day_Level",
+				"description": "This workbook prepares operational KPI metrics for Power BI dashboards by extracting, transforming, and aggregating data from a DMS database. It focuses on key areas of workshop activity, parts purchasing, and inventory performance across multiple branches.",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Keep_history_WO_with_R_no_SV_states",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/yanmingt@sterngroep.onmicrosoft.com/Dashboard_Parts/DataCollection_13_day"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks_PROD_BNL_DATABRICKS_01",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "DataCollection_Parts_Table_I",
+				"description": "This workbook generates aggregated and detailed data for Dashboard 1 in Power BI, focusing on work orders with parts in 'R' status (Ready). It also highlights older work orders where parts remain unprocessed after 14 days. The result is both a high-level summary and detailed drill-down tables by dealership (vestiging) and order.",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "DataCollection_Dashboard_Day_Level",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/yanmingt@sterngroep.onmicrosoft.com/Dashboard_Parts/DataCollection_Table_13_day_I"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks_PROD_BNL_DATABRICKS_01",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "DataCollection_Parts_Table_II",
+				"description": "This workbook prepares data for Dashboard 2 in Power BI by extracting, categorizing, and exporting workshop orders and their part lines from the DMS database. It supports order tracking at different fulfillment stages:\n\nOrders in progress (not yet delivered)\nOrders with parts on order\nOrders with parts already delivered\nThe final data is exported in both header- and part-level granularity to multiple fact tables.",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "DataCollection_Parts_Table_I",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/yanmingt@sterngroep.onmicrosoft.com/Dashboard_Parts/DataCollection_Table_13_day_II"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks_PROD_BNL_DATABRICKS_01",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "DataCollection_Parts_Table_III",
+				"description": "This workbook prepares datasets for Power BI dashboards 3, 4, 5, 7, and 8 by extracting and transforming data from the DMS database. The focus is on purchase order lines and stock-related insights per dealership location.",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "DataCollection_Parts_Table_II",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/yanmingt@sterngroep.onmicrosoft.com/Dashboard_Parts/DataCollection_Table_13_day_III"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks_PROD_BNL_DATABRICKS_01",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "DataCollection_Dashboard_Week_Level",
+				"description": "This workbook generates weekly KPI aggregates from daily operational parts data for use in dashboards and performance monitoring in Power BI. It merges current data, historical data, and target figures to calculate trends and ratios for each dealership (autoline | vestiging) and exports summarized metrics in both weekly and grid formats.",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "DataCollection_Parts_Table_III",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/yanmingt@sterngroep.onmicrosoft.com/Dashboard_Parts/DataCollection_13_wk"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks_PROD_BNL_DATABRICKS_01",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"folder": {
+			"name": "Dashboard/Parts"
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-07-03T14:58:14Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

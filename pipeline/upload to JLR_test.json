@@ -1,0 +1,94 @@
+{
+	"name": "upload to JLR_test",
+	"properties": {
+		"activities": [
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "filenames",
+					"value": [
+						"XML_HEADER",
+						"BUSINESS_PARTNER",
+						"EMPLOYEE",
+						"VEHICLE",
+						"INVOICE_HEADER",
+						"WORK_ORDER_HEADER",
+						"INVOICE_LINE",
+						"WORK_ORDER_LINE",
+						"LOCATION",
+						"PART",
+						"REPAIR_CATEGORY",
+						"TIME_EMP_ACT",
+						"TIME_EMP_ORDER",
+						"TIME_EMP_SCHED",
+						"TIME_HOURTYPES",
+						"WORKSHOP_CAPACITY",
+						"WPS_TIMESTAMPS"
+					]
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Set variable1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@variables('filenames')",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"activities": [
+						{
+							"name": "Execute Pipeline1",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "POST_in_XML_to_JLR",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"run_Filename": {
+										"value": "@item()",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"variables": {
+			"filenames": {
+				"type": "Array"
+			}
+		},
+		"folder": {
+			"name": "Supply to OEM"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-07-19T21:25:54Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

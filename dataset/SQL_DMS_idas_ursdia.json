@@ -1,0 +1,44 @@
+{
+	"name": "SQL_DMS_idas_ursdia",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "IADOCN",
+				"type": "decimal",
+				"precision": 7,
+				"scale": 0
+			},
+			{
+				"name": "IAOMSC",
+				"type": "varchar"
+			},
+			{
+				"name": "IAHGRP",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "IASGRP",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "IAACTV",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "idas_ursdia"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

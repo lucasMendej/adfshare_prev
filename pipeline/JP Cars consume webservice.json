@@ -1,0 +1,649 @@
+{
+	"name": "JP Cars consume webservice",
+	"properties": {
+		"activities": [
+			{
+				"name": "Consume JP webservice",
+				"description": "Haal data uit jpcars API en opslaan in DMS.dbo.jpcars_list tabel",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.01:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"additionalColumns": [
+							{
+								"name": "_last_update",
+								"value": {
+									"value": "@utcNow()",
+									"type": "Expression"
+								}
+							}
+						],
+						"httpRequestTimeout": "00:01:40",
+						"requestInterval": "00.00:00:00.010",
+						"requestMethod": "GET",
+						"paginationRules": {
+							"EndCondition:$.results": "Empty",
+							"QueryParameters.{page_index}": "RANGE:0:$.pagable.page_count:1"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true,
+							"keys": [
+								"url"
+							]
+						},
+						"sqlWriterUseTableLock": false,
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "['license_plate']"
+								},
+								"sink": {
+									"name": "license_plate",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['url']"
+								},
+								"sink": {
+									"name": "url",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['url_japie']"
+								},
+								"sink": {
+									"name": "url_japie",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['url_gaspedaal']"
+								},
+								"sink": {
+									"name": "url_gaspedaal",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['stat_turnover_int']"
+								},
+								"sink": {
+									"name": "stat_turnover_int",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['stat_turnover_ext']"
+								},
+								"sink": {
+									"name": "stat_turnover_ext",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['stat_turnover_int_trend']"
+								},
+								"sink": {
+									"name": "stat_turnover_int_trend",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['stat_turnover_ext_trend']"
+								},
+								"sink": {
+									"name": "stat_turnover_ext_trend",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['price_warning']"
+								},
+								"sink": {
+									"name": "price_warning",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['price_local']"
+								},
+								"sink": {
+									"name": "price_local",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['value']"
+								},
+								"sink": {
+									"name": "value",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['stock_days']"
+								},
+								"sink": {
+									"name": "stock_days",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['thumbs_down_days']"
+								},
+								"sink": {
+									"name": "thumbs_down_days",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['clicks']"
+								},
+								"sink": {
+									"name": "clicks",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['location_name']"
+								},
+								"sink": {
+									"name": "location_name",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['location']"
+								},
+								"sink": {
+									"name": "location",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['rank_target_perc']"
+								},
+								"sink": {
+									"name": "rank_target_perc",
+									"type": "Double"
+								}
+							},
+							{
+								"source": {
+									"path": "['price_purchase']"
+								},
+								"sink": {
+									"name": "price_purchase",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['proposal_rank_target_value']"
+								},
+								"sink": {
+									"name": "proposal_rank_target_value",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['mileage']"
+								},
+								"sink": {
+									"name": "mileage",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['make']"
+								},
+								"sink": {
+									"name": "make",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['model']"
+								},
+								"sink": {
+									"name": "model",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['stock_days_rdw']"
+								},
+								"sink": {
+									"name": "stock_days_rdw",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['stock_days_location']"
+								},
+								"sink": {
+									"name": "stock_days_location",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['supply_type']"
+								},
+								"sink": {
+									"name": "supply_type",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['build']"
+								},
+								"sink": {
+									"name": "build",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['fuel']"
+								},
+								"sink": {
+									"name": "fuel",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['body']"
+								},
+								"sink": {
+									"name": "body",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['gear']"
+								},
+								"sink": {
+									"name": "gear",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['hp']"
+								},
+								"sink": {
+									"name": "hp",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['model_year']"
+								},
+								"sink": {
+									"name": "model_year",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['rank_target']"
+								},
+								"sink": {
+									"name": "rank_target",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['rank_current']"
+								},
+								"sink": {
+									"name": "rank_current",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['window_size']"
+								},
+								"sink": {
+									"name": "window_size",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['window_size_own']"
+								},
+								"sink": {
+									"name": "window_size_own",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['stat_apk_days']"
+								},
+								"sink": {
+									"name": "stat_apk_days",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['price_history_since']"
+								},
+								"sink": {
+									"name": "price_history_since",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['stat_leads']"
+								},
+								"sink": {
+									"name": "stat_leads",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['equipment_four_doors']"
+								},
+								"sink": {
+									"name": "equipment_four_doors",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['stat_price_start']"
+								},
+								"sink": {
+									"name": "stat_price_start",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['price_history_amount_1']"
+								},
+								"sink": {
+									"name": "price_history_amount_1",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['price_history_date_1']"
+								},
+								"sink": {
+									"name": "price_history_date_1",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['price_history_amount_2']"
+								},
+								"sink": {
+									"name": "price_history_amount_2",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['price_history_date_2']"
+								},
+								"sink": {
+									"name": "price_history_date_2",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['price_history_amount_3']"
+								},
+								"sink": {
+									"name": "price_history_amount_3",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['sold_since']"
+								},
+								"sink": {
+									"name": "sold_since",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['mileage_mean']"
+								},
+								"sink": {
+									"name": "mileage_mean",
+									"type": "Double"
+								}
+							},
+							{
+								"source": {
+									"path": "['stock_days_average']"
+								},
+								"sink": {
+									"name": "stock_days_average",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['stock_days_average_in_stock']"
+								},
+								"sink": {
+									"name": "stock_days_average_in_stock",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['price_catalog']"
+								},
+								"sink": {
+									"name": "price_catalog",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['stat_discounts']"
+								},
+								"sink": {
+									"name": "stat_discounts",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['color']"
+								},
+								"sink": {
+									"name": "color",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['TDC']"
+								},
+								"sink": {
+									"name": "TDC",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['price_sensitivity']"
+								},
+								"sink": {
+									"name": "price_sensitivity",
+									"type": "Double"
+								}
+							},
+							{
+								"source": {
+									"path": "['vvp_10']"
+								},
+								"sink": {
+									"name": "vvp_10",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['vvp_25']"
+								},
+								"sink": {
+									"name": "vvp_25",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['vvp_50']"
+								},
+								"sink": {
+									"name": "vvp_50",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['options_not_advertised']"
+								},
+								"sink": {
+									"name": "options_not_advertised",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['vin']"
+								},
+								"sink": {
+									"name": "vin",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['stock_days_client']"
+								},
+								"sink": {
+									"name": "stock_days_client",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['stock_date_client']"
+								},
+								"sink": {
+									"name": "stock_date_client",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['apr']"
+								},
+								"sink": {
+									"name": "apr",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "$['_last_update']"
+								},
+								"sink": {
+									"name": "_last_update",
+									"type": "DateTime"
+								}
+							}
+						],
+						"collectionReference": "$.results"
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "JP_cars",
+						"type": "DatasetReference",
+						"parameters": {
+							"page_size": "25"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "JPCars_list_table",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "Consume Webservices"
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-02-10T10:10:16Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

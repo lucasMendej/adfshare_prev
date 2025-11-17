@@ -1,0 +1,180 @@
+{
+	"name": "SQL_Doorgangen_autoline_operatordetails",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DOORGANGEN_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "DMS",
+				"type": "varchar"
+			},
+			{
+				"name": "OPERATOR",
+				"type": "char"
+			},
+			{
+				"name": "OPNAME",
+				"type": "char"
+			},
+			{
+				"name": "OPLOCN",
+				"type": "char"
+			},
+			{
+				"name": "OPNUM",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "STOCKLOC",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "NOTUSED1",
+				"type": "char"
+			},
+			{
+				"name": "FOLLEXEC",
+				"type": "char"
+			},
+			{
+				"name": "PRIORITY_",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "SELLFROM",
+				"type": "char"
+			},
+			{
+				"name": "WARRANTY",
+				"type": "char"
+			},
+			{
+				"name": "SSTYPE",
+				"type": "char"
+			},
+			{
+				"name": "FIXWIDTH",
+				"type": "bit"
+			},
+			{
+				"name": "STOPSHOR",
+				"type": "bit"
+			},
+			{
+				"name": "ORDERSEL",
+				"type": "char"
+			},
+			{
+				"name": "PRIDEPT",
+				"type": "bit"
+			},
+			{
+				"name": "SORDLIMT",
+				"type": "decimal",
+				"precision": 16,
+				"scale": 2
+			},
+			{
+				"name": "PORDLIMT",
+				"type": "decimal",
+				"precision": 16,
+				"scale": 2
+			},
+			{
+				"name": "PARTSDIS",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 2
+			},
+			{
+				"name": "LABORDIS",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 2
+			},
+			{
+				"name": "FRANMASK",
+				"type": "char"
+			},
+			{
+				"name": "ALLOWINV",
+				"type": "char"
+			},
+			{
+				"name": "TEAMS",
+				"type": "char"
+			},
+			{
+				"name": "SCOPESD",
+				"type": "date"
+			},
+			{
+				"name": "SCOPESH",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "SCOPEED",
+				"type": "date"
+			},
+			{
+				"name": "SCOPEEH",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "WIZARD",
+				"type": "bit"
+			},
+			{
+				"name": "LOADFORM",
+				"type": "char"
+			},
+			{
+				"name": "GBUSERID",
+				"type": "char"
+			},
+			{
+				"name": "AUTOTEL",
+				"type": "char"
+			},
+			{
+				"name": "DAMAGE",
+				"type": "bit"
+			},
+			{
+				"name": "FORCECLW",
+				"type": "bit"
+			},
+			{
+				"name": "ADVTOUCH",
+				"type": "bit"
+			},
+			{
+				"name": "VHCOFF",
+				"type": "bit"
+			},
+			{
+				"name": "MOBJCPRT",
+				"type": "char"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "autoline_operatordetails"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

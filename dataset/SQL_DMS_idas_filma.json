@@ -1,0 +1,138 @@
+{
+	"name": "SQL_DMS_idas_filma",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "_SET",
+				"type": "varchar"
+			},
+			{
+				"name": "_COMPANY",
+				"type": "varchar"
+			},
+			{
+				"name": "_LTSTUPDATE",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "_LTSTCHECK",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "FIBRNO",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "FIADRS",
+				"type": "varchar"
+			},
+			{
+				"name": "FIHSNR",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 0
+			},
+			{
+				"name": "FIHSNT",
+				"type": "varchar"
+			},
+			{
+				"name": "FIPOCO",
+				"type": "varchar"
+			},
+			{
+				"name": "FICITY",
+				"type": "varchar"
+			},
+			{
+				"name": "FITELO",
+				"type": "varchar"
+			},
+			{
+				"name": "FIBTWN",
+				"type": "varchar"
+			},
+			{
+				"name": "FIBNKR",
+				"type": "decimal",
+				"precision": 9,
+				"scale": 0
+			},
+			{
+				"name": "FICTCP",
+				"type": "varchar"
+			},
+			{
+				"name": "FIROBE",
+				"type": "varchar"
+			},
+			{
+				"name": "FIRDCN",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 0
+			},
+			{
+				"name": "FIRDCK",
+				"type": "varchar"
+			},
+			{
+				"name": "FIRDCP",
+				"type": "varchar"
+			},
+			{
+				"name": "FIONDP",
+				"type": "varchar"
+			},
+			{
+				"name": "FIIBAN",
+				"type": "varchar"
+			},
+			{
+				"name": "FIBIC",
+				"type": "varchar"
+			},
+			{
+				"name": "FIRDWN",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 0
+			},
+			{
+				"name": "FIDQST",
+				"type": "varchar"
+			},
+			{
+				"name": "FIROBK",
+				"type": "varchar"
+			},
+			{
+				"name": "FIROBP",
+				"type": "varchar"
+			},
+			{
+				"name": "FIKVK",
+				"type": "decimal",
+				"precision": 8,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "idas_filma"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

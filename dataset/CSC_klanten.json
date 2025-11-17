@@ -1,0 +1,116 @@
+{
+	"name": "CSC_klanten",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CSC_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "klantnr",
+				"type": "decimal",
+				"precision": 20,
+				"scale": 0
+			},
+			{
+				"name": "vestiging",
+				"type": "varchar"
+			},
+			{
+				"name": "klantnaam",
+				"type": "varchar"
+			},
+			{
+				"name": "adres",
+				"type": "varchar"
+			},
+			{
+				"name": "woonplaats",
+				"type": "varchar"
+			},
+			{
+				"name": "postcode",
+				"type": "varchar"
+			},
+			{
+				"name": "land",
+				"type": "varchar"
+			},
+			{
+				"name": "postbus",
+				"type": "varchar"
+			},
+			{
+				"name": "postcode_plaats_postbus",
+				"type": "varchar"
+			},
+			{
+				"name": "email",
+				"type": "varchar"
+			},
+			{
+				"name": "man_vrouw",
+				"type": "varchar"
+			},
+			{
+				"name": "geboortedatum",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "status",
+				"type": "varchar"
+			},
+			{
+				"name": "bedrijfsnr",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "telefoon",
+				"type": "varchar"
+			},
+			{
+				"name": "telefoonwerk",
+				"type": "varchar"
+			},
+			{
+				"name": "mobiel",
+				"type": "varchar"
+			},
+			{
+				"name": "fax",
+				"type": "varchar"
+			},
+			{
+				"name": "soort",
+				"type": "varchar"
+			},
+			{
+				"name": "DMS",
+				"type": "varchar"
+			},
+			{
+				"name": "cluster",
+				"type": "varchar"
+			},
+			{
+				"name": "zakelijkemail",
+				"type": "varchar"
+			},
+			{
+				"name": "overleden",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"tableName": "[dbo].[klanten]"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

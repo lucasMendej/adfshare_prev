@@ -1,0 +1,42 @@
+{
+	"name": "SQL_Doorgangen_autoline_calendar",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DOORGANGEN_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "DMS",
+				"type": "varchar"
+			},
+			{
+				"name": "BEDRIJF",
+				"type": "varchar"
+			},
+			{
+				"name": "SRCODE",
+				"type": "char"
+			},
+			{
+				"name": "DESC_",
+				"type": "char"
+			},
+			{
+				"name": "timein",
+				"type": "varchar"
+			},
+			{
+				"name": "timeout",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "autoline_calendar"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

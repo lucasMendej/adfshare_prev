@@ -1,0 +1,13 @@
+{
+	"name": "SQL_PowerBI",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "PowerBI_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,56 @@
+{
+	"name": "DL_idas_carvar_e",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStoreYGROUP",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureDataLakeStoreLocation",
+				"fileName": "carvar_e.parquet",
+				"folderPath": "sternData/dataFactoryLandingZone/idas"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "CVRCTP",
+				"type": "UTF8"
+			},
+			{
+				"name": "CVPRCD",
+				"type": "UTF8"
+			},
+			{
+				"name": "CVMOJJ",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "CVVRSE",
+				"type": "UTF8"
+			},
+			{
+				"name": "F5#1",
+				"type": "UTF8"
+			},
+			{
+				"name": "CVVERD",
+				"type": "UTF8"
+			},
+			{
+				"name": "F6#1",
+				"type": "UTF8"
+			},
+			{
+				"name": "CVWSID",
+				"type": "UTF8"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

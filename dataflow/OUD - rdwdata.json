@@ -1,0 +1,31 @@
+{
+	"name": "OUD - rdwdata",
+	"properties": {
+		"folder": {
+			"name": "CRM"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "CRM_SQL_Temp_RdwData",
+						"type": "DatasetReference"
+					},
+					"name": "temprdwdata"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "CRM_SQL_RdwData",
+						"type": "DatasetReference"
+					},
+					"name": "rdwdata"
+				}
+			],
+			"transformations": [],
+			"script": "source(output(\n\t\tKenteken as string,\n\t\tMerk as string,\n\t\tHandelsbenaming as string,\n\t\tDatumaanvangtenaamstelling as date,\n\t\tDatumeersteafgifteNederland as date,\n\t\tDatumeerstetoelating as date,\n\t\tVervaldatumAPK as date,\n\t\tupdated as date\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'NONE',\n\tformat: 'table') ~> temprdwdata\ntemprdwdata sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tKenteken as string,\n\t\tMerk as string,\n\t\tHandelsbenaming as string,\n\t\tDatumaanvangtenaamstelling as date,\n\t\tDatumeersteafgifteNederland as date,\n\t\tDatumeerstetoelating as date,\n\t\tVervaldatumAPK as date,\n\t\tupdated as date\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\ttruncate:true,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> rdwdata"
+		}
+	}
+}

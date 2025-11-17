@@ -1,0 +1,52 @@
+{
+	"name": "Logistiek_autoline_sm_stock",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SQL_00_Sternlogistiek",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "_set",
+				"type": "varchar"
+			},
+			{
+				"name": "_company",
+				"type": "varchar"
+			},
+			{
+				"name": "PPARTNO",
+				"type": "varchar"
+			},
+			{
+				"name": "PARTNO",
+				"type": "varchar"
+			},
+			{
+				"name": "DESC002",
+				"type": "varchar"
+			},
+			{
+				"name": "BIN001",
+				"type": "varchar"
+			},
+			{
+				"name": "QUANTITY001",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "SCANCODE",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Autoline_sm_stock"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

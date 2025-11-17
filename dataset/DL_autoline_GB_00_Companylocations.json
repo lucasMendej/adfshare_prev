@@ -1,0 +1,62 @@
+{
+	"name": "DL_autoline_GB_00_Companylocations",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStoreYGROUP",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureDataLakeStoreLocation"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "CODE",
+				"type": "UTF8"
+			},
+			{
+				"name": "DESC_",
+				"type": "UTF8"
+			},
+			{
+				"name": "NAME_",
+				"type": "UTF8"
+			},
+			{
+				"name": "ADDRESS1",
+				"type": "UTF8"
+			},
+			{
+				"name": "ADDRESS4",
+				"type": "UTF8"
+			},
+			{
+				"name": "POSTCODE",
+				"type": "UTF8"
+			},
+			{
+				"name": "PHONE",
+				"type": "UTF8"
+			},
+			{
+				"name": "FAX",
+				"type": "UTF8"
+			},
+			{
+				"name": "TYPE_",
+				"type": "UTF8"
+			},
+			{
+				"name": "CCENT",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

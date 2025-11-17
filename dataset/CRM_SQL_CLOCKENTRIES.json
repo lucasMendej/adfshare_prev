@@ -1,0 +1,143 @@
+{
+	"name": "CRM_SQL_CLOCKENTRIES",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CRM_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "DMS",
+				"type": "varchar"
+			},
+			{
+				"name": "BEDRIJF",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ADJDATE",
+				"type": "date"
+			},
+			{
+				"name": "ADJDESC",
+				"type": "char"
+			},
+			{
+				"name": "ADJMODE",
+				"type": "char"
+			},
+			{
+				"name": "ADJTIME",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 2
+			},
+			{
+				"name": "ADJUSER",
+				"type": "char"
+			},
+			{
+				"name": "ALLOWED",
+				"type": "decimal",
+				"precision": 11,
+				"scale": 2
+			},
+			{
+				"name": "ANALYSIS",
+				"type": "char"
+			},
+			{
+				"name": "DATEI",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "DATEO",
+				"type": "date"
+			},
+			{
+				"name": "FACTOR",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 3
+			},
+			{
+				"name": "IDLE",
+				"type": "char"
+			},
+			{
+				"name": "REASON",
+				"type": "char"
+			},
+			{
+				"name": "RESOURCE",
+				"type": "varchar"
+			},
+			{
+				"name": "SEQ",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "SHIFT",
+				"type": "char"
+			},
+			{
+				"name": "STATE",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "TAKEN",
+				"type": "decimal",
+				"precision": 11,
+				"scale": 2
+			},
+			{
+				"name": "TEAM",
+				"type": "char"
+			},
+			{
+				"name": "TERMID",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "TIMEI",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 2
+			},
+			{
+				"name": "TIMEO",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 2
+			},
+			{
+				"name": "WIPLINE",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "WIPNO",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "WL_XX_CLOCKENTRIES"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

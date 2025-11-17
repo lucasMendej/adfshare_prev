@@ -1,0 +1,13 @@
+{
+	"name": "DMS_PROD_SRV_SQL_00",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "connection to the DMS database",
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"connectionString": "integrated security=False;encrypt=True;connection timeout=30;data source=prod-srv-sql-00.database.windows.net;initial catalog=DMS;user id=SQL_SA_DMS_Writer",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkxBS0UtRkFDVE9SWS0wMV8yOTAzNjdhMS1kZDUzLTRkY2YtYjYyZS00MzA4N2M2N2Y5YjkiDQp9"
+		}
+	}
+}

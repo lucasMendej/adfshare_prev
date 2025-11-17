@@ -1,0 +1,192 @@
+{
+	"name": "DL_idas_dvi",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStoreYGROUP",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureDataLakeStoreLocation",
+				"fileName": "dvi.parquet",
+				"folderPath": "sternData/dataFactoryLandingZone/idas"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "VICCAT",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VICUST",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VIREGN",
+				"type": "UTF8"
+			},
+			{
+				"name": "VIRACD",
+				"type": "UTF8"
+			},
+			{
+				"name": "VIRACH",
+				"type": "UTF8"
+			},
+			{
+				"name": "VICNFL",
+				"type": "UTF8"
+			},
+			{
+				"name": "VICNCD",
+				"type": "UTF8"
+			},
+			{
+				"name": "VIEXCC",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VIEXYY",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VIEXMM",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VIEXDD",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VIMILE",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VIALCD",
+				"type": "UTF8"
+			},
+			{
+				"name": "VIINNM",
+				"type": "UTF8"
+			},
+			{
+				"name": "VIINPN",
+				"type": "UTF8"
+			},
+			{
+				"name": "VICNTN",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VILPI",
+				"type": "UTF8"
+			},
+			{
+				"name": "VIAIRC",
+				"type": "UTF8"
+			},
+			{
+				"name": "VISRVS",
+				"type": "UTF8"
+			},
+			{
+				"name": "VIABS",
+				"type": "UTF8"
+			},
+			{
+				"name": "VIINTF",
+				"type": "UTF8"
+			},
+			{
+				"name": "VIDRIV",
+				"type": "UTF8"
+			},
+			{
+				"name": "VITEXT",
+				"type": "UTF8"
+			},
+			{
+				"name": "VITXT2",
+				"type": "UTF8"
+			},
+			{
+				"name": "VISLOT",
+				"type": "UTF8"
+			},
+			{
+				"name": "VIBIXE",
+				"type": "UTF8"
+			},
+			{
+				"name": "VIBMAT",
+				"type": "UTF8"
+			},
+			{
+				"name": "VIBMRK",
+				"type": "UTF8"
+			},
+			{
+				"name": "VIWINB",
+				"type": "UTF8"
+			},
+			{
+				"name": "VIBDNR",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VILMNR",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VILCNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "VILSED",
+				"type": "INT96"
+			},
+			{
+				"name": "VILKM",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VILLPT",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			},
+			{
+				"name": "VIFISW",
+				"type": "DECIMAL",
+				"precision": 38,
+				"scale": 18
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

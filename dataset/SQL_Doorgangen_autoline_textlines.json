@@ -1,0 +1,62 @@
+{
+	"name": "SQL_Doorgangen_autoline_textlines",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DOORGANGEN_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "DMS",
+				"type": "varchar"
+			},
+			{
+				"name": "BEDRIJF",
+				"type": "varchar"
+			},
+			{
+				"name": "WIPNO",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "RTSLINE",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "TEXT001",
+				"type": "char"
+			},
+			{
+				"name": "TEXT002",
+				"type": "char"
+			},
+			{
+				"name": "TEXT003",
+				"type": "char"
+			},
+			{
+				"name": "TEXT004",
+				"type": "char"
+			},
+			{
+				"name": "TEXT005",
+				"type": "char"
+			},
+			{
+				"name": "TEXT006",
+				"type": "char"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "autoline_textlines"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

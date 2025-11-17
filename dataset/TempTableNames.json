@@ -1,0 +1,16 @@
+{
+	"name": "TempTableNames",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureTableStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureTable",
+		"schema": [],
+		"typeProperties": {
+			"tableName": "tempTableNames"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

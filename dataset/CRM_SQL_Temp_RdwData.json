@@ -1,0 +1,50 @@
+{
+	"name": "CRM_SQL_Temp_RdwData",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CRM_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Kenteken",
+				"type": "varchar"
+			},
+			{
+				"name": "Merk",
+				"type": "varchar"
+			},
+			{
+				"name": "Handelsbenaming",
+				"type": "varchar"
+			},
+			{
+				"name": "Datumaanvangtenaamstelling",
+				"type": "date"
+			},
+			{
+				"name": "DatumeersteafgifteNederland",
+				"type": "date"
+			},
+			{
+				"name": "Datumeerstetoelating",
+				"type": "date"
+			},
+			{
+				"name": "VervaldatumAPK",
+				"type": "date"
+			},
+			{
+				"name": "updated",
+				"type": "date"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "temp_rdwData"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

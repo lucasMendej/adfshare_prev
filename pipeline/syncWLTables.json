@@ -1,0 +1,537 @@
+{
+	"name": "syncWLTables",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get DATEI_",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "@concat('SELECT cast(DATEI_ as varchar) as DATEI_, case when DATEI_ <> cast(getdate() as date) then 0.01 else isnull(TIMEI_, 1.00) end as TIMEI_ FROM autoline_sync_status where tablename_ = ''',pipeline().parameters.clockentriesTable, ''' and dms =''',pipeline().parameters.dms,'''')",
+							"type": "Expression"
+						},
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SQL_Doorgangen_autoline_sync_status",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "If DATEI_ is smaller then today",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Get DATEI_",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@or(equals(activity('Get DATEI_').output.value[0].DATEI_,null),less(activity('Get DATEI_').output.value[0].DATEI_,string(formatDateTime(utcnow(),'yyyy-MM-dd'))))",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "Set Variable Date False",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "date",
+								"value": {
+									"value": "@formatDateTime(utcnow(),'yyyy-MM-dd')",
+									"type": "Expression"
+								}
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "Stored Procedure UpdateSyncStatus",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[autoline_update_sync_status]",
+								"storedProcedureParameters": {
+									"DATEI_": {
+										"value": {
+											"value": "@formatDateTime(utcnow(),'yyyy-MM-dd')",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"DMS": {
+										"value": {
+											"value": "@pipeline().parameters.dms",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"MAGICLH_": {
+										"value": null,
+										"type": "String"
+									},
+									"tablename_": {
+										"value": {
+											"value": "@pipeline().parameters.clockentriesTable",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TIMEI_": {
+										"value": "0.1",
+										"type": "Double"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "DOORGANGEN_PROD_SRV_SQL_00",
+								"type": "LinkedServiceReference"
+							}
+						},
+						{
+							"name": "Set Variable Date True",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Stored Procedure UpdateSyncStatus",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "date",
+								"value": {
+									"value": "@formatDateTime(utcnow(),'yyyy-MM-dd')",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Set Variable Time",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "If DATEI_ is smaller then today",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "time",
+					"value": {
+						"value": "@string(activity('Get DATEI_').output.value[0].TIMEI_)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Get VTIME",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "get count rows",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "@concat('select min(timei) as vtime  from autoline_clockentries where timeo = 0 and wipno <> 0 and datei >= getdate()-1 and dms = ''',pipeline().parameters.dms, ''' and bedrijf = ',pipeline().parameters.bedrijf)",
+							"type": "Expression"
+						},
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SQL_Doorgangen_autoline_clockentries",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "If VTIME is not null",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Get VTIME",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@not(equals(activity('Get VTIME').output.value[0].vtime,null))",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Execute Pipeline Sync Clockentries Part 2",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Sync Clockentries Part 2",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"clockentriesTable": {
+										"value": "@pipeline().parameters.clockentriesTable",
+										"type": "Expression"
+									},
+									"dms": {
+										"value": "@pipeline().parameters.dms",
+										"type": "Expression"
+									},
+									"bedrijf": {
+										"value": "@pipeline().parameters.bedrijf",
+										"type": "Expression"
+									},
+									"vtime": {
+										"value": "activity('Get VTIME').output.value[0].vtime",
+										"type": "Expression"
+									},
+									"date": {
+										"value": "@variables('date')",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "If Condition1",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "If VTIME is not null",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@greater(activity('get count rows').output.value[0].aantal,0)",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Copy to CLOCKENTRIES",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@concat('select distinct * from autoline_clockentries_temp where dms = ''',pipeline().parameters.dms,''' and bedrijf = ',pipeline().parameters.bedrijf)",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "@{concat('delete from autoline_clockentries where DMS =''',pipeline().parameters.dms,''' and BEDRIJF = ',pipeline().parameters.bedrijf, ' and DATEI>= ''',variables('date') ,'''')}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_clockentries_temp",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Doorgangen_autoline_clockentries",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "Stored Procedure syncStatus",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Get Max DATEI and TIMEI",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[autoline_update_sync_status]",
+								"storedProcedureParameters": {
+									"DATEI_": {
+										"value": {
+											"value": "@activity('Get Max DATEI and TIMEI').output.value[0].DATEI",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"DMS": {
+										"value": {
+											"value": "@pipeline().parameters.dms",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"MAGICLH_": {
+										"value": null,
+										"type": "String"
+									},
+									"tablename_": {
+										"value": {
+											"value": "@pipeline().parameters.clockentriesTable",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TIMEI_": {
+										"value": {
+											"value": "@activity('Get Max DATEI and TIMEI').output.value[0].TIMEI",
+											"type": "Expression"
+										},
+										"type": "Double"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "DOORGANGEN_PROD_SRV_SQL_00",
+								"type": "LinkedServiceReference"
+							}
+						},
+						{
+							"name": "Get Max DATEI and TIMEI",
+							"type": "Lookup",
+							"dependsOn": [
+								{
+									"activity": "Copy to CLOCKENTRIES",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@concat('\n    SELECT ISNULL(MAX(cast(cast(DATEI as date) as varchar)), ''',variables('date'),''') as DATEI,\ncast( DATEPART(HOUR, dateadd(minute,-45,getdate())) as numeric(4,2)) + cast(datepart(minute, dateadd(minute,-45,getdate())) as numeric(4,2)) / 100 as TIMEI\n    FROM autoline_clockentries_temp WHERE DMS = ''',pipeline().parameters.dms,''' and BEDRIJF = ',pipeline().parameters.bedrijf)",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "SQL_Doorgangen_autoline_clockentries_temp",
+									"type": "DatasetReference"
+								},
+								"firstRowOnly": false
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Execute Pipeline Sync Clockentries Part 1",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Set Variable Time",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Sync Clockentries Part 1",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"clockentriesTable": {
+							"value": "@pipeline().parameters.clockentriesTable",
+							"type": "Expression"
+						},
+						"dms": {
+							"value": "@pipeline().parameters.dms",
+							"type": "Expression"
+						},
+						"bedrijf": {
+							"value": "@pipeline().parameters.bedrijf",
+							"type": "Expression"
+						},
+						"time": {
+							"value": "@variables('time')",
+							"type": "Expression"
+						},
+						"date": {
+							"value": "@variables('date')",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "get count rows",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Execute Pipeline Sync Clockentries Part 1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "@concat('select count(*) as aantal  from autoline_clockentries_temp where dms = ''',pipeline().parameters.dms, ''' and bedrijf = ',pipeline().parameters.bedrijf)",
+							"type": "Expression"
+						},
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SQL_Doorgangen_autoline_clockentries_temp",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			}
+		],
+		"parameters": {
+			"dms": {
+				"type": "string"
+			},
+			"bedrijf": {
+				"type": "string"
+			},
+			"clockentriesTable": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"date": {
+				"type": "String"
+			},
+			"time": {
+				"type": "String"
+			},
+			"rows": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Doorgangen/Sync direct"
+		},
+		"annotations": [],
+		"lastPublishTime": "2019-10-07T07:13:28Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

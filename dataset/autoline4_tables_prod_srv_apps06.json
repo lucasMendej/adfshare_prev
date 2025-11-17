@@ -1,0 +1,12 @@
+{
+	"name": "autoline4_tables_prod_srv_apps06",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "autoline4_prod_srv_apps06",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "RelationalTable"
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

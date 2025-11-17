@@ -1,0 +1,24 @@
+{
+	"name": "AZURE_CSC_PROD_SRV_SQL00",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CSC_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"OutputTable": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().OutputTable",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

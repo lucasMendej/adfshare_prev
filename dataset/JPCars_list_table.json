@@ -1,0 +1,368 @@
+{
+	"name": "JPCars_list_table",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "license_plate",
+				"type": "nchar"
+			},
+			{
+				"name": "url",
+				"type": "nchar"
+			},
+			{
+				"name": "url_japie",
+				"type": "nchar"
+			},
+			{
+				"name": "url_gaspedaal",
+				"type": "nchar"
+			},
+			{
+				"name": "stat_turnover_int",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "stat_turnover_ext",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "stat_turnover_int_trend",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "stat_turnover_ext_trend",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "price_warning",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "price_local",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "value",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "stock_days",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "thumbs_down_days",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "clicks",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "location_name",
+				"type": "nchar"
+			},
+			{
+				"name": "location",
+				"type": "nchar"
+			},
+			{
+				"name": "rank_target_perc",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "price_purchase",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "proposal_rank_target_value",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "mileage",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "make",
+				"type": "nchar"
+			},
+			{
+				"name": "model",
+				"type": "nchar"
+			},
+			{
+				"name": "stat_since_internet",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "stat_since_rdw",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "stat_since_location",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "supply_type",
+				"type": "nchar"
+			},
+			{
+				"name": "build",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "fuel",
+				"type": "nchar"
+			},
+			{
+				"name": "body",
+				"type": "nchar"
+			},
+			{
+				"name": "gear",
+				"type": "nchar"
+			},
+			{
+				"name": "hp",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "rank_target",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "rank_current",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "window_size",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "window_size_own",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "stat_apk_days",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "price_history_since",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "stat_leads",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "equipment_leather",
+				"type": "nchar"
+			},
+			{
+				"name": "equipment_navigation",
+				"type": "nchar"
+			},
+			{
+				"name": "equipment_xenon",
+				"type": "nchar"
+			},
+			{
+				"name": "equipment_airco",
+				"type": "nchar"
+			},
+			{
+				"name": "equipment_alloy_wheels",
+				"type": "nchar"
+			},
+			{
+				"name": "equipment_four_doors",
+				"type": "nchar"
+			},
+			{
+				"name": "equipment_roof",
+				"type": "nchar"
+			},
+			{
+				"name": "specials_info",
+				"type": "nchar"
+			},
+			{
+				"name": "stat_price_start",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "price_history_amount_1",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "price_history_date_1",
+				"type": "nchar"
+			},
+			{
+				"name": "price_history_amount_2",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "price_history_date_2",
+				"type": "nchar"
+			},
+			{
+				"name": "price_history_amount_3",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "superdeal",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "sold_since",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "mileage_mean",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "stat_since_average",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "price_catalog",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "stat_discounts",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "color",
+				"type": "nchar"
+			},
+			{
+				"name": "TDC",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "price_sensitivity",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "vvp_10",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "vvp_25",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "vvp_50",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "options_not_advertised",
+				"type": "nchar"
+			},
+			{
+				"name": "vin",
+				"type": "nchar"
+			},
+			{
+				"name": "stock_days_client",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "stock_date_client",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "apr",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "_last_update",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "stock_days_rdw",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "stock_days_location",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "model_year",
+				"type": "nchar"
+			},
+			{
+				"name": "stock_days_average",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "stock_days_average_in_stock",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "jpcars_list"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

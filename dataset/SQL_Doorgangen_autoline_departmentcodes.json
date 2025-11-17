@@ -1,0 +1,88 @@
+{
+	"name": "SQL_Doorgangen_autoline_departmentcodes",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DOORGANGEN_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "DMS",
+				"type": "varchar"
+			},
+			{
+				"name": "BEDRIJF",
+				"type": "varchar"
+			},
+			{
+				"name": "CODE",
+				"type": "char"
+			},
+			{
+				"name": "DESC_",
+				"type": "char"
+			},
+			{
+				"name": "DESC001",
+				"type": "char"
+			},
+			{
+				"name": "DESC002",
+				"type": "char"
+			},
+			{
+				"name": "DESC003",
+				"type": "char"
+			},
+			{
+				"name": "DESC004",
+				"type": "char"
+			},
+			{
+				"name": "DESC005",
+				"type": "char"
+			},
+			{
+				"name": "DESC006",
+				"type": "char"
+			},
+			{
+				"name": "DESC007",
+				"type": "char"
+			},
+			{
+				"name": "DESC008",
+				"type": "char"
+			},
+			{
+				"name": "DESC009",
+				"type": "char"
+			},
+			{
+				"name": "MKCCENT",
+				"type": "char"
+			},
+			{
+				"name": "BRANCH",
+				"type": "char"
+			},
+			{
+				"name": "DEPTTYPE",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "CRMLOCAT",
+				"type": "char"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "autoline_departmentcodes"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

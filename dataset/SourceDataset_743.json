@@ -1,0 +1,23 @@
+{
+	"name": "SourceDataset_743",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureFileStorageCaremail",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureFileStorageLocation",
+				"fileName": "dms-ardeaauto.xml.gz",
+				"folderPath": "compressed"
+			},
+			"compression": {
+				"type": "GZip",
+				"level": "Fastest"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

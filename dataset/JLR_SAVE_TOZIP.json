@@ -1,0 +1,38 @@
+{
+	"name": "JLR_SAVE_TOZIP",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage_SE",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"filename": {
+				"type": "string",
+				"defaultValue": "BUSINESS_PARTNER"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@concat('42029', dataset().filename, '.zip')",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().filename",
+					"type": "Expression"
+				},
+				"container": "power-bi-jaguar-in"
+			},
+			"columnDelimiter": ",",
+			"compressionCodec": "ZipDeflate",
+			"escapeChar": "",
+			"firstRowAsHeader": false,
+			"quoteChar": ""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

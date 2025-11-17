@@ -1,0 +1,228 @@
+{
+	"name": "SQL_DMS_autoline_companylocations",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "_SET",
+				"type": "varchar"
+			},
+			{
+				"name": "_COMPANY",
+				"type": "varchar"
+			},
+			{
+				"name": "_LTSTUPDATE",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "_LTSTCHECK",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "CODE",
+				"type": "char"
+			},
+			{
+				"name": "DESC_",
+				"type": "char"
+			},
+			{
+				"name": "CCENT",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "NAME_",
+				"type": "char"
+			},
+			{
+				"name": "ADDRESS1",
+				"type": "char"
+			},
+			{
+				"name": "ADDRESS2",
+				"type": "char"
+			},
+			{
+				"name": "ADDRESS3",
+				"type": "char"
+			},
+			{
+				"name": "ADDRESS4",
+				"type": "char"
+			},
+			{
+				"name": "POSTCODE",
+				"type": "char"
+			},
+			{
+				"name": "PHONE",
+				"type": "char"
+			},
+			{
+				"name": "FAX",
+				"type": "char"
+			},
+			{
+				"name": "EXPEN",
+				"type": "decimal",
+				"precision": 8,
+				"scale": 0
+			},
+			{
+				"name": "TYPE_",
+				"type": "char"
+			},
+			{
+				"name": "BSCCENT",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "BSEXPEN",
+				"type": "decimal",
+				"precision": 8,
+				"scale": 0
+			},
+			{
+				"name": "PTIND",
+				"type": "char"
+			},
+			{
+				"name": "DEPTANAL",
+				"type": "char"
+			},
+			{
+				"name": "DLRCODE",
+				"type": "char"
+			},
+			{
+				"name": "DEPSLACC",
+				"type": "char"
+			},
+			{
+				"name": "DEPNLEX",
+				"type": "decimal",
+				"precision": 8,
+				"scale": 0
+			},
+			{
+				"name": "DEPPRINT",
+				"type": "char"
+			},
+			{
+				"name": "BUSICOND",
+				"type": "char"
+			},
+			{
+				"name": "BUSIITEM",
+				"type": "char"
+			},
+			{
+				"name": "BUSREGNO",
+				"type": "char"
+			},
+			{
+				"name": "DEPNLAC",
+				"type": "decimal",
+				"precision": 8,
+				"scale": 0
+			},
+			{
+				"name": "LOCATILL",
+				"type": "char"
+			},
+			{
+				"name": "OWNER",
+				"type": "char"
+			},
+			{
+				"name": "REGBNAME",
+				"type": "char"
+			},
+			{
+				"name": "REGSLACC",
+				"type": "char"
+			},
+			{
+				"name": "VATNO",
+				"type": "char"
+			},
+			{
+				"name": "APPSEQ",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 0
+			},
+			{
+				"name": "VSBCO",
+				"type": "char"
+			},
+			{
+				"name": "VSBGROUP",
+				"type": "char"
+			},
+			{
+				"name": "MKDEPTS",
+				"type": "char"
+			},
+			{
+				"name": "MKDEPTS001",
+				"type": "char"
+			},
+			{
+				"name": "MKDEPTS002",
+				"type": "char"
+			},
+			{
+				"name": "DEPJTYPE",
+				"type": "char"
+			},
+			{
+				"name": "BONDED",
+				"type": "bit"
+			},
+			{
+				"name": "THIRDPTY",
+				"type": "bit"
+			},
+			{
+				"name": "REFJTYPE",
+				"type": "char"
+			},
+			{
+				"name": "USTAX",
+				"type": "char"
+			},
+			{
+				"name": "DBAUMAIL",
+				"type": "char"
+			},
+			{
+				"name": "DBVIEW",
+				"type": "bit"
+			},
+			{
+				"name": "REGION",
+				"type": "char"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "autoline_companylocations"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

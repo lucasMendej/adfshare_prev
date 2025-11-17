@@ -1,0 +1,66 @@
+{
+	"name": "SQL_DMS_idas_dvia",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "_SET",
+				"type": "varchar"
+			},
+			{
+				"name": "_COMPANY",
+				"type": "varchar"
+			},
+			{
+				"name": "_LTSTUPDATE",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "_LTSTCHECK",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "VICCAT",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "VICUST",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 0
+			},
+			{
+				"name": "VIREGN",
+				"type": "varchar"
+			},
+			{
+				"name": "VIFUEL",
+				"type": "varchar"
+			},
+			{
+				"name": "VIAPKL",
+				"type": "char"
+			},
+			{
+				"name": "VIAPKN",
+				"type": "char"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "idas_dvia"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

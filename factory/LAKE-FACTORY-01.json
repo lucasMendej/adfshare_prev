@@ -1,0 +1,14 @@
+{
+	"name": "LAKE-FACTORY-01",
+	"properties": {
+		"globalConfigurations": {
+			"PipelineBillingEnabled": "true"
+		}
+	},
+	"location": "westeurope",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "5331ad80-9977-4060-90f4-07f9e6b9cca9",
+		"tenantId": "d55df940-668b-437f-83a8-00ce4c933817"
+	}
+}

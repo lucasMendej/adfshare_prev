@@ -1,0 +1,736 @@
+{
+	"name": "SQL_DMS_idas_doh",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "OHBRAN",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHORDN",
+				"type": "decimal",
+				"precision": 7,
+				"scale": 0
+			},
+			{
+				"name": "OHTYPE",
+				"type": "varchar"
+			},
+			{
+				"name": "OHSTAT",
+				"type": "decimal",
+				"precision": 1,
+				"scale": 0
+			},
+			{
+				"name": "OHINVC",
+				"type": "varchar"
+			},
+			{
+				"name": "OHTIME",
+				"type": "varchar"
+			},
+			{
+				"name": "OHORCC",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHORYY",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHORMM",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHORDD",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHCRIN",
+				"type": "varchar"
+			},
+			{
+				"name": "OHCTYD",
+				"type": "varchar"
+			},
+			{
+				"name": "OHRCPT",
+				"type": "varchar"
+			},
+			{
+				"name": "OHPAYC",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHNORO",
+				"type": "varchar"
+			},
+			{
+				"name": "OHNOIN",
+				"type": "varchar"
+			},
+			{
+				"name": "OHNOTE",
+				"type": "varchar"
+			},
+			{
+				"name": "OHPLCC",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHPLYY",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHPLMM",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHPLDD",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHPLHH",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHPLMI",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHPRCC",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHPRYY",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHPRMM",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHPRDD",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHPRHH",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHPRMI",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHNVCC",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHNVYY",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHNVMM",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHNVDD",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHVCOD",
+				"type": "varchar"
+			},
+			{
+				"name": "OHCUST",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 0
+			},
+			{
+				"name": "OHCUSN",
+				"type": "varchar"
+			},
+			{
+				"name": "OHADDR",
+				"type": "varchar"
+			},
+			{
+				"name": "OHADD1",
+				"type": "varchar"
+			},
+			{
+				"name": "OHADD2",
+				"type": "varchar"
+			},
+			{
+				"name": "OHADD3",
+				"type": "varchar"
+			},
+			{
+				"name": "OHCREF",
+				"type": "varchar"
+			},
+			{
+				"name": "OHTELP",
+				"type": "varchar"
+			},
+			{
+				"name": "OHTELW",
+				"type": "varchar"
+			},
+			{
+				"name": "OHCUCC",
+				"type": "decimal",
+				"precision": 1,
+				"scale": 0
+			},
+			{
+				"name": "OHARCC",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHARYY",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHARMM",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHARDD",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHARHH",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHARMI",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHDCAT",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHLANC",
+				"type": "varchar"
+			},
+			{
+				"name": "OHWDEL",
+				"type": "varchar"
+			},
+			{
+				"name": "OHSHP1",
+				"type": "varchar"
+			},
+			{
+				"name": "OHSHP2",
+				"type": "varchar"
+			},
+			{
+				"name": "OHSHP3",
+				"type": "varchar"
+			},
+			{
+				"name": "OHCLAS",
+				"type": "decimal",
+				"precision": 1,
+				"scale": 0
+			},
+			{
+				"name": "OHREGN",
+				"type": "varchar"
+			},
+			{
+				"name": "OHCHNO",
+				"type": "varchar"
+			},
+			{
+				"name": "OHPRCD",
+				"type": "varchar"
+			},
+			{
+				"name": "OHRTCC",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHRTYY",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHRTMM",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHRTDD",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHMILE",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 0
+			},
+			{
+				"name": "OHMDCC",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHMDYY",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHCHVR",
+				"type": "varchar"
+			},
+			{
+				"name": "OHTRNO",
+				"type": "decimal",
+				"precision": 7,
+				"scale": 0
+			},
+			{
+				"name": "OHCARI",
+				"type": "varchar"
+			},
+			{
+				"name": "OHDRIV",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 0
+			},
+			{
+				"name": "OHBEDR",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 0
+			},
+			{
+				"name": "OHCOWN",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 0
+			},
+			{
+				"name": "OHCLCP",
+				"type": "varchar"
+			},
+			{
+				"name": "OHPAST",
+				"type": "varchar"
+			},
+			{
+				"name": "OHHIST",
+				"type": "varchar"
+			},
+			{
+				"name": "OHAFLG",
+				"type": "varchar"
+			},
+			{
+				"name": "OHLPGC",
+				"type": "varchar"
+			},
+			{
+				"name": "OHPRYN",
+				"type": "varchar"
+			},
+			{
+				"name": "OHMILB",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 0
+			},
+			{
+				"name": "OHPRIN",
+				"type": "varchar"
+			},
+			{
+				"name": "OHHMEC",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "OHBUSY",
+				"type": "varchar"
+			},
+			{
+				"name": "OHINVN",
+				"type": "decimal",
+				"precision": 9,
+				"scale": 0
+			},
+			{
+				"name": "OHSUMT",
+				"type": "decimal",
+				"precision": 11,
+				"scale": 2
+			},
+			{
+				"name": "OHSUMF",
+				"type": "decimal",
+				"precision": 11,
+				"scale": 2
+			},
+			{
+				"name": "OHSUBV",
+				"type": "decimal",
+				"precision": 11,
+				"scale": 2
+			},
+			{
+				"name": "OHSUMV",
+				"type": "decimal",
+				"precision": 11,
+				"scale": 2
+			},
+			{
+				"name": "OHSUMD",
+				"type": "decimal",
+				"precision": 11,
+				"scale": 2
+			},
+			{
+				"name": "OHSMFR",
+				"type": "decimal",
+				"precision": 11,
+				"scale": 2
+			},
+			{
+				"name": "OHEXTC",
+				"type": "decimal",
+				"precision": 11,
+				"scale": 2
+			},
+			{
+				"name": "OHMISC",
+				"type": "decimal",
+				"precision": 11,
+				"scale": 2
+			},
+			{
+				"name": "OHCRNO",
+				"type": "decimal",
+				"precision": 9,
+				"scale": 0
+			},
+			{
+				"name": "OHVRMT",
+				"type": "varchar"
+			},
+			{
+				"name": "OHINCC",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHINYY",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHINMM",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHINDD",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHINHH",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHINMI",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHOFCC",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHOFYY",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHOFMM",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHOFDD",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHOFHH",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHOFMI",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OHOFAM",
+				"type": "decimal",
+				"precision": 11,
+				"scale": 2
+			},
+			{
+				"name": "OHTXIN",
+				"type": "varchar"
+			},
+			{
+				"name": "OHWSNO",
+				"type": "varchar"
+			},
+			{
+				"name": "OHDSJN",
+				"type": "varchar"
+			},
+			{
+				"name": "OHSDAF",
+				"type": "varchar"
+			},
+			{
+				"name": "OHSMIV",
+				"type": "varchar"
+			},
+			{
+				"name": "OHNOHC",
+				"type": "varchar"
+			},
+			{
+				"name": "OHAROB",
+				"type": "varchar"
+			},
+			{
+				"name": "OHFL01",
+				"type": "varchar"
+			},
+			{
+				"name": "OHTNLM",
+				"type": "varchar"
+			},
+			{
+				"name": "PLPLAN",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "PLDAT1",
+				"type": "varchar"
+			},
+			{
+				"name": "PLTIM1",
+				"type": "varchar"
+			},
+			{
+				"name": "PLDAT2",
+				"type": "varchar"
+			},
+			{
+				"name": "PLTIM2",
+				"type": "varchar"
+			},
+			{
+				"name": "PLWRNR",
+				"type": "varchar"
+			},
+			{
+				"name": "PLDRIV",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 0
+			},
+			{
+				"name": "OHAAGI",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 0
+			},
+			{
+				"name": "OHAAKJ",
+				"type": "varchar"
+			},
+			{
+				"name": "OHAAGN",
+				"type": "varchar"
+			},
+			{
+				"name": "OHHERH",
+				"type": "varchar"
+			},
+			{
+				"name": "OHELFA",
+				"type": "varchar"
+			},
+			{
+				"name": "OHOFNR",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 0
+			},
+			{
+				"name": "OHALDC",
+				"type": "decimal",
+				"precision": 7,
+				"scale": 0
+			},
+			{
+				"name": "OHROCF",
+				"type": "varchar"
+			},
+			{
+				"name": "OHUSCR",
+				"type": "varchar"
+			},
+			{
+				"name": "OHUSIN",
+				"type": "varchar"
+			},
+			{
+				"name": "OHABBL",
+				"type": "varchar"
+			},
+			{
+				"name": "SANAME",
+				"type": "varchar"
+			},
+			{
+				"name": "SANAMEC",
+				"type": "varchar"
+			},
+			{
+				"name": "SANAMER",
+				"type": "varchar"
+			},
+			{
+				"name": "BVINUM",
+				"type": "varchar"
+			},
+			{
+				"name": "BPRCDE",
+				"type": "varchar"
+			},
+			{
+				"name": "VKOFFN",
+				"type": "varchar"
+			},
+			{
+				"name": "GHBTIM",
+				"type": "time",
+				"scale": 7
+			},
+			{
+				"name": "GHDATE",
+				"type": "date"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "idas_doh"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

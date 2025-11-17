@@ -1,0 +1,21 @@
+{
+	"name": "TeleCSI_stellantis",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "sFTP connectie met airebox van Stellantis",
+		"annotations": [],
+		"type": "Sftp",
+		"typeProperties": {
+			"host": "10.252.1.119",
+			"port": 22,
+			"skipHostKeyValidation": true,
+			"authenticationType": "Basic",
+			"userName": "PSA_sFTP",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIxNzRjYjAyNC0wNzc4LTRkYTUtOTczYy1kOTlmMTcwZTE0ZTAiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "WRK9011",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

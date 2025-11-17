@@ -1,0 +1,147 @@
+{
+	"name": "DMS - Copy iDas tables - Start",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get DMS and Bedrijf iDas",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT DISTINCT \n       'idas' AS dms, \n       [vestigingnr] AS bedrijf\nFROM [dbo].[doorgangenVestigingen]\nWHERE dms = 'idas';",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SQL_Doorgangen_autoline_sync_status",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach iDas",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get DMS and Bedrijf iDas",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get DMS and Bedrijf iDas').output.value",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"batchCount": 50,
+					"activities": [
+						{
+							"name": "If idas",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@startswith(item().DMS,'idas')",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "ExecutePipeline Copy idas tables",
+										"type": "ExecutePipeline",
+										"dependsOn": [
+											{
+												"activity": "Stored Procedure idas_truncate_tables",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"pipeline": {
+												"referenceName": "DMS - Copy iDas tables",
+												"type": "PipelineReference"
+											},
+											"waitOnCompletion": true,
+											"parameters": {
+												"bedrijf": {
+													"value": "@item().bedrijf",
+													"type": "Expression"
+												}
+											}
+										}
+									},
+									{
+										"name": "ExecutePipeline Copy idas tables deel 2",
+										"type": "ExecutePipeline",
+										"dependsOn": [
+											{
+												"activity": "Stored Procedure idas_truncate_tables",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"pipeline": {
+												"referenceName": "DMS - Copy iDas tables deel 2",
+												"type": "PipelineReference"
+											},
+											"waitOnCompletion": true
+										}
+									},
+									{
+										"name": "Stored Procedure idas_truncate_tables",
+										"type": "SqlServerStoredProcedure",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"storedProcedureName": "[dbo].[idas_truncate_tables]"
+										},
+										"linkedServiceName": {
+											"referenceName": "DMS_PROD_SRV_SQL_00",
+											"type": "LinkedServiceReference"
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		],
+		"folder": {
+			"name": "DMS"
+		},
+		"annotations": [],
+		"lastPublishTime": "2020-05-05T14:25:00Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

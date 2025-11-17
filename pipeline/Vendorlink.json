@@ -1,0 +1,674 @@
+{
+	"name": "Vendorlink",
+	"properties": {
+		"activities": [
+			{
+				"name": "Extract Vendorlink Autoline6_80",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Set _Sql_WhereXtra",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "OdbcSource",
+						"query": {
+							"value": "SELECT \t\n\t@{variables('_Sql_Colums')}\nFROM PL_80_PLTRANSACTIONS pltrans,\n\t\tPL_80_PURCHASELEDGERACCOUNTS PLTemp \t\nWHERE  pltemp.account = pltrans.account \n    AND\n\t@{variables('_Sql_WhereXtra')}\n ",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00"
+					},
+					"sink": {
+						"type": "BlobSink",
+						"copyBehavior": "PreserveHierarchy"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Autoline6_Table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzureBlob_csv",
+						"type": "DatasetReference",
+						"parameters": {
+							"OutputFolder": "vendorlink",
+							"OutputFile": "autoline6_80"
+						}
+					}
+				]
+			},
+			{
+				"name": "Set _Sql_columns",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "_Sql_Colums",
+					"value": "PLTemp.account, \tPLTemp.name_, \tPLTemp.address001, \tPLTemp.address004,\tPLTemp.postcode,\t\nPLTemp.vatno, \tPLTemp.iban,\tpltrans.referenc, \tpltrans.docnum, \tpltrans.doctype, \tpltrans.wholdtxt, \t\npltrans.baseval, \tpltrans.basevat, \tpltrans.docdate, \t\tpltrans.branch,\tpltrans.truemod,        PLtrans.magic"
+				}
+			},
+			{
+				"name": "Extract Vendorlink Autoline1 00",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Set _Sql_WhereXtra",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "OdbcSource",
+						"query": {
+							"value": "SELECT \t\n\t@{variables('_Sql_Colums')}\nFROM PL_00_PLTRANSACTIONS pltrans,\n\t\tPL_00_PURCHASELEDGERACCOUNTS PLTemp \t\nWHERE  pltemp.account = pltrans.account \n    AND\n\t@{variables('_Sql_WhereXtra')}\n ",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00"
+					},
+					"sink": {
+						"type": "BlobSink",
+						"copyBehavior": "PreserveHierarchy"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Autoline1_Table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzureBlob_csv",
+						"type": "DatasetReference",
+						"parameters": {
+							"OutputFolder": "vendorlink",
+							"OutputFile": "autoline1_00"
+						}
+					}
+				]
+			},
+			{
+				"name": "Set _Sql_WhereXtra",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Set _Sql_columns",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "_Sql_WhereXtra",
+					"value": "TIMESTAMPADD(SQL_TSI_MONTH, -3, curdate()) < TIMESTAMPADD(SQL_TSI_DAY, 0, pltrans.postdate)"
+				}
+			},
+			{
+				"name": "Extract Vendorlink Autoline2 00",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Set _Sql_WhereXtra",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "OdbcSource",
+						"query": {
+							"value": "SELECT \t\n\t@{variables('_Sql_Colums')}\nFROM PL_00_PLTRANSACTIONS pltrans,\n\t\tPL_00_PURCHASELEDGERACCOUNTS PLTemp \t\nWHERE  pltemp.account = pltrans.account \n    AND\n\t@{variables('_Sql_WhereXtra')}\n ",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00"
+					},
+					"sink": {
+						"type": "BlobSink",
+						"copyBehavior": "PreserveHierarchy"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Autoline2_Table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzureBlob_csv",
+						"type": "DatasetReference",
+						"parameters": {
+							"OutputFolder": "vendorlink",
+							"OutputFile": "autoline2_00"
+						}
+					}
+				]
+			},
+			{
+				"name": "Extract Vendorlink Autoline3 00",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Set _Sql_WhereXtra",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "OdbcSource",
+						"query": {
+							"value": "SELECT \t\n\t@{variables('_Sql_Colums')}\nFROM PL_00_PLTRANSACTIONS pltrans,\n\t\tPL_00_PURCHASELEDGERACCOUNTS PLTemp \t\nWHERE  pltemp.account = pltrans.account \n    AND\n\t@{variables('_Sql_WhereXtra')}\n ",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00"
+					},
+					"sink": {
+						"type": "BlobSink",
+						"copyBehavior": "PreserveHierarchy"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Autoline3_Table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzureBlob_csv",
+						"type": "DatasetReference",
+						"parameters": {
+							"OutputFolder": "vendorlink",
+							"OutputFile": "autoline3_00"
+						}
+					}
+				]
+			},
+			{
+				"name": "Extract Vendorlink Autoline4 80",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Set _Sql_WhereXtra",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "OdbcSource",
+						"query": {
+							"value": "SELECT \t\n\t@{variables('_Sql_Colums')}\nFROM PL_80_PLTRANSACTIONS pltrans,\n\t\tPL_80_PURCHASELEDGERACCOUNTS PLTemp \t\nWHERE  pltemp.account = pltrans.account \n    AND\n\t@{variables('_Sql_WhereXtra')}\n ",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00"
+					},
+					"sink": {
+						"type": "BlobSink",
+						"copyBehavior": "PreserveHierarchy"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Autoline4_Table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzureBlob_csv",
+						"type": "DatasetReference",
+						"parameters": {
+							"OutputFolder": "vendorlink",
+							"OutputFile": "autoline4_80"
+						}
+					}
+				]
+			},
+			{
+				"name": "Extract Vendorlink Autoline6_70",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Set _Sql_WhereXtra",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "OdbcSource",
+						"query": {
+							"value": "SELECT \t\n\t@{variables('_Sql_Colums')}\nFROM PL_70_PLTRANSACTIONS pltrans,\n\t\tPL_70_PURCHASELEDGERACCOUNTS PLTemp \t\nWHERE  pltemp.account = pltrans.account \n    AND\n\t@{variables('_Sql_WhereXtra')}\n ",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00"
+					},
+					"sink": {
+						"type": "BlobSink",
+						"copyBehavior": "PreserveHierarchy"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Autoline6_Table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzureBlob_csv",
+						"type": "DatasetReference",
+						"parameters": {
+							"OutputFolder": "vendorlink",
+							"OutputFile": "autoline6_70"
+						}
+					}
+				]
+			},
+			{
+				"name": "Extract Vendorlink Autoline6_70_archief",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Extract Vendorlink Autoline6_70",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "OdbcSource",
+						"query": {
+							"value": "SELECT \t\n\t@{variables('_Sql_Colums')}\nFROM PL_70_ARCHIVEDTRANSACTIONS pltrans,\n\t\tPL_70_PURCHASELEDGERACCOUNTS PLTemp \t\nWHERE  pltemp.account = pltrans.account \n    AND\n\t@{variables('_Sql_WhereXtra')}\n ",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00"
+					},
+					"sink": {
+						"type": "BlobSink",
+						"copyBehavior": "PreserveHierarchy"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Autoline6_Table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzureBlob_csv",
+						"type": "DatasetReference",
+						"parameters": {
+							"OutputFolder": "vendorlink",
+							"OutputFile": "autoline6_70_archief"
+						}
+					}
+				]
+			},
+			{
+				"name": "Extract Vendorlink Autoline6_80_archief",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Extract Vendorlink Autoline6_80",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "OdbcSource",
+						"query": {
+							"value": "SELECT \t\n\t@{variables('_Sql_Colums')}\nFROM PL_80_ARCHIVEDTRANSACTIONS pltrans,\n\t\tPL_80_PURCHASELEDGERACCOUNTS PLTemp \t\nWHERE  pltemp.account = pltrans.account \n    AND\n\t@{variables('_Sql_WhereXtra')}\n ",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00"
+					},
+					"sink": {
+						"type": "BlobSink",
+						"copyBehavior": "PreserveHierarchy"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Autoline6_Table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzureBlob_csv",
+						"type": "DatasetReference",
+						"parameters": {
+							"OutputFolder": "vendorlink",
+							"OutputFile": "autoline6_80_archief"
+						}
+					}
+				]
+			},
+			{
+				"name": "Extract Vendorlink Autoline1 00_archief",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Extract Vendorlink Autoline1 00",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "OdbcSource",
+						"query": {
+							"value": "SELECT \t\n\t@{variables('_Sql_Colums')}\nFROM PL_00_ARCHIVEDTRANSACTIONS pltrans,\n\t\tPL_00_PURCHASELEDGERACCOUNTS PLTemp \t\nWHERE  pltemp.account = pltrans.account \n    AND\n\t@{variables('_Sql_WhereXtra')}\n ",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00"
+					},
+					"sink": {
+						"type": "BlobSink",
+						"copyBehavior": "PreserveHierarchy"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Autoline1_Table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzureBlob_csv",
+						"type": "DatasetReference",
+						"parameters": {
+							"OutputFolder": "vendorlink",
+							"OutputFile": "autoline1_00_archief"
+						}
+					}
+				]
+			},
+			{
+				"name": "Extract Vendorlink Autoline2 00_archief",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Extract Vendorlink Autoline2 00",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "OdbcSource",
+						"query": {
+							"value": "SELECT \t\n\t@{variables('_Sql_Colums')}\nFROM PL_00_ARCHIVEDTRANSACTIONS pltrans,\n\t\tPL_00_PURCHASELEDGERACCOUNTS PLTemp \t\nWHERE  pltemp.account = pltrans.account \n    AND\n\t@{variables('_Sql_WhereXtra')}\n ",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00"
+					},
+					"sink": {
+						"type": "BlobSink",
+						"copyBehavior": "PreserveHierarchy"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Autoline2_Table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzureBlob_csv",
+						"type": "DatasetReference",
+						"parameters": {
+							"OutputFolder": "vendorlink",
+							"OutputFile": "autoline2_00_archief"
+						}
+					}
+				]
+			},
+			{
+				"name": "Extract Vendorlink Autoline3 00_archief",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Extract Vendorlink Autoline3 00",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "OdbcSource",
+						"query": {
+							"value": "SELECT \t\n\t@{variables('_Sql_Colums')}\nFROM PL_00_ARCHIVEDTRANSACTIONS pltrans,\n\t\tPL_00_PURCHASELEDGERACCOUNTS PLTemp \t\nWHERE  pltemp.account = pltrans.account \n    AND\n\t@{variables('_Sql_WhereXtra')}\n ",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00"
+					},
+					"sink": {
+						"type": "BlobSink",
+						"copyBehavior": "PreserveHierarchy"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Autoline3_Table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzureBlob_csv",
+						"type": "DatasetReference",
+						"parameters": {
+							"OutputFolder": "vendorlink",
+							"OutputFile": "autoline3_00_archief"
+						}
+					}
+				]
+			},
+			{
+				"name": "Extract Vendorlink Autoline4 80_archief",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Extract Vendorlink Autoline4 80",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "OdbcSource",
+						"query": {
+							"value": "SELECT \t\n\t@{variables('_Sql_Colums')}\nFROM PL_80_ARCHIVEDTRANSACTIONS pltrans,\n\t\tPL_80_PURCHASELEDGERACCOUNTS PLTemp \t\nWHERE  pltemp.account = pltrans.account \n    AND\n\t@{variables('_Sql_WhereXtra')}\n ",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00"
+					},
+					"sink": {
+						"type": "BlobSink",
+						"copyBehavior": "PreserveHierarchy"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Autoline4_Table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzureBlob_csv",
+						"type": "DatasetReference",
+						"parameters": {
+							"OutputFolder": "vendorlink",
+							"OutputFile": "autoline4_80_archief"
+						}
+					}
+				]
+			}
+		],
+		"variables": {
+			"_Sql_Colums": {
+				"type": "String",
+				"defaultValue": "\"\""
+			},
+			"_Sql_WhereXtra": {
+				"type": "String",
+				"defaultValue": "\"\""
+			},
+			"_Sql_AutolineServers": {
+				"type": "Array",
+				"defaultValue": []
+			}
+		},
+		"folder": {
+			"name": "Z_Samples"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-11-17T21:40:56Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

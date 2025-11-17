@@ -1,0 +1,318 @@
+{
+	"name": "Post_to_Vendorlink",
+	"properties": {
+		"activities": [
+			{
+				"name": "Select vl_suppliers A1",
+				"description": "Select uppliers from Autoline1 \nGenerated in XML content",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "clntap149",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "@concat('select (\nselect \n\ttrim(name_) as [SupplierName], \t\n\taccount as [SupplierExternalId], \t\n\ttrim(address001) as [SupplierAddressStreet], \n\t'''' as [SupplierAddressNumber],\n\t'''' as [SupplierAddressNumberAdd],\t\n\ttrim(postcode) as [SupplierAddressZipCode],\n\ttrim(address004) as [SupplierAddressCity],\n\t'''' as [SupplierAddressCountry],\n\ttrim(vatno) as [SupplierVatCode], \n\t'''' as [SupplierKvkCode],\n\t'''' as [SupplierDunsNumber],\n\t'''' as [SupplierTel],\n\t'''' as [SupplierFax],\n\t'''' as [SupplierOrderEmail],\n\ttrim(iban) as [SupplierBankAccount],\n\t'''' as [SupplierWebSiteUrl],\n\t'''' as [SupplierTypeExternalId],\n\t'''' as [SupplierCommodityExternalId],\n\t'''' as [SupplierClassificationExternalId],\n\t'''' as [SupplierProductGroupExternalId],\n\t0 as [SupplierRatingNorm]\nfrom openquery([', pipeline().parameters.Set, '], ''select distinct\n\tPLTemp.account, \n\tPLTemp.name_, \n\tPLTemp.address001, \n\tPLTemp.address004,\n\tPLTemp.address005,\n\tPLTemp.postcode,\n\tPLTemp.vatno, \n\tPLTemp.iban\n\tfrom PL_', pipeline().parameters.Company, '_pltransactions pltrans,\n\t\tPL_', pipeline().parameters.Company, '_PURCHASELEDGERACCOUNTS PLTemp \t\n\twhere  pltemp.account = pltrans.account\n\t\tand TIMESTAMPADD(SQL_TSI_DAY, ', string(add(mul(pipeline().parameters.Offset,10),10)) ,', pltrans.postdate) > TIMESTAMPADD(SQL_TSI_DAY, 0, curdate())\n\t\tand TIMESTAMPADD(SQL_TSI_DAY, ', string(mul(pipeline().parameters.Offset,10)) , ' , pltrans.postdate) <= TIMESTAMPADD(SQL_TSI_DAY, 0, curdate())\n '')\n\t\t VL_Invoice\nFOR XML PATH(''VL_Supplier'') , ROOT(''VL_Suppliers''), TYPE\n) as ou1')",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Post to Vendorlink Suppliers",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Select vl_suppliers A1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"headers": {
+						"Content-Type": "text/xml; charset=utf-8",
+						"SOAPAction": "\"http://tempuri.org/Suppliers\""
+					},
+					"url": "https://connector-app4.vendorlink.nl/InsertData.asmx",
+					"body": {
+						"value": "@concat(\n    '<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:tem=\"http://tempuri.org/\">\n   <soap:Header/>\n   <soap:Body>\n      <tem:Suppliers>\n         <!--Optional:-->\n         <tem:_UserName>'\n    ,pipeline().parameters.user\n    ,'</tem:_UserName>\n         <!--Optional:-->\n         <tem:_Password>'\n    ,pipeline().parameters.pwrd\n    ,'</tem:_Password>\n         <!--Optional:-->\n         <tem:_CustomerCode>'\n    ,pipeline().parameters.customercode\n    ,'</tem:_CustomerCode>\n         <!--Optional:-->\n         <tem:_XML><![CDATA[\n        '\n            \n    ,coalesce(activity('Select vl_suppliers A1').output.resultSets[0]['rows'][0].ou1, '<VL_Suppliers></VL_Suppliers>')\n    ,'\n    ]]></tem:_XML>\n      </tem:Suppliers>\n   </soap:Body>\n</soap:Envelope>')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Select vl_invoice A1",
+				"description": "Select invoice data from Autoline1 set in XML format",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "clntap149",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "@concat('\nwith branchcodes as (select branch, desc002 from openquery([', pipeline().parameters.Set, '], ''select branch, desc002 from NL_', pipeline().parameters.Company, '_BRANCHDESCRIPTIONs'')),\n\n  trans as ( select docnum, referenc, postdate, docdate, account, MAGIC, branch, baseval, basevat, name_ from openquery([', pipeline().parameters.Set, '], \n\t\t\t\t\t''select  pltrans.docnum, pltrans.referenc, pltrans.postdate, pltrans.docdate, pltrans.account, pltrans.MAGIC, \n\t\t\t\t\tpltrans.branch, pltrans.baseval, pltrans.basevat, accts.name_\n\t\t\t\t\tfrom \n\t\t\t\t\t\tPL_', pipeline().parameters.Company, '_pltransactions pltrans, \n\t\t\t\t\t\tPL_', pipeline().parameters.Company, '_PURCHASELEDGERACCOUNTS accts\n\t\t\t\t\twhere  accts.account = pltrans.account \n\t\t\t\t\t\tand TIMESTAMPADD(SQL_TSI_DAY, ', string(add(mul(pipeline().parameters.Offset,10),10)) ,', pltrans.postdate) > TIMESTAMPADD(SQL_TSI_DAY, 0, curdate()) \n\t\t\t\t\t\tand TIMESTAMPADD(SQL_TSI_DAY, ', string(mul(pipeline().parameters.Offset,10)) , ' , pltrans.postdate) <= TIMESTAMPADD(SQL_TSI_DAY, 0, curdate()) ''))\n\nselect (\n\tselect \n\t\tdocnum as [InvoiceNumber],  \n\t\ttrim(REPLACE(referenc, CHAR(0), '''')) as [InvoiceNumberSupplier],\n\t\tpostdate as [InvoiceCreationDate],  \n\t\tdocdate as [InvoiceDate],  \n\t\ttrim(REPLACE(account, CHAR(0), '''')) as [InvoiceSupplierExternalId], \n\t\ttrim(REPLACE(name_, CHAR(0), '''')) as [InvoiceSupplierName], \n\t''', pipeline().parameters.CompanyReference, ''' as [InvoiceCompanyReference], \n\t''', pipeline().parameters.CompanyCode, ''' as [InvoiceCompany],  \n\t\tdocnum as [VL_InvoiceLines/VL_InvoiceLine/InvoiceNumber], \n\t\tmagic as [VL_InvoiceLines/VL_InvoiceLine/InvoiceLineNumber], \n\t\t'''' as [VL_InvoiceLines/VL_InvoiceLine/InvoiceLineDesc], \n\t\tcoalesce(REPLACE(VL_Invoice.branch, CHAR(0), ''''), '''') as [VL_InvoiceLines/VL_InvoiceLine/InvoiceCostCentreCode], \n\t\tcoalesce(REPLACE(trim(coalesce(DESC002, '''')), CHAR(0), ''''), concat(''Branch '', VL_Invoice.branch)) as [VL_InvoiceLines/VL_InvoiceLine/InvoiceCostCentreDesc], \n\t\tbaseval - basevat as [VL_InvoiceLines/VL_InvoiceLine/InvoiceAmountEx], \n\t\tbasevat as [VL_InvoiceLines/VL_InvoiceLine/InvoiceAmountVat], \n\t\tbaseval as [VL_InvoiceLines/VL_InvoiceLine/InvoiceAmountIn], \n\t\t''EUR'' as [VL_InvoiceLines/VL_InvoiceLine/InvoiceCurrency]  \n\tfrom trans VL_Invoice\n\tleft join branchcodes b on b.branch = VL_Invoice.branch \n FOR XML PATH(''VL_Invoice'') , ROOT(''VL_Invoices''), TYPE) as ou1\n')",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Post to vendorlink Invoices",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Select vl_invoice A1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"headers": {
+						"Content-Type": "text/xml; charset=utf-8",
+						"SOAPAction": "\"http://tempuri.org/Invoices\""
+					},
+					"url": "https://connector-app4.vendorlink.nl/InsertData.asmx",
+					"body": {
+						"value": "@concat(\n    '<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:tem=\"http://tempuri.org/\">\n   <soap:Header/>\n   <soap:Body>\n      <tem:Invoices>\n         <!--Optional:-->\n         <tem:_UserName>'\n    ,pipeline().parameters.user\n    ,'</tem:_UserName>\n         <!--Optional:-->\n         <tem:_Password>'\n    ,pipeline().parameters.pwrd\n    ,'</tem:_Password>\n         <!--Optional:-->\n         <tem:_CustomerCode>'\n    ,pipeline().parameters.customercode\n    ,'</tem:_CustomerCode>\n         <!--Optional:-->\n         <tem:_XML><![CDATA[\n        '\n    ,coalesce(activity('Select vl_invoice A1').output.resultSets[0]['rows'][0].ou1,'<VL_Invoices></VL_Invoices>')\n    ,'\n    ]]></tem:_XML>\n      </tem:Invoices>\n   </soap:Body>\n</soap:Envelope>')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "If Condition1",
+				"type": "IfCondition",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@pipeline().parameters.Archief",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Select vl_suppliers Archive",
+							"description": "Select suppliers  \nGenerated in XML content",
+							"type": "Script",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"linkedServiceName": {
+								"referenceName": "clntap149",
+								"type": "LinkedServiceReference"
+							},
+							"typeProperties": {
+								"scripts": [
+									{
+										"type": "Query",
+										"text": {
+											"value": "@concat('select (\nselect \n\ttrim(name_) as [SupplierName], \t\n\taccount as [SupplierExternalId], \t\n\ttrim(address001) as [SupplierAddressStreet], \n\t'''' as [SupplierAddressNumber],\n\t'''' as [SupplierAddressNumberAdd],\t\n\ttrim(postcode) as [SupplierAddressZipCode],\n\ttrim(address004) as [SupplierAddressCity],\n\t'''' as [SupplierAddressCountry],\n\ttrim(vatno) as [SupplierVatCode], \n\t'''' as [SupplierKvkCode],\n\t'''' as [SupplierDunsNumber],\n\t'''' as [SupplierTel],\n\t'''' as [SupplierFax],\n\t'''' as [SupplierOrderEmail],\n\ttrim(iban) as [SupplierBankAccount],\n\t'''' as [SupplierWebSiteUrl],\n\t'''' as [SupplierTypeExternalId],\n\t'''' as [SupplierCommodityExternalId],\n\t'''' as [SupplierClassificationExternalId],\n\t'''' as [SupplierProductGroupExternalId],\n\t0 as [SupplierRatingNorm]\nfrom openquery([', pipeline().parameters.Set, '], ''select distinct\n\tPLTemp.account, \n\tPLTemp.name_, \n\tPLTemp.address001, \n\tPLTemp.address004,\n\tPLTemp.address005,\n\tPLTemp.postcode,\n\tPLTemp.vatno, \n\tPLTemp.iban\n\tfrom PL_', pipeline().parameters.Company, '_ARCHIVEDTRANSACTIONS pltrans,\n\t\tPL_', pipeline().parameters.Company, '_PURCHASELEDGERACCOUNTS PLTemp \t\n\twhere  pltemp.account = pltrans.account  \n\tand TIMESTAMPADD(SQL_TSI_DAY, ', string(add(mul(pipeline().parameters.Offset,10),10)) ,', pltrans.postdate) > TIMESTAMPADD(SQL_TSI_DAY, 0, curdate())\n\tand TIMESTAMPADD(SQL_TSI_DAY, ', string(mul(pipeline().parameters.Offset,10)) , ' , pltrans.postdate) <= TIMESTAMPADD(SQL_TSI_DAY, 0, curdate()) '')\n\t\t VL_Invoice\nFOR XML PATH(''VL_Supplier'') , ROOT(''VL_Suppliers''), TYPE\n) as ou1')",
+											"type": "Expression"
+										}
+									}
+								],
+								"scriptBlockExecutionTimeout": "02:00:00"
+							}
+						},
+						{
+							"name": "Post to Vendorlink Suppliers Archief",
+							"type": "WebActivity",
+							"dependsOn": [
+								{
+									"activity": "Select vl_suppliers Archive",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"method": "POST",
+								"headers": {
+									"Content-Type": "text/xml; charset=utf-8",
+									"SOAPAction": "\"http://tempuri.org/Suppliers\""
+								},
+								"url": "https://connector-app4.vendorlink.nl/InsertData.asmx",
+								"body": {
+									"value": "@concat(\n    '<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:tem=\"http://tempuri.org/\">\n   <soap:Header/>\n   <soap:Body>\n      <tem:Suppliers>\n         <!--Optional:-->\n         <tem:_UserName>'\n    ,pipeline().parameters.user\n    ,'</tem:_UserName>\n         <!--Optional:-->\n         <tem:_Password>'\n    ,pipeline().parameters.pwrd\n    ,'</tem:_Password>\n         <!--Optional:-->\n         <tem:_CustomerCode>'\n    ,pipeline().parameters.customercode\n    ,'</tem:_CustomerCode>\n         <!--Optional:-->\n         <tem:_XML><![CDATA[\n        '\n    ,coalesce(activity('Select vl_suppliers Archive').output.resultSets[0]['rows'][0].ou1, '<VL_Suppliers></VL_Suppliers>')\n    ,'\n    ]]></tem:_XML>\n      </tem:Suppliers>\n   </soap:Body>\n</soap:Envelope>')",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Select vl_invoice archive",
+							"description": "Select archived invoice data in XML format",
+							"type": "Script",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"linkedServiceName": {
+								"referenceName": "clntap149",
+								"type": "LinkedServiceReference"
+							},
+							"typeProperties": {
+								"scripts": [
+									{
+										"type": "Query",
+										"text": {
+											"value": "@concat('\nwith branchcodes as (select branch, desc002 from openquery([', pipeline().parameters.Set, '], ''select branch, desc002 from NL_', pipeline().parameters.Company, '_BRANCHDESCRIPTIONs'')),\n\n  trans as ( select docnum, referenc, postdate, docdate, account, MAGIC, branch, baseval, basevat, name_ from openquery([', pipeline().parameters.Set, '], \n\t\t\t\t\t''select  pltrans.docnum, pltrans.referenc, pltrans.postdate, pltrans.docdate, pltrans.account, pltrans.MAGIC, \n\t\t\t\t\tpltrans.branch, pltrans.baseval, pltrans.basevat, accts.name_\n\t\t\t\t\tfrom \n\t\t\t\t\t\tPL_', pipeline().parameters.Company, '_ARCHIVEDTRANSACTIONS pltrans, \n\t\t\t\t\t\tPL_', pipeline().parameters.Company, '_PURCHASELEDGERACCOUNTS accts\n\t\t\t\t\twhere  accts.account = pltrans.account \n\t\t\t\t\t\tand TIMESTAMPADD(SQL_TSI_DAY, ', string(add(mul(pipeline().parameters.Offset,10),10)) ,', pltrans.postdate) > TIMESTAMPADD(SQL_TSI_DAY, 0, curdate()) \n\t\t\t\t\t\tand TIMESTAMPADD(SQL_TSI_DAY, ', string(mul(pipeline().parameters.Offset,10)) , ' , pltrans.postdate) <= TIMESTAMPADD(SQL_TSI_DAY, 0, curdate()) ''))\n\nselect (\n\tselect \n\t\tdocnum as [InvoiceNumber],  \n\t\ttrim(referenc) as [InvoiceNumberSupplier],\n\t\tpostdate as [InvoiceCreationDate],  \n\t\tdocdate as [InvoiceDate],  \n\t\ttrim(account) as [InvoiceSupplierExternalId], \n\t\ttrim(name_) as [InvoiceSupplierName], \n\t''', pipeline().parameters.CompanyReference, ''' as [InvoiceCompanyReference], \n\t''', pipeline().parameters.CompanyCode, ''' as [InvoiceCompany],  \n\t\tdocnum as [VL_InvoiceLines/VL_InvoiceLine/InvoiceNumber], \n\t\tmagic as [VL_InvoiceLines/VL_InvoiceLine/InvoiceLineNumber], \n\t\t'''' as [VL_InvoiceLines/VL_InvoiceLine/InvoiceLineDesc], \n\t\tcoalesce(VL_Invoice.branch, '''') as [VL_InvoiceLines/VL_InvoiceLine/InvoiceCostCentreCode], \n\t\tcoalesce(trim(DESC002), concat(''Branch '', VL_Invoice.branch)) as [VL_InvoiceLines/VL_InvoiceLine/InvoiceCostCentreDesc], \n\t\tbaseval - basevat as [VL_InvoiceLines/VL_InvoiceLine/InvoiceAmountEx], \n\t\tbasevat as [VL_InvoiceLines/VL_InvoiceLine/InvoiceAmountVat], \n\t\tbaseval as [VL_InvoiceLines/VL_InvoiceLine/InvoiceAmountIn], \n\t\t''EUR'' as [VL_InvoiceLines/VL_InvoiceLine/InvoiceCurrency]  \n\tfrom trans VL_Invoice\n\tleft join branchcodes b on b.branch = VL_Invoice.branch \n FOR XML PATH(''VL_Invoice'') , ROOT(''VL_Invoices''), TYPE) as ou1\n')",
+											"type": "Expression"
+										}
+									}
+								],
+								"scriptBlockExecutionTimeout": "02:00:00"
+							}
+						},
+						{
+							"name": "Post to vendorlink Invoices_Archief",
+							"type": "WebActivity",
+							"dependsOn": [
+								{
+									"activity": "Select vl_invoice archive",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"method": "POST",
+								"headers": {
+									"Content-Type": "text/xml; charset=utf-8",
+									"SOAPAction": "\"http://tempuri.org/Invoices\""
+								},
+								"url": "https://connector-app4.vendorlink.nl/InsertData.asmx",
+								"body": {
+									"value": "@concat(\n    '<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:tem=\"http://tempuri.org/\">\n   <soap:Header/>\n   <soap:Body>\n      <tem:Invoices>\n         <!--Optional:-->\n         <tem:_UserName>'\n    ,pipeline().parameters.user\n    ,'</tem:_UserName>\n         <!--Optional:-->\n         <tem:_Password>'\n    ,pipeline().parameters.pwrd\n    ,'</tem:_Password>\n         <!--Optional:-->\n         <tem:_CustomerCode>'\n    ,pipeline().parameters.customercode\n    ,'</tem:_CustomerCode>\n         <!--Optional:-->\n         <tem:_XML><![CDATA[\n        '\n    ,coalesce(activity('Select vl_invoice Archive').output.resultSets[0]['rows'][0].ou1,'<VL_Invoices></VL_Invoices>')\n    ,'\n    ]]></tem:_XML>\n      </tem:Invoices>\n   </soap:Body>\n</soap:Envelope>')",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"user": {
+				"type": "string",
+				"defaultValue": "Connector_spend_HedinNL"
+			},
+			"pwrd": {
+				"type": "string",
+				"defaultValue": "e6*G8L2y3$6Jw@"
+			},
+			"customercode": {
+				"type": "string",
+				"defaultValue": "66D32FE8-1E03-4603-A34F-9BB792C1FF2E"
+			},
+			"Set": {
+				"type": "string",
+				"defaultValue": "Autoline1"
+			},
+			"Company": {
+				"type": "string",
+				"defaultValue": "00"
+			},
+			"CompanyReference": {
+				"type": "string",
+				"defaultValue": "Hedin 1M"
+			},
+			"CompanyCode": {
+				"type": "string",
+				"defaultValue": "1M"
+			},
+			"Archief": {
+				"type": "bool",
+				"defaultValue": false
+			},
+			"Offset": {
+				"type": "int",
+				"defaultValue": 0
+			}
+		},
+		"variables": {
+			"test": {
+				"type": "Array"
+			}
+		},
+		"folder": {
+			"name": "Vendorlink"
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-07-24T11:47:51Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

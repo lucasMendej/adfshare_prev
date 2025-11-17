@@ -1,0 +1,2475 @@
+{
+	"name": "DMS - Copy Autoline Tables Deel 2",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get Tables",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get DMS and Bedrijf",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get DMS and Bedrijf').output.value",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"batchCount": 50,
+					"activities": [
+						{
+							"name": "If autoline1",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(item().DMS, 'autoline1')",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Copy sl_00_salesledgeraccounts autoline1",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ', variables('QuerySalesledgeraccounts'),' from sl_00_salesledgeraccounts')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline1_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_salesledgeraccounts",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy wl_00_idletimecodes autoline1",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ', variables('QueryIdletimecodes'),' from WL_00_IDLETIMECODES')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline1_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_idletimecodes",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy gb_00_userdetails autoline1",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS,  ',variables('QueryUserdetails') , ' from gb_00_userdetails')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline1_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_userdetails",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy gb_00_companylocations autoline1",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ',variables('QueryCompanylocations'),' from  gb_00_companylocations')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline1_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_companylocations",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy so_00_operatordetails autoline1",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ',variables('QueryOperatordetails'),' from  so_00_operatordetails')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline1_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_operatordetails",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy CS_WL_wlsystemparameters autoline1",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, company as bedrijf, CLCKANAL as analyseCodes from CS_NL_WLSYSTEMPARAMETERS')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline1_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_wlsystemparameters",
+												"type": "DatasetReference"
+											}
+										]
+									}
+								]
+							}
+						},
+						{
+							"name": "If autoline2",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(item().DMS, 'autoline2')",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Copy sl_00_salesledgeraccounts autoline2",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ', variables('QuerySalesledgeraccounts'),' from sl_00_salesledgeraccounts')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline2_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_salesledgeraccounts",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy wl_00_idletimecodes autoline2",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ', variables('QueryIdletimecodes'),' from WL_00_IDLETIMECODES')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline2_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_idletimecodes",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy gb_00_userdetails autoline2",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS,  ',variables('QueryUserdetails') , ' from gb_00_userdetails')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline2_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_userdetails",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy gb_00_companylocations autoline2",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ',variables('QueryCompanylocations'),' from  gb_00_companylocations')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline2_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_companylocations",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy so_00_operatordetails autoline2",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ',variables('QueryOperatordetails'),' from  so_00_operatordetails')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline2_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_operatordetails",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy CS_WL_wlsystemparameters autoline2",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, company as bedrijf, CLCKANAL as analyseCodes from CS_NL_WLSYSTEMPARAMETERS')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline2_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_wlsystemparameters",
+												"type": "DatasetReference"
+											}
+										]
+									}
+								]
+							}
+						},
+						{
+							"name": "If autoline3",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(item().DMS, 'autoline3')",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Copy sl_00_salesledgeraccounts autoline3",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ', variables('QuerySalesledgeraccounts'),' from sl_00_salesledgeraccounts')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline3_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_salesledgeraccounts",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy wl_00_idletimecodes autoline3",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ', variables('QueryIdletimecodes'),' from WL_00_IDLETIMECODES')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline3_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_idletimecodes",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy gb_00_userdetails autoline3",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS,  ',variables('QueryUserdetails') , ' from gb_00_userdetails')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline3_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_userdetails",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy gb_00_companylocations autoline3",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ',variables('QueryCompanylocations'),' from  gb_00_companylocations')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline3_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_companylocations",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy so_00_operatordetails autoline3",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ',variables('QueryOperatordetails'),' from  so_00_operatordetails')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline3_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_operatordetails",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy CS_WL_wlsystemparameters autoline3",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, company as bedrijf, CLCKANAL as analyseCodes from CS_NL_WLSYSTEMPARAMETERS')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline3_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_wlsystemparameters",
+												"type": "DatasetReference"
+											}
+										]
+									}
+								]
+							}
+						},
+						{
+							"name": "If autoline4",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(item().DMS, 'autoline4')",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Copy sl_00_salesledgeraccounts autoline4",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ', variables('QuerySalesledgeraccounts'),' from sl_80_salesledgeraccounts')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline4_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_salesledgeraccounts",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy wl_00_idletimecodes autoline4",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ', variables('QueryIdletimecodes'),' from WL_00_IDLETIMECODES')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline4_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_idletimecodes",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy gb_00_userdetails autoline4",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS,  ',variables('QueryUserdetails') , ' from gb_00_userdetails')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline4_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_userdetails",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy gb_00_companylocations autoline4",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ',variables('QueryCompanylocations'),' from  gb_00_companylocations')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline4_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_companylocations",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy so_00_operatordetails autoline4",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ',variables('QueryOperatordetails'),' from  so_00_operatordetails')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline4_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_operatordetails",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy CS_WL_wlsystemparameters autoline4",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, company as bedrijf, CLCKANAL as analyseCodes from CS_NL_WLSYSTEMPARAMETERS')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline4_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_wlsystemparameters",
+												"type": "DatasetReference"
+											}
+										]
+									}
+								]
+							}
+						},
+						{
+							"name": "If autoline6",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(item().DMS, 'autoline6')",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Copy sl_70_salesledgeraccounts autoline6",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"additionalColumns": [
+													{
+														"name": "dummy",
+														"value": "leeg"
+													}
+												],
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ', variables('QuerySalesledgeraccounts'),' from sl_70_salesledgeraccounts')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false,
+											"translator": {
+												"type": "TabularTranslator",
+												"mappings": [
+													{
+														"source": {
+															"name": "DMS",
+															"type": "String"
+														},
+														"sink": {
+															"name": "DMS",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "CATEGORY",
+															"type": "String"
+														},
+														"sink": {
+															"name": "CATEGORY",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "ACCOUNT",
+															"type": "String"
+														},
+														"sink": {
+															"name": "ACCOUNT",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "EDITDATE",
+															"type": "DateTime"
+														},
+														"sink": {
+															"name": "EDITDATE",
+															"type": "DateTime"
+														}
+													},
+													{
+														"source": {
+															"name": "NAME_",
+															"type": "String"
+														},
+														"sink": {
+															"name": "NAME_",
+															"type": "String"
+														}
+													}
+												]
+											}
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline6_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_salesledgeraccounts",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy wl_00_idletimecodes autoline6",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"additionalColumns": [
+													{
+														"name": "dummy",
+														"value": "leeg"
+													}
+												],
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ', variables('QueryIdletimecodes'),' from WL_00_IDLETIMECODES')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false,
+											"translator": {
+												"type": "TabularTranslator",
+												"mappings": [
+													{
+														"source": {
+															"name": "DMS",
+															"type": "String"
+														},
+														"sink": {
+															"name": "DMS",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "CODE",
+															"type": "String"
+														},
+														"sink": {
+															"name": "CODE",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "DESC_",
+															"type": "String"
+														},
+														"sink": {
+															"name": "DESC_",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "DESC001",
+															"type": "String"
+														},
+														"sink": {
+															"name": "DESC001",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "DESC002",
+															"type": "String"
+														},
+														"sink": {
+															"name": "DESC002",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "DESC003",
+															"type": "String"
+														},
+														"sink": {
+															"name": "DESC003",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "DESC004",
+															"type": "String"
+														},
+														"sink": {
+															"name": "DESC004",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "DESC005",
+															"type": "String"
+														},
+														"sink": {
+															"name": "DESC005",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "DESC006",
+															"type": "String"
+														},
+														"sink": {
+															"name": "DESC006",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "DESC007",
+															"type": "String"
+														},
+														"sink": {
+															"name": "DESC007",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "DESC008",
+															"type": "String"
+														},
+														"sink": {
+															"name": "DESC008",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "DESC009",
+															"type": "String"
+														},
+														"sink": {
+															"name": "DESC009",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "SHORT",
+															"type": "String"
+														},
+														"sink": {
+															"name": "SHORT",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "ORDER_",
+															"type": "Decimal"
+														},
+														"sink": {
+															"name": "ORDER_",
+															"type": "Decimal"
+														}
+													},
+													{
+														"source": {
+															"name": "PRODUCTV",
+															"type": "Boolean"
+														},
+														"sink": {
+															"name": "PRODUCTV",
+															"type": "Boolean"
+														}
+													},
+													{
+														"source": {
+															"name": "ANALYSIS",
+															"type": "String"
+														},
+														"sink": {
+															"name": "ANALYSIS",
+															"type": "String"
+														}
+													}
+												]
+											}
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline6_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_idletimecodes",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy gb_00_userdetails autoline6",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"additionalColumns": [
+													{
+														"name": "dummy",
+														"value": "leeg"
+													}
+												],
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS,  ',variables('QueryUserdetails') , ' from gb_00_userdetails')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false,
+											"translator": {
+												"type": "TabularTranslator",
+												"mappings": [
+													{
+														"source": {
+															"name": "DMS",
+															"type": "String"
+														},
+														"sink": {
+															"name": "DMS",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "DEPT",
+															"type": "String"
+														},
+														"sink": {
+															"name": "DEPT",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "LOCAT",
+															"type": "String"
+														},
+														"sink": {
+															"name": "LOCAT",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "EMAIL",
+															"type": "String"
+														},
+														"sink": {
+															"name": "EMAIL",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "NAME_",
+															"type": "String"
+														},
+														"sink": {
+															"name": "NAME_",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "USERID",
+															"type": "String"
+														},
+														"sink": {
+															"name": "USERID",
+															"type": "String"
+														}
+													}
+												]
+											}
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline6_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_userdetails",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy gb_00_companylocations autoline6",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"additionalColumns": [
+													{
+														"name": "dummy",
+														"value": "leeg"
+													}
+												],
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ',variables('QueryCompanylocations'),' from  gb_00_companylocations')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false,
+											"translator": {
+												"type": "TabularTranslator",
+												"mappings": [
+													{
+														"source": {
+															"name": "DMS",
+															"type": "String"
+														},
+														"sink": {
+															"name": "DMS",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "CODE",
+															"type": "String"
+														},
+														"sink": {
+															"name": "CODE",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "DESC_",
+															"type": "String"
+														},
+														"sink": {
+															"name": "DESC_",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "CCENT",
+															"type": "Decimal"
+														},
+														"sink": {
+															"name": "CCENT",
+															"type": "Decimal"
+														}
+													},
+													{
+														"source": {
+															"name": "NAME_",
+															"type": "String"
+														},
+														"sink": {
+															"name": "NAME_",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "ADDRESS1",
+															"type": "String"
+														},
+														"sink": {
+															"name": "ADDRESS1",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "ADDRESS2",
+															"type": "String"
+														},
+														"sink": {
+															"name": "ADDRESS2",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "ADDRESS3",
+															"type": "String"
+														},
+														"sink": {
+															"name": "ADDRESS3",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "ADDRESS4",
+															"type": "String"
+														},
+														"sink": {
+															"name": "ADDRESS4",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "POSTCODE",
+															"type": "String"
+														},
+														"sink": {
+															"name": "POSTCODE",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "PHONE",
+															"type": "String"
+														},
+														"sink": {
+															"name": "PHONE",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "FAX",
+															"type": "String"
+														},
+														"sink": {
+															"name": "FAX",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "EXPEN",
+															"type": "Decimal"
+														},
+														"sink": {
+															"name": "EXPEN",
+															"type": "Decimal"
+														}
+													},
+													{
+														"source": {
+															"name": "TYPE_",
+															"type": "String"
+														},
+														"sink": {
+															"name": "TYPE_",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "BSCCENT",
+															"type": "Decimal"
+														},
+														"sink": {
+															"name": "BSCCENT",
+															"type": "Decimal"
+														}
+													},
+													{
+														"source": {
+															"name": "BSEXPEN",
+															"type": "Decimal"
+														},
+														"sink": {
+															"name": "BSEXPEN",
+															"type": "Decimal"
+														}
+													},
+													{
+														"source": {
+															"name": "PTIND",
+															"type": "String"
+														},
+														"sink": {
+															"name": "PTIND",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "DEPTANAL",
+															"type": "String"
+														},
+														"sink": {
+															"name": "DEPTANAL",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "DLRCODE",
+															"type": "String"
+														},
+														"sink": {
+															"name": "DLRCODE",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "DEPSLACC",
+															"type": "String"
+														},
+														"sink": {
+															"name": "DEPSLACC",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "DEPNLEX",
+															"type": "Decimal"
+														},
+														"sink": {
+															"name": "DEPNLEX",
+															"type": "Decimal"
+														}
+													},
+													{
+														"source": {
+															"name": "DEPPRINT",
+															"type": "String"
+														},
+														"sink": {
+															"name": "DEPPRINT",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "BUSICOND",
+															"type": "String"
+														},
+														"sink": {
+															"name": "BUSICOND",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "BUSIITEM",
+															"type": "String"
+														},
+														"sink": {
+															"name": "BUSIITEM",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "BUSREGNO",
+															"type": "String"
+														},
+														"sink": {
+															"name": "BUSREGNO",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "DEPNLAC",
+															"type": "Decimal"
+														},
+														"sink": {
+															"name": "DEPNLAC",
+															"type": "Decimal"
+														}
+													},
+													{
+														"source": {
+															"name": "LOCATILL",
+															"type": "String"
+														},
+														"sink": {
+															"name": "LOCATILL",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "OWNER",
+															"type": "String"
+														},
+														"sink": {
+															"name": "OWNER",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "REGBNAME",
+															"type": "String"
+														},
+														"sink": {
+															"name": "REGBNAME",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "REGSLACC",
+															"type": "String"
+														},
+														"sink": {
+															"name": "REGSLACC",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "VATNO",
+															"type": "String"
+														},
+														"sink": {
+															"name": "VATNO",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "APPSEQ",
+															"type": "Decimal"
+														},
+														"sink": {
+															"name": "APPSEQ",
+															"type": "Decimal"
+														}
+													},
+													{
+														"source": {
+															"name": "VSBCO",
+															"type": "String"
+														},
+														"sink": {
+															"name": "VSBCO",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "VSBGROUP",
+															"type": "String"
+														},
+														"sink": {
+															"name": "VSBGROUP",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "MKDEPTS",
+															"type": "String"
+														},
+														"sink": {
+															"name": "MKDEPTS",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "MKDEPTS001",
+															"type": "String"
+														},
+														"sink": {
+															"name": "MKDEPTS001",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "MKDEPTS002",
+															"type": "String"
+														},
+														"sink": {
+															"name": "MKDEPTS002",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "DEPJTYPE",
+															"type": "String"
+														},
+														"sink": {
+															"name": "DEPJTYPE",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "BONDED",
+															"type": "Boolean"
+														},
+														"sink": {
+															"name": "BONDED",
+															"type": "Boolean"
+														}
+													},
+													{
+														"source": {
+															"name": "THIRDPTY",
+															"type": "Boolean"
+														},
+														"sink": {
+															"name": "THIRDPTY",
+															"type": "Boolean"
+														}
+													},
+													{
+														"source": {
+															"name": "REFJTYPE",
+															"type": "String"
+														},
+														"sink": {
+															"name": "REFJTYPE",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "USTAX",
+															"type": "String"
+														},
+														"sink": {
+															"name": "USTAX",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "DBAUMAIL",
+															"type": "String"
+														},
+														"sink": {
+															"name": "DBAUMAIL",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "DBVIEW",
+															"type": "Boolean"
+														},
+														"sink": {
+															"name": "DBVIEW",
+															"type": "Boolean"
+														}
+													},
+													{
+														"source": {
+															"name": "REGION",
+															"type": "String"
+														},
+														"sink": {
+															"name": "REGION",
+															"type": "String"
+														}
+													}
+												]
+											}
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline6_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_companylocations",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy so_00_operatordetails autoline6",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"additionalColumns": [
+													{
+														"name": "dummy",
+														"value": "leeg"
+													}
+												],
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ',variables('QueryOperatordetails'),' from  so_00_operatordetails')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false,
+											"translator": {
+												"type": "TabularTranslator",
+												"mappings": [
+													{
+														"source": {
+															"name": "DMS",
+															"type": "String"
+														},
+														"sink": {
+															"name": "DMS",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "OPERATOR",
+															"type": "String"
+														},
+														"sink": {
+															"name": "OPERATOR",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "OPNAME",
+															"type": "String"
+														},
+														"sink": {
+															"name": "OPNAME",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "OPLOCN",
+															"type": "String"
+														},
+														"sink": {
+															"name": "OPLOCN",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "OPNUM",
+															"type": "Decimal"
+														},
+														"sink": {
+															"name": "OPNUM",
+															"type": "Decimal"
+														}
+													},
+													{
+														"source": {
+															"name": "STOCKLOC",
+															"type": "Decimal"
+														},
+														"sink": {
+															"name": "STOCKLOC",
+															"type": "Decimal"
+														}
+													},
+													{
+														"source": {
+															"name": "NOTUSED1",
+															"type": "String"
+														},
+														"sink": {
+															"name": "NOTUSED1",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "FOLLEXEC",
+															"type": "String"
+														},
+														"sink": {
+															"name": "FOLLEXEC",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "PRIORITY_",
+															"type": "Int64"
+														},
+														"sink": {
+															"name": "PRIORITY_",
+															"type": "Decimal"
+														}
+													},
+													{
+														"source": {
+															"name": "SELLFROM",
+															"type": "String"
+														},
+														"sink": {
+															"name": "SELLFROM",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "WARRANTY",
+															"type": "String"
+														},
+														"sink": {
+															"name": "WARRANTY",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "SSTYPE",
+															"type": "String"
+														},
+														"sink": {
+															"name": "SSTYPE",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "FIXWIDTH",
+															"type": "Boolean"
+														},
+														"sink": {
+															"name": "FIXWIDTH",
+															"type": "Boolean"
+														}
+													},
+													{
+														"source": {
+															"name": "STOPSHOR",
+															"type": "Boolean"
+														},
+														"sink": {
+															"name": "STOPSHOR",
+															"type": "Boolean"
+														}
+													},
+													{
+														"source": {
+															"name": "ORDERSEL",
+															"type": "String"
+														},
+														"sink": {
+															"name": "ORDERSEL",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "PRIDEPT",
+															"type": "Boolean"
+														},
+														"sink": {
+															"name": "PRIDEPT",
+															"type": "Boolean"
+														}
+													},
+													{
+														"source": {
+															"name": "SORDLIMT",
+															"type": "Decimal"
+														},
+														"sink": {
+															"name": "SORDLIMT",
+															"type": "Decimal"
+														}
+													},
+													{
+														"source": {
+															"name": "PORDLIMT",
+															"type": "Decimal"
+														},
+														"sink": {
+															"name": "PORDLIMT",
+															"type": "Decimal"
+														}
+													},
+													{
+														"source": {
+															"name": "PARTSDIS",
+															"type": "Decimal"
+														},
+														"sink": {
+															"name": "PARTSDIS",
+															"type": "Decimal"
+														}
+													},
+													{
+														"source": {
+															"name": "LABORDIS",
+															"type": "Decimal"
+														},
+														"sink": {
+															"name": "LABORDIS",
+															"type": "Decimal"
+														}
+													},
+													{
+														"source": {
+															"name": "FRANMASK",
+															"type": "String"
+														},
+														"sink": {
+															"name": "FRANMASK",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "ALLOWINV",
+															"type": "String"
+														},
+														"sink": {
+															"name": "ALLOWINV",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "TEAMS",
+															"type": "String"
+														},
+														"sink": {
+															"name": "TEAMS",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "SCOPESD",
+															"type": "DateTime"
+														},
+														"sink": {
+															"name": "SCOPESD",
+															"type": "DateTime"
+														}
+													},
+													{
+														"source": {
+															"name": "SCOPESH",
+															"type": "Decimal"
+														},
+														"sink": {
+															"name": "SCOPESH",
+															"type": "Decimal"
+														}
+													},
+													{
+														"source": {
+															"name": "SCOPEED",
+															"type": "DateTime"
+														},
+														"sink": {
+															"name": "SCOPEED",
+															"type": "DateTime"
+														}
+													},
+													{
+														"source": {
+															"name": "SCOPEEH",
+															"type": "Decimal"
+														},
+														"sink": {
+															"name": "SCOPEEH",
+															"type": "Decimal"
+														}
+													},
+													{
+														"source": {
+															"name": "WIZARD",
+															"type": "Boolean"
+														},
+														"sink": {
+															"name": "WIZARD",
+															"type": "Boolean"
+														}
+													},
+													{
+														"source": {
+															"name": "LOADFORM",
+															"type": "String"
+														},
+														"sink": {
+															"name": "LOADFORM",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "GBUSERID",
+															"type": "String"
+														},
+														"sink": {
+															"name": "GBUSERID",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "AUTOTEL",
+															"type": "String"
+														},
+														"sink": {
+															"name": "AUTOTEL",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "DAMAGE",
+															"type": "Boolean"
+														},
+														"sink": {
+															"name": "DAMAGE",
+															"type": "Boolean"
+														}
+													},
+													{
+														"source": {
+															"name": "FORCECLW",
+															"type": "Boolean"
+														},
+														"sink": {
+															"name": "FORCECLW",
+															"type": "Boolean"
+														}
+													},
+													{
+														"source": {
+															"name": "ADVTOUCH",
+															"type": "Boolean"
+														},
+														"sink": {
+															"name": "ADVTOUCH",
+															"type": "Boolean"
+														}
+													},
+													{
+														"source": {
+															"name": "VHCOFF",
+															"type": "Boolean"
+														},
+														"sink": {
+															"name": "VHCOFF",
+															"type": "Boolean"
+														}
+													},
+													{
+														"source": {
+															"name": "MOBJCPRT",
+															"type": "String"
+														},
+														"sink": {
+															"name": "MOBJCPRT",
+															"type": "String"
+														}
+													}
+												]
+											}
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline6_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_operatordetails",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy CS_WL_wlsystemparameters autoline6",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"additionalColumns": [
+													{
+														"name": "dummy",
+														"value": "leeg"
+													}
+												],
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, company as bedrijf, CLCKANAL as analyseCodes from CS_NL_WLSYSTEMPARAMETERS')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false,
+											"translator": {
+												"type": "TabularTranslator",
+												"mappings": [
+													{
+														"source": {
+															"name": "DMS",
+															"type": "String"
+														},
+														"sink": {
+															"name": "DMS",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "bedrijf",
+															"type": "String"
+														},
+														"sink": {
+															"name": "bedrijf",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"name": "analyseCodes",
+															"type": "String"
+														},
+														"sink": {
+															"name": "analyseCodes",
+															"type": "String"
+														}
+													}
+												]
+											}
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline6_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_DMS_autoline_wlsystemparameters",
+												"type": "DatasetReference"
+											}
+										]
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Get DMS and Bedrijf",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT DISTINCT \n       [DMS]\nFROM [dbo].[autoline_sync_status]\nWHERE bedrijf <> '00' and DMS <> 'autoline5'",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SQL_DMS_autoline_sync_status",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			}
+		],
+		"variables": {
+			"dms": {
+				"type": "String"
+			},
+			"bedrijf": {
+				"type": "String"
+			},
+			"QuerySalesledgeraccounts": {
+				"type": "String",
+				"defaultValue": "category,account,editdate,name_"
+			},
+			"QueryIdletimecodes": {
+				"type": "String",
+				"defaultValue": "CODE,DESC_,DESC001,DESC002,DESC003,DESC004,DESC005,DESC006,DESC007,DESC008,DESC009,SHORT,ORDER_,PRODUCTV,ANALYSIS"
+			},
+			"QueryUserdetails": {
+				"type": "String",
+				"defaultValue": "DEPT, LOCAT, EMAIL, NAME_, USERID"
+			},
+			"QueryOperatordetails": {
+				"type": "String",
+				"defaultValue": "OPERATOR, OPNAME, OPLOCN, OPNUM, STOCKLOC, NOTUSED1, FOLLEXEC, PRIORITY_, SELLFROM, WARRANTY, SSTYPE, FIXWIDTH, STOPSHOR, ORDERSEL, PRIDEPT, SORDLIMT, PORDLIMT, PARTSDIS, LABORDIS, FRANMASK, ALLOWINV, TEAMS, SCOPESD, SCOPESH, SCOPEED, SCOPEEH, WIZARD, LOADFORM, GBUSERID, AUTOTEL, DAMAGE, FORCECLW, ADVTOUCH, VHCOFF, MOBJCPRT"
+			},
+			"QueryCompanylocations": {
+				"type": "String",
+				"defaultValue": "CODE , DESC_ , CCENT , NAME_ , ADDRESS1 , ADDRESS2 , ADDRESS3 , ADDRESS4 , POSTCODE , PHONE , FAX , EXPEN , TYPE_ , BSCCENT , BSEXPEN , PTIND , DEPTANAL , DLRCODE , DEPSLACC , DEPNLEX , DEPPRINT , BUSICOND , BUSIITEM , BUSREGNO , DEPNLAC , LOCATILL , OWNER , REGBNAME , REGSLACC , VATNO , APPSEQ , VSBCO , VSBGROUP , MKDEPTS , MKDEPTS001 , MKDEPTS002 , DEPJTYPE , BONDED , THIRDPTY , REFJTYPE , USTAX , DBAUMAIL , DBVIEW , REGION"
+			}
+		},
+		"folder": {
+			"name": "DMS"
+		},
+		"annotations": [],
+		"lastPublishTime": "2020-09-11T08:21:51Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

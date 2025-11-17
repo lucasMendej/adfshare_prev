@@ -1,0 +1,21 @@
+{
+	"name": "autoline3_prod_srv_apps06",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "Odbc",
+		"typeProperties": {
+			"connectionString": {
+				"type": "SecureString",
+				"value": "**********"
+			},
+			"authenticationType": "Basic",
+			"userName": "odbc",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJkMzdjMzczMC0zNzQ0LTRmNDgtODk3OC1iZWJjMjRjNTVlMzgiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "Apps06",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

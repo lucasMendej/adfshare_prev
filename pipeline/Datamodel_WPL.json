@@ -1,0 +1,541 @@
+{
+	"name": "Datamodel_WPL",
+	"properties": {
+		"activities": [
+			{
+				"name": "Build up history Fact Orders",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Execute Datamodel WPL staging",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "delete\nfrom [wpl].[Fact_Orders]\nwhere (Datum_Order > DateAdd(month, -12, getDate()) and Instance in ('autoline1', 'autoline2', 'autoline4', 'IDAS'))\nor\n(Datum_Order > DateAdd(month, -6, getDate()) and Instance in ('autoline3', 'autoline6'))\n\n\n/* verwijder orders die voorkomen in nieuwe dataset om dubbele te voorkomen */\ndelete fact\nFROM [wpl].[Fact_Orders] fact\n  inner join [wpl].[Fact_Orders_staging] stage on stage.Order_id = fact.Order_id  \nwhere (stage.Datum_Order > DateAdd(month, -12, getDate()) and fact.Instance in ('autoline1', 'autoline2', 'autoline4', 'IDAS'))\nor\n(stage.Datum_Order > DateAdd(month, -6, getDate()) and fact.Instance in ('autoline3', 'autoline6'))\n\nINSERT INTO [wpl].[Fact_Orders]\n           ([Order_id]\n           ,[Order_nr]\n           ,[Voertuig_id]\n           ,[Klant_id]\n           ,[Valid_From]\n           ,[Valid_To]\n           ,[Afdeling_id]\n           ,[Weg]\n           ,[Datum_Order]\n           ,[Instance]\n           ,[Vestiging]\n           ,[Vestiging_id]\n           ,[Remvloeistof]\n           ,[Petromark]\n           ,[Onderhoudsbeurt]\n           ,[richttijd]\n           ,[gereed]\n           ,[Datumgereed]\n           ,[Openstaand]\n           ,[Open_Bedrag]\n           ,[Open_Dagen]\n           ,[Open_Bucket]\n           ,[Nog_binnen]\n           ,[Doorgepland]\n           ,[Opschonen]\n           ,[Factureren]\n           ,[DELFLAG]\n           ,[OPBOOKIN]\n           ,[CUSTCONT]\n           ,[Klant_Wacht]\n           ,[timestamp])\nSELECT [Order_id]\n           ,[Order_nr]\n           ,[Voertuig_id]\n           ,[Klant_id]\n           ,NULL\n           ,NULL\n           ,[Afdeling_id]\n           ,[Weg]\n           ,[Datum_Order]\n           ,[Instance]\n           ,[Vestiging]\n           ,[Vestiging_id]\n           ,NULL\n           ,NULL\n           ,NULL\n           ,[richttijd]\n           ,[gereed]\n           ,[Datumgereed]\n           ,[Openstaand]\n           ,[Open_Bedrag]\n           ,[Open_Dagen]\n           ,[Open_Bucket]\n           ,[Nog_binnen]\n           ,[Doorgepland]\n           ,[Opschonen]\n           ,[Factureren]\n           ,[DELFLAG]\n           ,[OPBOOKIN]\n           ,[CUSTCONT]\n           ,[Klant_Wacht]\n           , GETDATE()\n  FROM [wpl].[Fact_Orders_staging]\n  where (Datum_Order > DateAdd(month, -12, getDate()) and Instance in ('autoline1', 'autoline2', 'autoline4', 'IDAS'))\n  or\n  (Datum_Order > DateAdd(month, -6, getDate()) and Instance in ('autoline3', 'autoline6'))\n"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Build up history Fact Klok uren rooster",
+				"type": "Script",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "Build up history Fact Orders 1W",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "delete\nfrom [wpl].[Fact_Klokuren_Rooster]\nwhere (Datum > DateAdd(month, -12, getDate()) and substring(Vestiging_id, 1, CHARINDEX('|', Vestiging_id)-1) in ('autoline1', 'autoline2', 'autoline4', 'IDAS'))\nor\n(Datum > DateAdd(month, -6, getDate()) and substring(Vestiging_id, 1, CHARINDEX('|', Vestiging_id)-1) in ('autoline3', 'autoline6'))\n\nINSERT INTO [wpl].[Fact_Klokuren_Rooster]\n           ([Monteur_id]\n           ,[Vestiging_id]\n           ,[Afdeling_id]\n           ,[StartShift]\n           ,[EindShift]\n           ,[Datum]\n           ,[Rooster_Uren]\n           ,[Volgens_Rooster]\n           ,[Tijd_Impro]\n           ,[Uren_Werkplaats]\n           ,[Uren_Magazijn]\n           ,[Uren_Geenwerk]\n           ,[Uren_Leiding]\n           ,[Uren_ATV]\n           ,[Uren_Scholing]\n           ,[Uren_Verlof]\n           ,[Uren_Ziek]\n           ,[Uren_Anderfiliaal]\n           ,[Uren_Verloren]\n           ,[Uren_Pauze]\n           ,[Uren_HaalBreng]\n           ,[Uren_Onbekend]\n           ,[Uren_geklokt_clockentries]\n           ,[Productief]\n           ,[Starttijd_klok]\n           ,[Eindtijd_klok]\n           ,[Start_ErrorV]\n           ,[Start_ErrorN]\n           ,[Eind_ErrorV]\n           ,[Eind_ErrorN]\n           ,[Melding]\n           ,[Clock_Errors]\n           ,[Klok_verschil]\n           ,[Pauze_Verwacht]\n           ,[Monteur_id_Hash]\n           ,[id]\n           ,[Flag_Monteur]\n           ,[Datum_Monteur]\n           ,[timestamp])\n     select [Monteur_id]\n           ,[Vestiging_id]\n           ,[Afdeling_id]\n           ,[StartShift]\n           ,[EindShift]\n           ,[Datum]\n           ,[Rooster_Uren]\n           ,[Volgens_Rooster_x]\n           ,[Tijd_Impro]\n           ,[Uren_Werkplaats]\n           ,[Uren_Magazijn]\n           ,[Uren_Geenwerk]\n           ,[Uren_Leiding]\n           ,[Uren_ATV]\n           ,[Uren_Scholing]\n           ,[Uren_Verlof]\n           ,[Uren_Ziek]\n           ,[Uren_Anderfiliaal]\n           ,[Uren_Verloren]\n           ,[Uren_Pauze]\n           ,[Uren_HaalBreng]\n           ,[Uren_Onbekend]\n           ,[Uren_geklokt_clockentries]\n           ,[Productief]\n           ,[Starttijd_klok]\n           ,[Eindtijd_klok]\n           ,[Start_ErrorV]\n           ,[Start_ErrorN]\n           ,[Eind_ErrorV]\n           ,[Eind_ErrorN]\n           , NULL\n           , NULL\n           ,[Klok_verschil]\n           ,[Pauze_Verwacht]\n           ,[Monteur_id_Hash]\n           , NULL\n           , NULL\n           ,[Datum_Monteur]\n           , GETDATE()\n  FROM [wpl].[Fact_Klokuren_Rooster_staging]\n  where (Datum > DateAdd(month, -12, getDate()) and substring(Vestiging_id, 1, CHARINDEX('|', Vestiging_id)-1) in ('autoline1', 'autoline2', 'autoline4', 'IDAS'))\n      or\n      (Datum > DateAdd(month, -6, getDate()) and substring(Vestiging_id, 1, CHARINDEX('|', Vestiging_id)-1) in ('autoline3', 'autoline6'))\n"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Build up history Fact Orders Uren Monteur",
+				"type": "Script",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "Build up history Fact Klok uren rooster",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "\ndelete\nfrom [wpl].[Fact_Orders_Uren_Monteur]\nwhere (klok_datum > DateAdd(month, -12, getDate()) and substring(Order_id, 1, CHARINDEX('|', Order_id)-1) in ('autoline1', 'autoline2', 'autoline4', 'IDAS'))\nor\n(klok_datum > DateAdd(month, -6, getDate()) and substring(Order_id, 1, CHARINDEX('|', Order_id)-1) in ('autoline3', 'autoline6'))\n\n/* Delete records in the Fact table which have order_id occur again in the staging table to avoid doubel records. */\ndelete fact\nFROM [wpl].[Fact_Orders_Uren_Monteur] fact\n  inner join [wpl].[Fact_Orders_Uren_Monteur_staging] stage on (stage.Order_Line_id = fact.Order_Line_id  and stage.Monteur_id = fact.Monteur_id and  stage.klok_datum = fact.klok_datum)\nwhere (stage.klok_datum > DateAdd(month, -12, getDate()) and substring(fact.Order_id, 1, CHARINDEX('|', fact.Order_id)-1) in ('autoline1', 'autoline2', 'autoline4', 'IDAS'))\nor\n(stage.klok_datum > DateAdd(month, -6, getDate()) and substring(fact.Order_id, 1, CHARINDEX('|', fact.Order_id)-1) in ('autoline3', 'autoline6'))\n\nINSERT INTO [wpl].[Fact_Orders_Uren_Monteur]\n            ([Order_id]\n           ,[Order_Line_id]\n           ,[Monteur_id]\n           ,[Uren_geklokt_clockentries]\n           ,[Toegestaan_Labourlines]\n           ,[Gefactureerd_Labourlines]\n           ,[Omzet_Loon]\n           ,[Klok_datum]\n           ,[datum_factuur]\n           ,[Monteur_id_Hash]\n           ,[richttijd]\n           ,[Datum_Order_Fact_Orders]\n           ,[Datumgereed_Fact_Orders]\n           ,[Datum_Order_Fact_Orders_Monteurlink]\n           ,[Datumgereed_Fact_Orders_Monteurlink]\n           ,[Klok_datum_Monteurlink]\n           ,[datum_factuur_Monteurlink]\n           ,[Afdeling_id]\n           ,[Voertuig_id]\n           ,[Klant_id]\n           ,[timestamp])\nSELECT  [Order_id]\n           ,[Order_Line_id]\n           ,[Monteur_id]\n           ,[Uren_geklokt_clockentries]\n           ,[Toegestaan_Labourlines]\n           ,[Gefactureerd_Labourlines]\n           ,[Omzet_Loon]\n           ,[Klok_datum]\n           ,[datum_factuur]\n           ,[Monteur_id_Hash]\n           ,[richttijd]\n           ,[Datum_Order_Fact_Orders]\n           ,[Datumgereed_Fact_Orders]\n           ,[Datum_Order_Fact_Orders_Monteurlink]\n           ,[Datumgereed_Fact_Orders_Monteurlink]\n           ,[Klok_datum_Monteurlink]\n           ,[datum_factuur_Monteurlink]\n           ,[Afdeling_id]\n           ,[Voertuig_id]\n           ,[Klant_id]\n           ,[timestamp]\n  FROM [wpl].[Fact_Orders_Uren_Monteur_staging]\n  where (klok_datum > DateAdd(month, -12, getDate()) and substring(Order_id, 1, CHARINDEX('|', Order_id)-1) in ('autoline1', 'autoline2', 'autoline4', 'IDAS'))\n  or\n  (klok_datum > DateAdd(month, -6, getDate()) and substring(Order_id, 1, CHARINDEX('|', Order_id)-1) in ('autoline3', 'autoline6'))\n"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Build up history Fact Orders Uren",
+				"type": "Script",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "Build up history Fact Orders Uren Monteur",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "delete\nfrom [wpl].[Fact_Orders_Uren]\nwhere (Datum > DateAdd(month, -12, getDate()) and substring(Order_id, 1, CHARINDEX('|', Order_id)-1) in ('autoline1', 'autoline2', 'autoline4', 'IDAS'))\nor\n(Datum > DateAdd(month, -6, getDate()) and substring(Order_id, 1, CHARINDEX('|', Order_id)-1) in ('autoline3', 'autoline6'))\n\n\n/* Delete records in the Fact table which have order_id occur again in the staging table to avoid doubel records. */\ndelete fact\nFROM [wpl].[Fact_Orders_Uren] fact\n  inner join [wpl].[Fact_Orders_Uren_staging] stage on stage.Order_Line_id = fact.Order_Line_id \nwhere (stage.Datum > DateAdd(month, -12, getDate()) and substring(fact.Order_id, 1, CHARINDEX('|', fact.Order_id)-1) in ('autoline1', 'autoline2', 'autoline4', 'IDAS'))\nor\n(stage.Datum > DateAdd(month, -6, getDate()) and substring(fact.Order_id, 1, CHARINDEX('|', fact.Order_id)-1) in ('autoline3', 'autoline6'))\n\n\nINSERT INTO [wpl].[Fact_Orders_Uren]\n           ([Order_id]\n           ,[Order_Line_id]\n           ,[Factuur]\n           ,[DESC_]\n           ,[RTSCODE]\n           ,[Gefactureerd]\n           ,[Uren_geklokt_clockentries]\n           ,[Toegestaan_Labourlines]\n           ,[Gefactureerd_Labourlines]\n           ,[Omzet loon]\n           ,[Korting_MB_pakket]\n           ,[Korting_00_pakket]\n           ,[neg]\n           ,[Tarief]\n           ,[Korting]\n           ,[Verschil]\n           ,[Datum]\n           ,[Datum_Factuur]\n           ,[richttijd]\n           ,[Tijd_Planning_Niet_toegewezen]\n           ,[Datum_Planning]\n           ,[Tijd_Planning_toegewezen]\n           ,[Skill_id]\n           ,[Operator]\n           ,[Account]\n           ,[timestamp])\nSELECT [Order_id]\n      ,[Order_Line_id]\n      ,[Factuur]\n      ,[DESC_]\n      ,[RTSCODE]\n      ,[Gefactureerd]\n      ,[Uren_geklokt_clockentries]\n      ,[Toegestaan_Labourlines]\n      ,[Gefactureerd_Labourlines]\n      ,[Omzet_Loon]\n      ,[Korting_MB_pakket]\n      ,[Korting_00_pakket]\n      ,[neg]\n      ,[Tarief]\n      ,[Korting]\n      ,[Verschil]\n      ,[Datum]\n      ,[Datum_Factuur]\n      ,[richttijd]\n      ,[Tijd_Planning_Niet_toegewezen]\n      ,[Datum_Planning]\n      ,[Tijd_Planning_toegewezen]\n      ,[Skill_id]\n      ,[Operator]\n      ,[Account]\n      ,[timestamp]\nFROM [wpl].[Fact_Orders_Uren_staging]\nwhere (Datum > DateAdd(month, -12, getDate()) and substring(Order_id, 1, CHARINDEX('|', Order_id)-1) in ('autoline1', 'autoline2', 'autoline4', 'IDAS'))\nor\n(Datum > DateAdd(month, -6, getDate()) and substring(Order_id, 1, CHARINDEX('|', Order_id)-1) in ('autoline3', 'autoline6'))\n\n"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Build up history Fact Orders Onderdelen",
+				"type": "Script",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "Build up history Fact Orders Uren",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "\ndelete\nfrom [wpl].[Fact_Orders_Onderdelen]\nwhere (DATEIN > DateAdd(month, -12, getDate()) and substring(Order_id, 1, CHARINDEX('|', Order_id)-1) in ('autoline1', 'autoline2', 'autoline4', 'IDAS'))\nor\n(DATEIN > DateAdd(month, -6, getDate()) and substring(Order_id, 1, CHARINDEX('|', Order_id)-1) in ('autoline3', 'autoline6'))\n\n\n\n/* Delete records in the Fact table which have order_id occur again in the staging table to avoid doubel records. */\ndelete fact\nFROM [wpl].[Fact_Orders_Onderdelen] fact\n  inner join [wpl].[Fact_Orders_Onderdelen_staging] stage on stage.Order_id = fact.Order_id  \nwhere (stage.DATEIN > DateAdd(month, -12, getDate()) and substring(fact.Order_id, 1, CHARINDEX('|',fact.Order_id)-1) in ('autoline1', 'autoline2', 'autoline4', 'IDAS'))\nor\n(stage.DATEIN > DateAdd(month, -6, getDate()) and substring(fact.Order_id, 1, CHARINDEX('|', fact.Order_id)-1) in ('autoline3', 'autoline6'))\n\n\nINSERT INTO [wpl].[Fact_Orders_Onderdelen]\n           ([DATEIN]\n           ,[Order_id]\n           ,[Order_Line_id]\n           ,[Onderdeel_nummer]\n           ,[Onderdeel_omschrijving]\n           ,[Aantal]\n           ,[Kostprijs]\n           ,[Verkoopprijs]\n           ,[Korting]\n           ,[Externeprijs]\n           ,[Factuur]\n           ,[Gefactureerd]\n           ,[Status]\n           ,[timestamp])\nSELECT [DATEIN]\n      ,[Order_id]\n      ,[Order_Line_id]\n      ,[Onderdeel_nummer]\n      ,[Onderdeel_omschrijving]\n      ,[Aantal]\n      ,[Kostprijs]\n      ,[Verkoopprijs]\n      ,[Korting]\n      ,[Externeprijs]\n      ,[Factuur]\n      ,[Gefactureerd]\n      ,[Status]\n      ,[timestamp]\n  FROM [wpl].[Fact_Orders_Onderdelen_staging]\n  where (DATEIN > DateAdd(month, -12, getDate()) and substring(Order_id, 1, CHARINDEX('|', Order_id)-1) in ('autoline1', 'autoline2', 'autoline4', 'IDAS'))\n  or\n  (DATEIN > DateAdd(month, -6, getDate()) and substring(Order_id, 1, CHARINDEX('|', Order_id)-1) in ('autoline3', 'autoline6'))\n\n"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Build up history Fact Finance",
+				"type": "Script",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "Build up history Fact Orders Onderdelen",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "\ndelete\nfrom [wpl].[Fact_Finance]\nwhere (POSTDATE > DateAdd(month, -12, getDate()) and substring(Vestiging_id, 1, CHARINDEX('|', Vestiging_id)-1) in ('autoline1', 'autoline2', 'autoline4', 'IDAS'))\nor\n(POSTDATE > DateAdd(month, -6, getDate()) and substring(Vestiging_id, 1, CHARINDEX('|', Vestiging_id)-1) in ('autoline3', 'autoline6'))\n\n\nINSERT INTO [wpl].[Fact_Finance]\n           ([Bedrag]\n           ,[COSTCENT]\n           ,[Vestiging_id]\n           ,[Afdeling_id]\n           ,[EXPENSE]\n           ,[PERIOD]\n           ,[POSTDATE]\n           ,[OmzetO]\n           ,[OmzetO_vb]\n           ,[KortO]\n           ,[KortO_vb]\n           ,[KostpO]\n           ,[KostpO_vb]\n           ,[Omzetwpl]\n           ,[OmzetDiverse]\n           ,[OmzetOlie]\n           ,[KortOlie]\n           ,[KostpOlie]\n           ,[Kortingwpl]\n           ,[Gratiswpl]\n           ,[Klantsoort]\n           ,[H_id]\n           ,[timestamp])\nSELECT [Bedrag]\n      ,[COSTCENT]\n      ,[Vestiging_id]\n      ,[Afdeling_id]\n      ,[EXPENSE]\n      ,[PERIOD]\n      ,[POSTDATE]\n      ,[OmzetO]\n      ,[OmzetO_vb]\n      ,[KortO]\n      ,[KortO_vb]\n      ,[KostpO]\n      ,[KostpO_vb]\n      ,[Omzetwpl]\n      ,[OmzetDiverse]\n      ,[OmzetOlie]\n      ,[KortOlie]\n      ,[KostpOlie]\n      ,[Kortingwpl]\n      ,[Gratiswpl]\n      ,[Klantsoort]\n      ,[H_id]\n      ,[timestamp]\n  FROM [wpl].[Fact_Finance_staging]\n  where (POSTDATE > DateAdd(month, -12, getDate()) and substring(Vestiging_id, 1, CHARINDEX('|', Vestiging_id)-1) in ('autoline1', 'autoline2', 'autoline4', 'IDAS'))\n    or\n    (POSTDATE > DateAdd(month, -6, getDate()) and substring(Vestiging_id, 1, CHARINDEX('|', Vestiging_id)-1) in ('autoline3', 'autoline6'))\n\n"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Build up history Datum Monteur",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Build up history Fact Finance",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Build up history Fact Finance 1W",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "delete\nfrom [wpl].[Datum_Monteur]\nwhere FullDate >= getDate() \n\n\n\nINSERT INTO [wpl].[Datum_Monteur]\n           ([Monteur_id]\n           ,[Monteur_id_Hash]\n           ,[Datum_Monteur]\n           ,[FullDate]\n           ,[timestamp])\n\nSELECT      [Monteur_id]\n           ,[Monteur_id_Hash]\n           ,[Datum_Monteur]\n           ,[FullDate]\n           ,[timestamp]\nFROM [wpl].[Datum_Monteur_staging]\nwhere FullDate >= getDate()\n\n\n\n"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Execute Datamodel WPL staging",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Datamodel_WPL_staging",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Build up history Fact Orders 1W",
+				"description": "deactivated and reverred bakc to 1 year due to oustandig orders not beeeing closed.",
+				"type": "Script",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "Execute Datamodel WPL staging",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "/* logging */\r\nDECLARE @rowCount INT = (SELECT COUNT(*) FROM [wpl].[Fact_Orders] where Datum_Order > DateAdd(day, -8, getDate()));\r\nPRINT 'Row count to delete in [wpl].[Fact_Orders]: ' + CAST(@rowCount AS NVARCHAR);\r\n\r\n/* delete orders based on datum_order */\r\ndelete\r\nfrom [wpl].[Fact_Orders]\r\nwhere Datum_Order > DateAdd(day, -180, getDate()) \r\n\r\n\r\n/* verwijder orders die voorkomen in nieuwe dataset om dubbele te voorkomen */\r\ndelete fact\r\nFROM [wpl].[Fact_Orders] fact\r\n  inner join [wpl].[Fact_Orders_staging] stage on stage.Order_id = fact.Order_id  \r\nwhere stage.Datum_Order > DateAdd(day, -180, getDate())\r\n\r\nINSERT INTO [wpl].[Fact_Orders]\r\n           ([Order_id]\r\n           ,[Order_nr]\r\n           ,[Voertuig_id]\r\n           ,[Klant_id]\r\n           ,[Valid_From]\r\n           ,[Valid_To]\r\n           ,[Afdeling_id]\r\n           ,[Weg]\r\n           ,[Datum_Order]\r\n           ,[Instance]\r\n           ,[Vestiging]\r\n           ,[Vestiging_id]\r\n           ,[Remvloeistof]\r\n           ,[Petromark]\r\n           ,[Onderhoudsbeurt]\r\n           ,[richttijd]\r\n           ,[gereed]\r\n           ,[Datumgereed]\r\n           ,[Openstaand]\r\n           ,[Open_Bedrag]\r\n           ,[Open_Dagen]\r\n           ,[Open_Bucket]\r\n           ,[Nog_binnen]\r\n           ,[Doorgepland]\r\n           ,[Opschonen]\r\n           ,[Factureren]\r\n           ,[DELFLAG]\r\n           ,[OPBOOKIN]\r\n           ,[CUSTCONT]\r\n           ,[Klant_Wacht]\r\n           ,[timestamp])\r\nSELECT [Order_id]\r\n           ,[Order_nr]\r\n           ,[Voertuig_id]\r\n           ,[Klant_id]\r\n           ,NULL\r\n           ,NULL\r\n           ,[Afdeling_id]\r\n           ,[Weg]\r\n           ,[Datum_Order]\r\n           ,[Instance]\r\n           ,[Vestiging]\r\n           ,[Vestiging_id]\r\n           ,NULL\r\n           ,NULL\r\n           ,NULL\r\n           ,[richttijd]\r\n           ,[gereed]\r\n           ,[Datumgereed]\r\n           ,[Openstaand]\r\n           ,[Open_Bedrag]\r\n           ,[Open_Dagen]\r\n           ,[Open_Bucket]\r\n           ,[Nog_binnen]\r\n           ,[Doorgepland]\r\n           ,[Opschonen]\r\n           ,[Factureren]\r\n           ,[DELFLAG]\r\n           ,[OPBOOKIN]\r\n           ,[CUSTCONT]\r\n           ,[Klant_Wacht]\r\n           , GETDATE()\r\n  FROM [wpl].[Fact_Orders_staging]\r\n  where Datum_Order > DateAdd(day, -180, getDate())\r\n\r\n\r\n/* logging */\r\nSET @rowCount = (SELECT COUNT(*) FROM [wpl].[Fact_Orders] where Datum_Order > DateAdd(day, -180, getDate()));\r\nPRINT ' Row count after insert in [wpl].[Fact_Orders]: ' + CAST(@rowCount AS NVARCHAR);"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00",
+					"logSettings": {
+						"logDestination": "ActivityOutput"
+					}
+				}
+			},
+			{
+				"name": "Build up history Fact Klok uren rooster 1W",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Build up history Fact Orders",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"parameters": [
+								{
+									"name": "Offset",
+									"type": "Int16",
+									"value": {
+										"value": "@pipeline().parameters.DagenOffset",
+										"type": "Expression"
+									},
+									"direction": "Input"
+								}
+							],
+							"type": "NonQuery",
+							"text": "delete\nfrom [wpl].[Fact_Klokuren_Rooster]\nwhere Datum > DateAdd(day, (-1 * @Offset), getDate())\n\nINSERT INTO [wpl].[Fact_Klokuren_Rooster]\n           ([Monteur_id]\n           ,[Vestiging_id]\n           ,[Afdeling_id]\n           ,[StartShift]\n           ,[EindShift]\n           ,[Datum]\n           ,[Rooster_Uren]\n           ,[Volgens_Rooster]\n           ,[Tijd_Impro]\n           ,[Uren_Werkplaats]\n           ,[Uren_Magazijn]\n           ,[Uren_Geenwerk]\n           ,[Uren_Leiding]\n           ,[Uren_ATV]\n           ,[Uren_Scholing]\n           ,[Uren_Verlof]\n           ,[Uren_Ziek]\n           ,[Uren_Anderfiliaal]\n           ,[Uren_Verloren]\n           ,[Uren_Pauze]\n           ,[Uren_HaalBreng]\n           ,[Uren_Onbekend]\n           ,[Uren_geklokt_clockentries]\n           ,[Productief]\n           ,[Starttijd_klok]\n           ,[Eindtijd_klok]\n           ,[Start_ErrorV]\n           ,[Start_ErrorN]\n           ,[Eind_ErrorV]\n           ,[Eind_ErrorN]\n           ,[Melding]\n           ,[Clock_Errors]\n           ,[Klok_verschil]\n           ,[Pauze_Verwacht]\n           ,[Monteur_id_Hash]\n           ,[id]\n           ,[Flag_Monteur]\n           ,[Datum_Monteur]\n           ,[timestamp])\n     select [Monteur_id]\n           ,[Vestiging_id]\n           ,[Afdeling_id]\n           ,[StartShift]\n           ,[EindShift]\n           ,[Datum]\n           ,[Rooster_Uren]\n           ,[Volgens_Rooster_x]\n           ,[Tijd_Impro]\n           ,[Uren_Werkplaats]\n           ,[Uren_Magazijn]\n           ,[Uren_Geenwerk]\n           ,[Uren_Leiding]\n           ,[Uren_ATV]\n           ,[Uren_Scholing]\n           ,[Uren_Verlof]\n           ,[Uren_Ziek]\n           ,[Uren_Anderfiliaal]\n           ,[Uren_Verloren]\n           ,[Uren_Pauze]\n           ,[Uren_HaalBreng]\n           ,[Uren_Onbekend]\n           ,[Uren_geklokt_clockentries]\n           ,[Productief]\n           ,[Starttijd_klok]\n           ,[Eindtijd_klok]\n           ,[Start_ErrorV]\n           ,[Start_ErrorN]\n           ,[Eind_ErrorV]\n           ,[Eind_ErrorN]\n           , NULL\n           , NULL\n           ,[Klok_verschil]\n           ,[Pauze_Verwacht]\n           ,[Monteur_id_Hash]\n           , NULL\n           , NULL\n           ,[Datum_Monteur]\n           , GETDATE()\n  FROM [wpl].[Fact_Klokuren_Rooster_staging]\n  where Datum > DateAdd(day, (-1 * @Offset), getDate())\n"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Build up history Fact Orders Uren Monteur 1W",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Build up history Fact Klok uren rooster 1W",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"parameters": [
+								{
+									"name": "Offset",
+									"type": "Int16",
+									"value": {
+										"value": "@pipeline().parameters.DagenOffset",
+										"type": "Expression"
+									},
+									"direction": "Input"
+								}
+							],
+							"type": "NonQuery",
+							"text": "\ndelete\nfrom [wpl].[Fact_Orders_Uren_Monteur]\nwhere klok_datum > DateAdd(day, (-1 * @Offset), getDate())\n\n\n/* Delete records in the Fact table which have order_id occur again in the staging table to avoid doubel records. */\ndelete fact\nFROM [wpl].[Fact_Orders_Uren_Monteur] fact\n  inner join [wpl].[Fact_Orders_Uren_Monteur_staging] stage on (stage.Order_Line_id = fact.Order_Line_id  and stage.Monteur_id = fact.Monteur_id and  stage.klok_datum = fact.klok_datum)\nwhere stage.klok_datum > DateAdd(day, (-1 * @Offset), getDate())\n\nINSERT INTO [wpl].[Fact_Orders_Uren_Monteur]\n            ([Order_id]\n           ,[Order_Line_id]\n           ,[Monteur_id]\n           ,[Uren_geklokt_clockentries]\n           ,[Toegestaan_Labourlines]\n           ,[Gefactureerd_Labourlines]\n           ,[Omzet_Loon]\n           ,[Klok_datum]\n           ,[datum_factuur]\n           ,[Monteur_id_Hash]\n           ,[richttijd]\n           ,[Datum_Order_Fact_Orders]\n           ,[Datumgereed_Fact_Orders]\n           ,[Datum_Order_Fact_Orders_Monteurlink]\n           ,[Datumgereed_Fact_Orders_Monteurlink]\n           ,[Klok_datum_Monteurlink]\n           ,[datum_factuur_Monteurlink]\n           ,[Afdeling_id]\n           ,[Voertuig_id]\n           ,[Klant_id]\n           ,[timestamp])\nSELECT  [Order_id]\n           ,[Order_Line_id]\n           ,[Monteur_id]\n           ,[Uren_geklokt_clockentries]\n           ,[Toegestaan_Labourlines]\n           ,[Gefactureerd_Labourlines]\n           ,[Omzet_Loon]\n           ,[Klok_datum]\n           ,[datum_factuur]\n           ,[Monteur_id_Hash]\n           ,[richttijd]\n           ,[Datum_Order_Fact_Orders]\n           ,[Datumgereed_Fact_Orders]\n           ,[Datum_Order_Fact_Orders_Monteurlink]\n           ,[Datumgereed_Fact_Orders_Monteurlink]\n           ,[Klok_datum_Monteurlink]\n           ,[datum_factuur_Monteurlink]\n           ,[Afdeling_id]\n           ,[Voertuig_id]\n           ,[Klant_id]\n           ,[timestamp]\n  FROM [wpl].[Fact_Orders_Uren_Monteur_staging]\n  where klok_datum > DateAdd(day, (-1 * @Offset), getDate())\n"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Build up history Fact Orders Uren_copy1",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Build up history Fact Orders Uren Monteur 1W",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"parameters": [
+								{
+									"name": "Offset",
+									"type": "Int16",
+									"value": {
+										"value": "@pipeline().parameters.DagenOffset",
+										"type": "Expression"
+									},
+									"direction": "Input"
+								}
+							],
+							"type": "NonQuery",
+							"text": "delete\nfrom [wpl].[Fact_Orders_Uren]\nwhere \n  (datum_factuur is null  \n    and ( (Datum > DateAdd(month, -12, getDate()) and substring(Order_id, 1, CHARINDEX('|', Order_id)-1) in ('autoline1', 'autoline2', 'autoline4', 'IDAS'))\n      or\t\n        (Datum > DateAdd(month, -6, getDate()) and substring(Order_id, 1, CHARINDEX('|', Order_id)-1) in ('autoline3', 'autoline6'))\n      )\n  ) \n  or \n  datum_factuur > DateAdd(day, (-1 * @Offset), getDate())\n\n\n/* Delete records in the Fact table which have order_id occur again in the staging table to avoid doubel records. */\ndelete fact\nFROM [wpl].[Fact_Orders_Uren] fact\n  inner join [wpl].[Fact_Orders_Uren_staging] stage on stage.Order_Line_id = fact.Order_Line_id \nwhere \n  (stage.datum_factuur is null  \n    and ( (stage.Datum > DateAdd(month, -12, getDate()) and substring(fact.Order_id, 1, CHARINDEX('|', fact.Order_id)-1) in ('autoline1', 'autoline2', 'autoline4', 'IDAS'))\n      or\t\n        (stage.Datum > DateAdd(month, -6, getDate()) and substring(fact.Order_id, 1, CHARINDEX('|', fact.Order_id)-1) in ('autoline3', 'autoline6'))\n      )\n  ) \n  or \n  stage.datum_factuur > DateAdd(day, (-1 * @Offset), getDate())\n\nINSERT INTO [wpl].[Fact_Orders_Uren]\n           ([Order_id]\n           ,[Order_Line_id]\n           ,[Factuur]\n           ,[DESC_]\n           ,[RTSCODE]\n           ,[Gefactureerd]\n           ,[Uren_geklokt_clockentries]\n           ,[Toegestaan_Labourlines]\n           ,[Gefactureerd_Labourlines]\n           ,[Omzet loon]\n           ,[Korting_MB_pakket]\n           ,[Korting_00_pakket]\n           ,[neg]\n           ,[Tarief]\n           ,[Korting]\n           ,[Verschil]\n           ,[Datum]\n           ,[Datum_Factuur]\n           ,[richttijd]\n           ,[Tijd_Planning_Niet_toegewezen]\n           ,[Datum_Planning]\n           ,[Tijd_Planning_toegewezen]\n           ,[Skill_id]\n           ,[Operator]\n           ,[Account]\n           ,[timestamp])\nSELECT [Order_id]\n      ,[Order_Line_id]\n      ,[Factuur]\n      ,[DESC_]\n      ,[RTSCODE]\n      ,[Gefactureerd]\n      ,[Uren_geklokt_clockentries]\n      ,[Toegestaan_Labourlines]\n      ,[Gefactureerd_Labourlines]\n      ,[Omzet_Loon]\n      ,[Korting_MB_pakket]\n      ,[Korting_00_pakket]\n      ,[neg]\n      ,[Tarief]\n      ,[Korting]\n      ,[Verschil]\n      ,[Datum]\n      ,[Datum_Factuur]\n      ,[richttijd]\n      ,[Tijd_Planning_Niet_toegewezen]\n      ,[Datum_Planning]\n      ,[Tijd_Planning_toegewezen]\n      ,[Skill_id]\n      ,[Operator]\n      ,[Account]\n      ,[timestamp]\nFROM [wpl].[Fact_Orders_Uren_staging]\nwhere \n  (datum_factuur is null  \n    and ( (Datum > DateAdd(month, -12, getDate()) and substring(Order_id, 1, CHARINDEX('|', Order_id)-1) in ('autoline1', 'autoline2', 'autoline4', 'IDAS'))\n      or\t\n        (Datum > DateAdd(month, -6, getDate()) and substring(Order_id, 1, CHARINDEX('|', Order_id)-1) in ('autoline3', 'autoline6'))\n      )\n  ) \n  or \n  datum_factuur > DateAdd(day, (-1 * @Offset), getDate())\n\n"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Build up history Fact Orders Onderdelen 1W",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Build up history Fact Orders Uren_copy1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"parameters": [
+								{
+									"name": "Offset",
+									"type": "Int16",
+									"value": {
+										"value": "@pipeline().parameters.DagenOffset",
+										"type": "Expression"
+									},
+									"direction": "Input"
+								}
+							],
+							"type": "NonQuery",
+							"text": "\ndelete\nfrom [wpl].[Fact_Orders_Onderdelen]\nwhere DATEIN > DateAdd(day, (-1 * @Offset), getDate())\n\n/* Delete records in the Fact table which have order_id occur again in the staging table to avoid doubel records. */\ndelete fact\nFROM [wpl].[Fact_Orders_Onderdelen] fact\n  inner join [wpl].[Fact_Orders_Onderdelen_staging] stage on stage.Order_id = fact.Order_id  \nwhere stage.DATEIN > DateAdd(day, (-1 * @Offset), getDate())\n\n\nINSERT INTO [wpl].[Fact_Orders_Onderdelen]\n           ([DATEIN]\n           ,[Order_id]\n           ,[Order_Line_id]\n           ,[Onderdeel_nummer]\n           ,[Onderdeel_omschrijving]\n           ,[Aantal]\n           ,[Kostprijs]\n           ,[Verkoopprijs]\n           ,[Korting]\n           ,[Externeprijs]\n           ,[Factuur]\n           ,[Gefactureerd]\n           ,[Status]\n           ,[timestamp])\nSELECT [DATEIN]\n      ,[Order_id]\n      ,[Order_Line_id]\n      ,[Onderdeel_nummer]\n      ,[Onderdeel_omschrijving]\n      ,[Aantal]\n      ,[Kostprijs]\n      ,[Verkoopprijs]\n      ,[Korting]\n      ,[Externeprijs]\n      ,[Factuur]\n      ,[Gefactureerd]\n      ,[Status]\n      ,[timestamp]\n  FROM [wpl].[Fact_Orders_Onderdelen_staging]\n  where DATEIN > DateAdd(day, (-1 * @Offset), getDate())\n\n"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Build up history Fact Finance 1W",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Build up history Fact Orders Onderdelen 1W",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "PowerBI_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"parameters": [
+								{
+									"name": "Offset",
+									"type": "Int16",
+									"value": {
+										"value": "@pipeline().parameters.DagenOffset",
+										"type": "Expression"
+									},
+									"direction": "Input"
+								}
+							],
+							"type": "NonQuery",
+							"text": "\ndelete\nfrom [wpl].[Fact_Finance]\nwhere POSTDATE > DateAdd(day, (-1 * @Offset), getDate())\n\nINSERT INTO [wpl].[Fact_Finance]\n           ([Bedrag]\n           ,[COSTCENT]\n           ,[Vestiging_id]\n           ,[Afdeling_id]\n           ,[EXPENSE]\n           ,[PERIOD]\n           ,[POSTDATE]\n           ,[OmzetO]\n           ,[OmzetO_vb]\n           ,[KortO]\n           ,[KortO_vb]\n           ,[KostpO]\n           ,[KostpO_vb]\n           ,[Omzetwpl]\n           ,[OmzetDiverse]\n           ,[OmzetOlie]\n           ,[KortOlie]\n           ,[KostpOlie]\n           ,[Kortingwpl]\n           ,[Gratiswpl]\n           ,[Klantsoort]\n           ,[H_id]\n           ,[timestamp])\nSELECT [Bedrag]\n      ,[COSTCENT]\n      ,[Vestiging_id]\n      ,[Afdeling_id]\n      ,[EXPENSE]\n      ,[PERIOD]\n      ,[POSTDATE]\n      ,[OmzetO]\n      ,[OmzetO_vb]\n      ,[KortO]\n      ,[KortO_vb]\n      ,[KostpO]\n      ,[KostpO_vb]\n      ,[Omzetwpl]\n      ,[OmzetDiverse]\n      ,[OmzetOlie]\n      ,[KortOlie]\n      ,[KostpOlie]\n      ,[Kortingwpl]\n      ,[Gratiswpl]\n      ,[Klantsoort]\n      ,[H_id]\n      ,[timestamp]\n  FROM [wpl].[Fact_Finance_staging]\n  where POSTDATE > DateAdd(day, (-1 * @Offset), getDate())\n\n"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			}
+		],
+		"parameters": {
+			"DagenOffset": {
+				"type": "int",
+				"defaultValue": 8
+			}
+		},
+		"folder": {
+			"name": "Dashboard/WPL"
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-07-24T15:22:03Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

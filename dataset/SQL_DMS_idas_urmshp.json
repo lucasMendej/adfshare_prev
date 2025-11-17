@@ -1,0 +1,70 @@
+{
+	"name": "SQL_DMS_idas_urmshp",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "GHBRAN",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "GHSDOC",
+				"type": "decimal",
+				"precision": 7,
+				"scale": 0
+			},
+			{
+				"name": "GHMONT",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "GHDATE",
+				"type": "date"
+			},
+			{
+				"name": "GHBTIM",
+				"type": "time",
+				"scale": 7
+			},
+			{
+				"name": "GHETIM",
+				"type": "time",
+				"scale": 7
+			},
+			{
+				"name": "GHGMIN",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "GHSTAT",
+				"type": "varchar"
+			},
+			{
+				"name": "GHBKLK",
+				"type": "time",
+				"scale": 7
+			},
+			{
+				"name": "GHEKLK",
+				"type": "time",
+				"scale": 7
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "idas_urmshp"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

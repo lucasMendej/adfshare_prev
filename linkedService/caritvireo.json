@@ -1,0 +1,22 @@
+{
+	"name": "caritvireo",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "Odbc",
+		"typeProperties": {
+			"connectionString": {
+				"type": "SecureString",
+				"value": "**********"
+			},
+			"authenticationType": "Basic",
+			"userName": "admin",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI5MDE3NmYzYS1mNDI0LTQ3YmUtYjNlZi1jNmFlM2IyOTViYzciLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "Apps06",
+			"type": "IntegrationRuntimeReference"
+		},
+		"description": "ODBC verbinding naar caritvireo database"
+	}
+}

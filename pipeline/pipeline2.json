@@ -1,0 +1,170 @@
+{
+	"name": "pipeline2",
+	"properties": {
+		"activities": [
+			{
+				"name": "Set Variable1",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "jaarmaand",
+					"value": {
+						"value": "@if(equals(formatDateTime(utcnow(),'MM'),'01'),concat(string(sub(int(formatDateTime(utcnow(),'yyyy')),1)),'12'),concat(string(formatDateTime(utcnow(),'yyyy')),concat(if(startswith(string(formatDateTime(utcnow(),'MM')),'0'),'0','') ,string(sub(int(formatDateTime(utcnow(),'MM')),1)))))",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Copy1",
+				"description": "export grootboek vireo auto",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RelationalSource",
+						"query": {
+							"value": "SELECT \n a.KPLNR as Kostenplaatsnummer,\n e.KPOMS as Kostenplaats,\nd.KDOMS as Kostendrager,\na.GBRNR as Grootboekrekeningnummer,\nb.GROMS as Grootboekomschrijving,\na.BKTXT  as Boekingstekst,\na.FACNR as Factuurnummer,\n       CASE\n           WHEN c.SGBNR IS NULL\n           THEN 0\n           ELSE c.SGBNR\n       END AS Debiteurnummer,\na.JBDRD as BoekingsbedragDebet,\na.JBDRC as BoekingsbedragCredit,\na.KDRNR as Kostendragernummer,\na.BJPER as ActueelBoekjaarPeriode,\na.JBDTM as DatumOpname,\na.MUDAT as DatumBoekstuk,\na.STKNR as NummerBoekstuk\n \nFROM VLVDBF02.LJBF a\n     LEFT JOIN VLVDBF02.SGBF b ON b.GBRNR = a.GBRNR\n     LEFT JOIN VLVDBF02.SDFF c ON c.FACNR = a.FACNR\n     LEFT JOIN VLVDBF02.SDDF d ON d.KDRNR = a.KDRNR\n     LEFT JOIN VLVDBF02.SKPF e ON e.KPLNR = a.KPLNR\nWHERE a.gbrnr IN(7350, 7365, 7370, 8350, 8351, 8365, 8370, 8371)\nand a. BJPER >= 201801",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureDataLakeStoreWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Idas_table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ParquetToDataLakeYGROUP",
+						"type": "DatasetReference",
+						"parameters": {
+							"FileName": "caritvireo\\idas_export_balie_grootboek_carit_vireo_from2018"
+						}
+					}
+				]
+			},
+			{
+				"name": "Copy2",
+				"description": "export grootboek jager auto",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RelationalSource",
+						"query": {
+							"value": "SELECT \n a.KPLNR as Kostenplaatsnummer,\n e.KPOMS as Kostenplaats,\nd.KDOMS as Kostendrager,\na.GBRNR as Grootboekrekeningnummer,\nb.GROMS as Grootboekomschrijving,\na.BKTXT  as Boekingstekst,\na.FACNR as Factuurnummer,\n       CASE\n           WHEN c.SGBNR IS NULL\n           THEN 0\n           ELSE c.SGBNR\n       END AS Debiteurnummer,\na.JBDRD as BoekingsbedragDebet,\na.JBDRC as BoekingsbedragCredit,\na.KDRNR as Kostendragernummer,\na.BJPER as ActueelBoekjaarPeriode,\na.JBDTM as DatumOpname,\na.MUDAT as DatumBoekstuk,\na.STKNR as NummerBoekstuk\n \nFROM VLVDBF03.LJBF a\n     LEFT JOIN VLVDBF03.SGBF b ON b.GBRNR = a.GBRNR\n     LEFT JOIN VLVDBF03.SDFF c ON c.FACNR = a.FACNR\n     LEFT JOIN VLVDBF03.SDDF d ON d.KDRNR = a.KDRNR\n     LEFT JOIN VLVDBF03.SKPF e ON e.KPLNR = a.KPLNR\nWHERE a.gbrnr IN(7350,7365,8350,8351,8365)\nand a. BJPER >= 201801",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureDataLakeStoreWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Idas_table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ParquetToDataLakeYGROUP",
+						"type": "DatasetReference",
+						"parameters": {
+							"FileName": "caritjager\\idas_export_balie_grootboek_carit_jager_from2018"
+						}
+					}
+				]
+			},
+			{
+				"name": "Copy3",
+				"description": "export grootboek Svala auto",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RelationalSource",
+						"query": {
+							"value": "SELECT \n a.KPLNR as Kostenplaatsnummer,\n e.KPOMS as Kostenplaats,\nd.KDOMS as Kostendrager,\na.GBRNR as Grootboekrekeningnummer,\nb.GROMS as Grootboekomschrijving,\na.BKTXT  as Boekingstekst,\na.FACNR as Factuurnummer,\n       CASE\n           WHEN c.SGBNR IS NULL\n           THEN 0\n           ELSE c.SGBNR\n       END AS Debiteurnummer,\na.JBDRD as BoekingsbedragDebet,\na.JBDRC as BoekingsbedragCredit,\na.KDRNR as Kostendragernummer,\na.BJPER as ActueelBoekjaarPeriode,\na.JBDTM as DatumOpname,\na.MUDAT as DatumBoekstuk,\na.STKNR as NummerBoekstuk\n \nFROM VLVDBF01.LJBF a\n     LEFT JOIN VLVDBF01.SGBF b ON b.GBRNR = a.GBRNR\n     LEFT JOIN VLVDBF01.SDFF c ON c.FACNR = a.FACNR\n     LEFT JOIN VLVDBF01.SDDF d ON d.KDRNR = a.KDRNR\n     LEFT JOIN VLVDBF01.SKPF e ON e.KPLNR = a.KPLNR\nWHERE a.gbrnr IN(7350,7365,7370,8350,8365,8370,8371)\nand a. BJPER >= 201801",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureDataLakeStoreWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Idas_table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ParquetToDataLakeYGROUP",
+						"type": "DatasetReference",
+						"parameters": {
+							"FileName": "idas\\idas_export_balie_grootboek_idas_from2018"
+						}
+					}
+				]
+			}
+		],
+		"variables": {
+			"jaarmaand": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Z_Samples"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-03-22T16:17:52Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

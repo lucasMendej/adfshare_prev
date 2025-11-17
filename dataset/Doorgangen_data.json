@@ -1,0 +1,230 @@
+{
+	"name": "Doorgangen_data",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DOORGANGEN_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "wipno",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "DMS",
+				"type": "varchar"
+			},
+			{
+				"name": "vestiging",
+				"type": "varchar"
+			},
+			{
+				"name": "datumaangemaakt",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "datumin",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "TijdIn",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 2
+			},
+			{
+				"name": "datumuit",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "tijduit",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 2
+			},
+			{
+				"name": "smsNummer",
+				"type": "varchar"
+			},
+			{
+				"name": "userid",
+				"type": "varchar"
+			},
+			{
+				"name": "monteur",
+				"type": "varchar"
+			},
+			{
+				"name": "status",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "gereed",
+				"type": "bit"
+			},
+			{
+				"name": "TijdGereed",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "exportGereed",
+				"type": "bit"
+			},
+			{
+				"name": "gebeld",
+				"type": "bit"
+			},
+			{
+				"name": "TijdGebeld",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "weg",
+				"type": "bit"
+			},
+			{
+				"name": "TijdWeg",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "sms",
+				"type": "bit"
+			},
+			{
+				"name": "TijdSms",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "huidig",
+				"type": "bit"
+			},
+			{
+				"name": "monteurHistorie",
+				"type": "varchar"
+			},
+			{
+				"name": "werkplaats",
+				"type": "varchar"
+			},
+			{
+				"name": "klokuren",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "voortgang",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "toegestaan",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "richttijd",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Kenteken",
+				"type": "nvarchar"
+			},
+			{
+				"name": "notitie",
+				"type": "varchar"
+			},
+			{
+				"name": "factuur",
+				"type": "varchar"
+			},
+			{
+				"name": "Klantnaam",
+				"type": "varchar"
+			},
+			{
+				"name": "Merk",
+				"type": "varchar"
+			},
+			{
+				"name": "KlantWacht",
+				"type": "bit"
+			},
+			{
+				"name": "HuurAuto",
+				"type": "bit"
+			},
+			{
+				"name": "Chassisnummer",
+				"type": "varchar"
+			},
+			{
+				"name": "Contant",
+				"type": "varchar"
+			},
+			{
+				"name": "SiteChanged",
+				"type": "bit"
+			},
+			{
+				"name": "InUit",
+				"type": "varchar"
+			},
+			{
+				"name": "InDoor",
+				"type": "varchar"
+			},
+			{
+				"name": "UitDoor",
+				"type": "varchar"
+			},
+			{
+				"name": "BinnenGemeld",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "Afdeling",
+				"type": "varchar"
+			},
+			{
+				"name": "Telefoon",
+				"type": "varchar"
+			},
+			{
+				"name": "Klantnummer",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "Model",
+				"type": "char"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "doorgangen"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

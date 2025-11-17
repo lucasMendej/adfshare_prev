@@ -1,0 +1,418 @@
+{
+	"name": "DestinationDataset_fdd",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "_SET",
+				"type": "varchar"
+			},
+			{
+				"name": "_LTSTUPDATE",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "_LTSTCHECK",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "SERVICEC",
+				"type": "char"
+			},
+			{
+				"name": "ACCNO",
+				"type": "char"
+			},
+			{
+				"name": "AFTLOCN",
+				"type": "char"
+			},
+			{
+				"name": "AFTMAGIC",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "AVMPG",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 1
+			},
+			{
+				"name": "BHP",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "BUYBEXCE",
+				"type": "decimal",
+				"precision": 15,
+				"scale": 2
+			},
+			{
+				"name": "BUYBVAL",
+				"type": "decimal",
+				"precision": 15,
+				"scale": 2
+			},
+			{
+				"name": "CC",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "CHASSIS",
+				"type": "char"
+			},
+			{
+				"name": "CO2",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 1
+			},
+			{
+				"name": "COLCODE",
+				"type": "char"
+			},
+			{
+				"name": "COLOUR",
+				"type": "char"
+			},
+			{
+				"name": "COMMAGIC001",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "COMMAGIC002",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "COMMAGIC003",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "CREATED",
+				"type": "date"
+			},
+			{
+				"name": "CTATNEW",
+				"type": "decimal",
+				"precision": 16,
+				"scale": 2
+			},
+			{
+				"name": "CTSTART",
+				"type": "date"
+			},
+			{
+				"name": "CVNXTTAC",
+				"type": "date"
+			},
+			{
+				"name": "DELDATE",
+				"type": "date"
+			},
+			{
+				"name": "DESCLETT",
+				"type": "char"
+			},
+			{
+				"name": "DESC_",
+				"type": "char"
+			},
+			{
+				"name": "DRIVSIDE",
+				"type": "char"
+			},
+			{
+				"name": "DRVMAGIC",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "EDITED",
+				"type": "date"
+			},
+			{
+				"name": "EDUSERID",
+				"type": "char"
+			},
+			{
+				"name": "ENGINE",
+				"type": "char"
+			},
+			{
+				"name": "EXEC_",
+				"type": "char"
+			},
+			{
+				"name": "FINEXPD",
+				"type": "date"
+			},
+			{
+				"name": "FRAN",
+				"type": "char"
+			},
+			{
+				"name": "FUEL",
+				"type": "char"
+			},
+			{
+				"name": "GEARS",
+				"type": "char"
+			},
+			{
+				"name": "KEY001",
+				"type": "char"
+			},
+			{
+				"name": "KEY002",
+				"type": "char"
+			},
+			{
+				"name": "LASTMLG",
+				"type": "decimal",
+				"precision": 8,
+				"scale": 0
+			},
+			{
+				"name": "LASTSERV",
+				"type": "date"
+			},
+			{
+				"name": "LASTWORK",
+				"type": "date"
+			},
+			{
+				"name": "LOCN001",
+				"type": "char"
+			},
+			{
+				"name": "LOCN002",
+				"type": "char"
+			},
+			{
+				"name": "MAGIC",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "MILEAGE",
+				"type": "decimal",
+				"precision": 8,
+				"scale": 0
+			},
+			{
+				"name": "MILETYPE",
+				"type": "char"
+			},
+			{
+				"name": "MODEL",
+				"type": "char"
+			},
+			{
+				"name": "MODELGRP",
+				"type": "char"
+			},
+			{
+				"name": "MODELYR",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "MOTDATE",
+				"type": "date"
+			},
+			{
+				"name": "MSCO",
+				"type": "char"
+			},
+			{
+				"name": "MTDVALUE",
+				"type": "decimal",
+				"precision": 15,
+				"scale": 2
+			},
+			{
+				"name": "NEXTSERV",
+				"type": "date"
+			},
+			{
+				"name": "NU",
+				"type": "char"
+			},
+			{
+				"name": "OPTIONS",
+				"type": "char"
+			},
+			{
+				"name": "OTHERMLG",
+				"type": "decimal",
+				"precision": 8,
+				"scale": 0
+			},
+			{
+				"name": "OWNER",
+				"type": "char"
+			},
+			{
+				"name": "PREVREGD",
+				"type": "date"
+			},
+			{
+				"name": "PREVREGL",
+				"type": "char"
+			},
+			{
+				"name": "RADIO",
+				"type": "char"
+			},
+			{
+				"name": "REGDATE",
+				"type": "date"
+			},
+			{
+				"name": "REGNO",
+				"type": "char"
+			},
+			{
+				"name": "SALEDATE",
+				"type": "date"
+			},
+			{
+				"name": "SALEEXEC",
+				"type": "char"
+			},
+			{
+				"name": "SALETYPE",
+				"type": "char"
+			},
+			{
+				"name": "SALMAGIC",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "SECURENO",
+				"type": "char"
+			},
+			{
+				"name": "SERVIVL",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "SERVIVLM",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "STATUS",
+				"type": "char"
+			},
+			{
+				"name": "STYLE",
+				"type": "char"
+			},
+			{
+				"name": "TALLWGHT",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "TRIMCODE",
+				"type": "char"
+			},
+			{
+				"name": "TRIM_",
+				"type": "char"
+			},
+			{
+				"name": "TRUCK",
+				"type": "bit"
+			},
+			{
+				"name": "USERID",
+				"type": "char"
+			},
+			{
+				"name": "VARIANT",
+				"type": "char"
+			},
+			{
+				"name": "VPURDATE",
+				"type": "date"
+			},
+			{
+				"name": "VSBCOMP",
+				"type": "char"
+			},
+			{
+				"name": "VSBREF",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 0
+			},
+			{
+				"name": "WAREXPDT",
+				"type": "date"
+			},
+			{
+				"name": "WAREXTDT",
+				"type": "date"
+			},
+			{
+				"name": "WARRANTY",
+				"type": "char"
+			},
+			{
+				"name": "YTDVALUE",
+				"type": "decimal",
+				"precision": 15,
+				"scale": 2
+			},
+			{
+				"name": "INSREF",
+				"type": "char"
+			},
+			{
+				"name": "INSEXP",
+				"type": "date"
+			},
+			{
+				"name": "MNTEND",
+				"type": "date"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "autoline_vehiclerecords"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

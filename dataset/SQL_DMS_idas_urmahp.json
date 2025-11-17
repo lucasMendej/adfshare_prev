@@ -1,0 +1,54 @@
+{
+	"name": "SQL_DMS_idas_urmahp",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DMS_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "UABRAN",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "UAUTYP",
+				"type": "varchar"
+			},
+			{
+				"name": "UAMEDW",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "UADATE",
+				"type": "date"
+			},
+			{
+				"name": "UABTIM",
+				"type": "time",
+				"scale": 7
+			},
+			{
+				"name": "UAETIM",
+				"type": "time",
+				"scale": 7
+			},
+			{
+				"name": "UAGMIN",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "idas_urmahp"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

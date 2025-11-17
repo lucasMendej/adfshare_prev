@@ -1,0 +1,140 @@
+{
+	"name": "Trigger Sync runs DMS",
+	"properties": {
+		"description": "Routine that reads entries from _Syncindex Table from the DMS database\nbased on those entries it wil execute the Full sync autoline Pipline to sync the data in that table",
+		"activities": [
+			{
+				"name": "Lookup Tables toSync",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "-- This query selects active sync instructions from [_SyncIndex].\n-- If the 'linkedServer' column is '**', it acts as a wildcard: apply this sync rule to all linked servers.\n-- It LEFT JOINs to [_SyncLinkedservers] to resolve '**' into actual server names.\n-- However, it excludes any servers that already have an explicit sync rule (an \"overrule\") defined for the same sourceTable + targetTable.\n-- This ensures '**' acts as a fallback and does not override specific server-level configurations.\n-- The CASE logic selects either the explicit linked server or the one joined from [_SyncLinkedservers].\n-- Only rows with active = 1 are considered for syncing.\n\nselect si.sourceTable, \n\tcase when si.linkedserver = '**' \n\tthen sl.linkedserver \n\telse si.linkedServer \n\tend as linkedserver \n      ,si.[targetTable]\n      ,si.[addedFilterSource]\n      ,si.[addedFilterDestination]\n\t  ,si.clearBeforeLoad\nfrom [dbo].[_SyncIndex] si\nleft join [dbo].[_SyncLinkedservers] sl on si.linkedServer = '**' \n\t\tand sl.linkedserver not in (select distinct linkedserver \n\t\t\t\t\t\t\t\t\tfrom [dbo].[_SyncIndex] overrule \n\t\t\t\t\t\t\t\t\twhere overrule.sourceTable = si.sourceTable \n\t\t\t\t\t\t\t\t\t\tand overrule.targetTable = si.targetTable \n\t\t\t\t\t\t\t\t\t\tand overrule.linkedServer <> '**')\nwhere active = 1 and schedule = '@{pipeline().parameters.schedule}';",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "AZURE_DMS_PROD_SRV_SQL00",
+						"type": "DatasetReference",
+						"parameters": {
+							"OutputTable": "_SyncIndex"
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach Table toSync",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup Tables toSync",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup Tables toSync').output.value",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"batchCount": 3,
+					"activities": [
+						{
+							"name": "Execute table sync",
+							"description": "@item().targetTable",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Full sync Autoline DMS",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"linkedServer": {
+										"value": "@item().linkedServer",
+										"type": "Expression"
+									},
+									"sourceTable": {
+										"value": "@item().sourceTable",
+										"type": "Expression"
+									},
+									"targetTable": {
+										"value": "@item().targetTable",
+										"type": "Expression"
+									},
+									"addedFilterSource": {
+										"value": "@item().AddedFilterSource",
+										"type": "Expression"
+									},
+									"addedFilterDestination": {
+										"value": "@item().AddedFilterDestination",
+										"type": "Expression"
+									},
+									"clearBeforeLoad": {
+										"value": "@item().clearBeforeLoad",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Read me",
+				"description": "✅ Summary: Trigger Sync runs DMS\nThis pipeline automates batch execution of the \"Full sync Autoline DMS\" pipeline based on records from the _SyncIndex control table.\n\n🧩 Core Steps\nLookup Tables to Sync:\nQueries the _SyncIndex table to find all active entries (active = 1) that define which source tables to sync.\n\nResolves Wildcard ** Entries:\n\nIf linkedServer = '**', the pipeline expands the row into one sync job for each active linked server, except those explicitly overridden.\n\nThis is handled via a LEFT JOIN with the _SyncLinkedservers table and exclusion logic to avoid duplication.\n\nForEach Table to Sync:\nLoops through all resolved sync instructions and triggers “Full sync Autoline DMS” in parallel batches, passing:\n\nsourceTable, targetTable\n\nOptional filters\n\nThe correct linkedServer (resolved from wildcard or explicit)\n\nclearBeforeLoad flag\n\n🛠 _SyncIndex Configuration Options\nThe _SyncIndex table lets you control sync behavior per table and per server:\n\nField\tDescription\nsourceTable\tAutoline source table (e.g., GB.locat)\ntargetTable\tAzure SQL target table (e.g., autoline_companylocations)\nlinkedServer\tSet to a specific server (autoline7) or use ** to apply to all active servers not explicitly listed\naddedFilterSource\tOptional SQL WHERE clause for filtering source data\naddedFilterDestination\tOptional SQL condition for controlling what data gets deleted before insert\nactive\tOnly rows with 1 are executed\nclearBeforeLoad\tSet to 1 to skip PK-based deletes and clear all data before loading\n\n🧪 Wildcard Example (**) Explained\nExample row:\n   sourceTable: GB.locat  \n   targetTable: autoline_companylocations  \n   linkedServer: **  \n   active: 1  \n\nThis entry tells ADF:\n\nSync GB.locat → autoline_companylocations\n\nFor all active linked servers not already explicitly mapped in _SyncIndex\n\nUnless another row with a specific linkedServer is found for the same sourceTable + targetTable\n",
+				"type": "Script",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"scripts": [],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			}
+		],
+		"parameters": {
+			"schedule": {
+				"type": "string",
+				"defaultValue": "Daily"
+			}
+		},
+		"folder": {
+			"name": "Autoline"
+		},
+		"annotations": [
+			"DMS"
+		],
+		"lastPublishTime": "2025-06-06T10:24:05Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

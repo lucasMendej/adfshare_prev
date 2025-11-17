@@ -1,0 +1,1307 @@
+{
+	"name": "Copy Autoline Tables Deel 1",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get Tables",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get DMS and Bedrijf",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get DMS and Bedrijf').output.value",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"batchCount": 50,
+					"activities": [
+						{
+							"name": "If autoline1",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(item().DMS, 'autoline1')",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Copy clockentries autoline1",
+										"type": "Copy",
+										"dependsOn": [
+											{
+												"activity": "Copy partslines autoline1",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ', variables('QueryClockentries'),' from wl_',item().bedrijf,'_clockentries where datei is not null  and YEAR(datei) >= YEAR(CURDATE()) - 2 ')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline1_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_clockentries",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy headerlog autoline1",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ', variables('QueryHeaderlog'),' from so_',item().bedrijf,'_headerlog where postdate >= ''',formatDateTime(adddays(utcnow(),-6),'yyyy-MM-dd'),''' ')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline1_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_headerlog",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy headerrecords autoline1",
+										"type": "Copy",
+										"dependsOn": [
+											{
+												"activity": "Copy headerlog autoline1",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ', variables('QueryHeaderrecords'),' from so_',item().bedrijf,'_headerrecords')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline1_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_headerrecords",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy labourlines autoline1",
+										"type": "Copy",
+										"dependsOn": [
+											{
+												"activity": "Copy headerrecords autoline1",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ', variables('QueryLabourlines'),' from so_',item().bedrijf,'_labourlines')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline1_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_labourlines",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy partslines autoline1",
+										"type": "Copy",
+										"dependsOn": [
+											{
+												"activity": "Copy labourlines autoline1",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ', variables('QueryPartlines'),' from so_',item().bedrijf,'_partslines')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline1_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_partslines",
+												"type": "DatasetReference"
+											}
+										]
+									}
+								]
+							}
+						},
+						{
+							"name": "If autoline2",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(item().DMS, 'autoline2')",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Copy clockentries autoline2",
+										"type": "Copy",
+										"dependsOn": [
+											{
+												"activity": "Copy partslines autoline2",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ', variables('QueryClockentries'),' from wl_',item().bedrijf,'_clockentries where datei is not null  and YEAR(datei) >= YEAR(CURDATE()) - 2 ')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline2_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_clockentries",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy headerlog autoline2",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ', variables('QueryHeaderlog'),' from so_',item().bedrijf,'_headerlog where postdate >= ''',formatDateTime(adddays(utcnow(),-6),'yyyy-MM-dd'),''' ')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline2_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_headerlog",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy headerrecords autoline2",
+										"type": "Copy",
+										"dependsOn": [
+											{
+												"activity": "Copy headerlog autoline2",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ', variables('QueryHeaderrecords'),' from so_',item().bedrijf,'_headerrecords')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline2_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_headerrecords",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy labourlines autoline2",
+										"type": "Copy",
+										"dependsOn": [
+											{
+												"activity": "Copy headerrecords autoline2",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ', variables('QueryLabourlines'),' from so_',item().bedrijf,'_labourlines')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline2_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_labourlines",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy partslines autoline2",
+										"type": "Copy",
+										"dependsOn": [
+											{
+												"activity": "Copy labourlines autoline2",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ', variables('QueryPartlines'),' from so_',item().bedrijf,'_partslines')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline2_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_partslines",
+												"type": "DatasetReference"
+											}
+										]
+									}
+								]
+							}
+						},
+						{
+							"name": "If autoline3",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(item().DMS, 'autoline3')",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Copy clockentries autoline3",
+										"type": "Copy",
+										"dependsOn": [
+											{
+												"activity": "Copy partslines autoline3",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ', variables('QueryClockentries'),' from wl_',item().bedrijf,'_clockentries where datei is not null  and YEAR(datei) >= YEAR(CURDATE()) - 2 ')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline3_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_clockentries",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy headerlog autoline3",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ', variables('QueryHeaderlog'),' from so_',item().bedrijf,'_headerlog where postdate >= ''',formatDateTime(adddays(utcnow(),-6),'yyyy-MM-dd'),''' ')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline3_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_headerlog",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy headerrecords autoline3",
+										"type": "Copy",
+										"dependsOn": [
+											{
+												"activity": "Copy headerlog autoline3",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ', variables('QueryHeaderrecords'),' from so_',item().bedrijf,'_headerrecords')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline3_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_headerrecords",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy labourlines autoline3",
+										"type": "Copy",
+										"dependsOn": [
+											{
+												"activity": "Copy headerrecords autoline3",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ', variables('QueryLabourlines'),' from so_',item().bedrijf,'_labourlines')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline3_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_labourlines",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy partslines autoline3",
+										"type": "Copy",
+										"dependsOn": [
+											{
+												"activity": "Copy labourlines autoline3",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ', variables('QueryPartlines'),' from so_',item().bedrijf,'_partslines')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline3_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_partslines",
+												"type": "DatasetReference"
+											}
+										]
+									}
+								]
+							}
+						},
+						{
+							"name": "If autoline4",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(item().DMS, 'autoline4')",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Copy clockentries autoline",
+										"type": "Copy",
+										"dependsOn": [
+											{
+												"activity": "Copy partslines autoline4",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ', variables('QueryClockentries'),' from wl_',item().bedrijf,'_clockentries where datei is not null  and YEAR(datei) >= YEAR(CURDATE()) - 2 ')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline4_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_clockentries",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy headerlog autoline4",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ', variables('QueryHeaderlog'),' from so_',item().bedrijf,'_headerlog where postdate >= ''',formatDateTime(adddays(utcnow(),-6),'yyyy-MM-dd'),''' ')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline4_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_headerlog",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy headerrecords autoline4",
+										"type": "Copy",
+										"dependsOn": [
+											{
+												"activity": "Copy headerlog autoline4",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ', variables('QueryHeaderrecords'),' from so_',item().bedrijf,'_headerrecords')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline4_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_headerrecords",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy labourlines autoline4",
+										"type": "Copy",
+										"dependsOn": [
+											{
+												"activity": "Copy headerrecords autoline4",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ', variables('QueryLabourlines'),' from so_',item().bedrijf,'_labourlines')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline4_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_labourlines",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy partslines autoline4",
+										"type": "Copy",
+										"dependsOn": [
+											{
+												"activity": "Copy labourlines autoline4",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ', variables('QueryPartlines'),' from so_',item().bedrijf,'_partslines')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline4_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_partslines",
+												"type": "DatasetReference"
+											}
+										]
+									}
+								]
+							}
+						},
+						{
+							"name": "If autoline6",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(item().DMS, 'autoline6')",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Copy clockentries autoline6",
+										"type": "Copy",
+										"dependsOn": [
+											{
+												"activity": "Copy partslines autoline6",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ', variables('QueryClockentries'),' from wl_',item().bedrijf,'_clockentries where datei is not null  and YEAR(datei) >= YEAR(CURDATE()) - 2 ')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline6_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_clockentries",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy headerlog autoline6",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ', variables('QueryHeaderlog'),' from so_',item().bedrijf,'_headerlog where postdate >= ''',formatDateTime(adddays(utcnow(),-6),'yyyy-MM-dd'),''' ')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline6_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_headerlog",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy headerrecords autoline6",
+										"type": "Copy",
+										"dependsOn": [
+											{
+												"activity": "Copy headerlog autoline6",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ', variables('QueryHeaderrecords'),' from so_',item().bedrijf,'_headerrecords')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline6_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_headerrecords",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy labourlines autoline6",
+										"type": "Copy",
+										"dependsOn": [
+											{
+												"activity": "Copy headerrecords autoline6",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ', variables('QueryLabourlines'),' from so_',item().bedrijf,'_labourlines')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline6_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_labourlines",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy partslines autoline6",
+										"type": "Copy",
+										"dependsOn": [
+											{
+												"activity": "Copy labourlines autoline6",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "OdbcSource",
+												"query": {
+													"value": "@concat('SELECT ''',item().DMS, ''' as DMS, ''',item().bedrijf, ''' as BEDRIJF, ', variables('QueryPartlines'),' from so_',item().bedrijf,'_partslines')",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "autoline6_tables_prod_srv_apps06",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Doorgangen_autoline_partslines",
+												"type": "DatasetReference"
+											}
+										]
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Get DMS and Bedrijf",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Truncate Tables",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT DISTINCT \n       [DMS],\n       [bedrijf]\nFROM [dbo].[autoline_sync_status]\nWHERE bedrijf <> '00' and DMS <> 'autoline5'",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SQL_Doorgangen_autoline_sync_status",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Truncate Tables",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[autoline_truncate_tables]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DOORGANGEN_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Update syncStatus",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Get Tables",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[autoline_update_autoline_sync_status]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DOORGANGEN_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"variables": {
+			"dms": {
+				"type": "String"
+			},
+			"bedrijf": {
+				"type": "String"
+			},
+			"QueryHeaderlog": {
+				"type": "String",
+				"defaultValue": "MAGICLH, WIPNO, DOCTYPE, POSTDATE, TIME_"
+			},
+			"QueryHeaderrecords": {
+				"type": "String",
+				"defaultValue": "ACCOUNT ,CHASSIS ,CREATED ,CUSTCONT ,CUSTNAME ,DATEIN ,DATEOUT ,DATEREG ,DELFLAG ,DEPT ,FRANCODE ,INVNO ,MAGICT ,MAGICV ,MODEL ,OPBOOKIN ,PHONE ,REGNO ,REPREP ,SALTYPE ,SERTEXT ,SERVCODE ,TEXT001 ,TEXT002 ,TEXT003 ,TEXT004 ,TIMEIN ,TIMEOUT ,WIPNO ,VSBNO ,WTIMEOUT ,WDATEOUT ,MILEAGE ,WDATEIN ,WTIMEIN ,WLINOUT ,OPCREATE ,OPBOOKOU ,OPINVOIC ,CUSTWAIT ,COURTREQ ,WIPPARTS"
+			},
+			"QueryLabourlines": {
+				"type": "String",
+				"defaultValue": "ACCOUNT,ACTLINE ,ALLOWED ,BONUSTIM ,CONTRIB ,DATECOST ,DEPT ,DESC_ ,DISCPC ,EXTPRICE ,FRANCODE ,INVOICE ,INVSTAT ,LINE ,LOADSTAT ,MENU ,MENUCODE ,MENUFLAG ,MENUPRCE ,RATE ,RTSCODE ,RTSCOMPY ,SALTYPE ,TAKEN ,TYPEANAL ,TYPECODE ,WIPNO ,WLCLOCKR ,TARMAGIC"
+			},
+			"QueryPartlines": {
+				"type": "String",
+				"defaultValue": "ACCOUNT ,DATEIN,DISCOUNT ,INVSTAT,LINE,ORDERQTY,ORDSTAT,PRODGRP,SELLPRCE,WIPNO,PART,ACTLINE,INVOICE,DESCRIPN,DECARDED,DEPT,CONTRIB,EXTPRICE ,TARMAGIC"
+			},
+			"QueryClockentries": {
+				"type": "String",
+				"defaultValue": "ADJDATE ,ADJDESC ,ADJMODE ,ADJTIME ,ADJUSER ,ALLOWED ,ANALYSIS ,DATEI ,DATEO ,FACTOR ,IDLE ,REASON ,RESOURCE ,SEQ ,SHIFT ,STATE ,TAKEN ,TEAM ,TERMID ,TIMEI ,TIMEO ,WIPLINE,WIPNO"
+			},
+			"QuerySalesledgeraccounts": {
+				"type": "String",
+				"defaultValue": "category,account,editdate"
+			}
+		},
+		"folder": {
+			"name": "Doorgangen"
+		},
+		"annotations": [],
+		"lastPublishTime": "2020-03-23T14:11:09Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

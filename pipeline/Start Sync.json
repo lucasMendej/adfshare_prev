@@ -1,0 +1,715 @@
+{
+	"name": "Start Sync",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get DMS and Bedrijf",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get DMS and Bedrijf').output.value",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"activities": [
+						{
+							"name": "If autoline1",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(item().DMS, 'autoline1')",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Set headerlog table autoline1",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "headerlogTable",
+											"value": {
+												"value": "@concat('so_',item().bedrijf,'_headerlog')",
+												"type": "Expression"
+											}
+										}
+									},
+									{
+										"name": "Set headerrecords table autoline1",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "headerrecordsTable",
+											"value": {
+												"value": "@concat('so_',item().bedrijf,'_headerrecords')",
+												"type": "Expression"
+											}
+										}
+									},
+									{
+										"name": "Set pipelines table autoline1",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "labourlinesTable",
+											"value": {
+												"value": "@concat('so_',item().bedrijf,'_labourlines')",
+												"type": "Expression"
+											}
+										}
+									},
+									{
+										"name": "Set partslines table autoline1",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "partlinesTable",
+											"value": {
+												"value": "@concat('so_',item().bedrijf,'_partslines')",
+												"type": "Expression"
+											}
+										}
+									},
+									{
+										"name": "Set clockentries table autoline1",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "clockentriesTable",
+											"value": {
+												"value": "@concat('wl_',item().bedrijf,'_clockentries')",
+												"type": "Expression"
+											}
+										}
+									}
+								]
+							}
+						},
+						{
+							"name": "If autoline2",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(item().DMS, 'autoline2')",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Set headerlog table autoline2",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "headerlogTable",
+											"value": {
+												"value": "@concat('so_',item().bedrijf,'_headerlog')",
+												"type": "Expression"
+											}
+										}
+									},
+									{
+										"name": "Set headerrecords table autoline2",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "headerrecordsTable",
+											"value": {
+												"value": "@concat('so_',item().bedrijf,'_headerrecords')",
+												"type": "Expression"
+											}
+										}
+									},
+									{
+										"name": "Set pipelines table autoline2",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "labourlinesTable",
+											"value": {
+												"value": "@concat('so_',item().bedrijf,'_labourlines')",
+												"type": "Expression"
+											}
+										}
+									},
+									{
+										"name": "Set partslines table autoline2",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "partlinesTable",
+											"value": {
+												"value": "@concat('so_',item().bedrijf,'_partslines')",
+												"type": "Expression"
+											}
+										}
+									},
+									{
+										"name": "Set clockentries table autoline2",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "clockentriesTable",
+											"value": {
+												"value": "@concat('wl_',item().bedrijf,'_clockentries')",
+												"type": "Expression"
+											}
+										}
+									}
+								]
+							}
+						},
+						{
+							"name": "If autoline3",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(item().DMS, 'autoline3')",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Set headerlog table autoline3",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "headerlogTable",
+											"value": {
+												"value": "@concat('so_',item().bedrijf,'_headerlog')",
+												"type": "Expression"
+											}
+										}
+									},
+									{
+										"name": "Set headerrecords table autoline3",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "headerrecordsTable",
+											"value": {
+												"value": "@concat('so_',item().bedrijf,'_headerrecords')",
+												"type": "Expression"
+											}
+										}
+									},
+									{
+										"name": "Set pipelines table autoline3",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "labourlinesTable",
+											"value": {
+												"value": "@concat('so_',item().bedrijf,'_labourlines')",
+												"type": "Expression"
+											}
+										}
+									},
+									{
+										"name": "Set partslines table autoline3",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "partlinesTable",
+											"value": {
+												"value": "@concat('so_',item().bedrijf,'_partslines')",
+												"type": "Expression"
+											}
+										}
+									},
+									{
+										"name": "Set clockentries table autoline3",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "clockentriesTable",
+											"value": {
+												"value": "@concat('wl_',item().bedrijf,'_clockentries')",
+												"type": "Expression"
+											}
+										}
+									}
+								]
+							}
+						},
+						{
+							"name": "If autoline4",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(item().DMS, 'autoline4')",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Set headerlog table autoline4",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "headerlogTable",
+											"value": {
+												"value": "@concat('so_',item().bedrijf,'_headerlog')",
+												"type": "Expression"
+											}
+										}
+									},
+									{
+										"name": "Set headerrecords table autoline4",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "headerrecordsTable",
+											"value": {
+												"value": "@concat('so_',item().bedrijf,'_headerrecords')",
+												"type": "Expression"
+											}
+										}
+									},
+									{
+										"name": "Set pipelines table autoline4",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "labourlinesTable",
+											"value": {
+												"value": "@concat('so_',item().bedrijf,'_labourlines')",
+												"type": "Expression"
+											}
+										}
+									},
+									{
+										"name": "Set partslines table autoline4",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "partlinesTable",
+											"value": {
+												"value": "@concat('so_',item().bedrijf,'_partslines')",
+												"type": "Expression"
+											}
+										}
+									},
+									{
+										"name": "Set clockentries table autoline4",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "clockentriesTable",
+											"value": {
+												"value": "@concat('wl_',item().bedrijf,'_clockentries')",
+												"type": "Expression"
+											}
+										}
+									}
+								]
+							}
+						},
+						{
+							"name": "If autoline5",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(item().DMS, 'autoline5')",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Set headerlog table autoline5",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "headerlogTable",
+											"value": {
+												"value": "@concat('so_',item().bedrijf,'_loghd')",
+												"type": "Expression"
+											}
+										}
+									},
+									{
+										"name": "Set headerrecords table autoline5",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "headerrecordsTable",
+											"value": {
+												"value": "@concat('so_',item().bedrijf,'_headr')",
+												"type": "Expression"
+											}
+										}
+									},
+									{
+										"name": "Set pipelines table autoline5",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "labourlinesTable",
+											"value": {
+												"value": "@concat('so_',item().bedrijf,'_labor')",
+												"type": "Expression"
+											}
+										}
+									},
+									{
+										"name": "Set partslines table autoline5",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "partlinesTable",
+											"value": {
+												"value": "@concat('so_',item().bedrijf,'_parts')",
+												"type": "Expression"
+											}
+										}
+									},
+									{
+										"name": "Set clockentries table autoline5",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "clockentriesTable",
+											"value": {
+												"value": "@concat('wl_',item().bedrijf,'_clockentries')",
+												"type": "Expression"
+											}
+										}
+									}
+								]
+							}
+						},
+						{
+							"name": "ExecutePipeline syncSOTables",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "If autoline5",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "If autoline4",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "If autoline3",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "If autoline2",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "If autoline1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "syncSOTables",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"dms": {
+										"value": "@item().DMS",
+										"type": "Expression"
+									},
+									"bedrijf": {
+										"value": "@item().bedrijf",
+										"type": "Expression"
+									},
+									"headerrecordsTable": {
+										"value": "@variables('headerrecordsTable')",
+										"type": "Expression"
+									},
+									"headerlogTable": {
+										"value": "@variables('headerlogTable')",
+										"type": "Expression"
+									},
+									"labourlinesTable": {
+										"value": "@variables('labourlinesTable')",
+										"type": "Expression"
+									},
+									"partlinesTable": {
+										"value": "@variables('partlinesTable')",
+										"type": "Expression"
+									}
+								}
+							}
+						},
+						{
+							"name": "Execute Pipeline syncWLTables",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "ExecutePipeline syncSOTables",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "syncWLTables",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"dms": {
+										"value": "@item().DMS",
+										"type": "Expression"
+									},
+									"bedrijf": {
+										"value": "@item().bedrijf",
+										"type": "Expression"
+									},
+									"clockentriesTable": {
+										"value": "@variables('clockentriesTable')",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Get DMS and Bedrijf",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Clear temp tables",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT DISTINCT \n       [DMS],\n       [bedrijf]\nFROM [dbo].[autoline_sync_status]\nWHERE bedrijf <> '00' ",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SQL_Doorgangen_autoline_sync_status",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Clear temp tables",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[autoline_truncate_temp_tables]"
+				},
+				"linkedServiceName": {
+					"referenceName": "DOORGANGEN_PROD_SRV_SQL_00",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"variables": {
+			"headerrecordsTable": {
+				"type": "String"
+			},
+			"headerlogTable": {
+				"type": "String"
+			},
+			"labourlinesTable": {
+				"type": "String"
+			},
+			"partlinesTable": {
+				"type": "String"
+			},
+			"dms": {
+				"type": "String"
+			},
+			"bedrijf": {
+				"type": "String"
+			},
+			"clockentriesTable": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Doorgangen/Sync direct"
+		},
+		"annotations": [],
+		"lastPublishTime": "2019-10-07T07:13:29Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

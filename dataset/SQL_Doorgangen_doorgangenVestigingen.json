@@ -1,0 +1,34 @@
+{
+	"name": "SQL_Doorgangen_doorgangenVestigingen",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DOORGANGEN_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "DMS",
+				"type": "varchar"
+			},
+			{
+				"name": "Vestigingnr",
+				"type": "varchar"
+			},
+			{
+				"name": "Vestiging",
+				"type": "varchar"
+			},
+			{
+				"name": "Afdelingen",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "doorgangenVestigingen"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

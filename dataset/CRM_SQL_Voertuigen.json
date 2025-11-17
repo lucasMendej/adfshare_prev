@@ -1,0 +1,187 @@
+{
+	"name": "CRM_SQL_Voertuigen",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CRM_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "dms",
+				"type": "varchar"
+			},
+			{
+				"name": "bedrijf",
+				"type": "char"
+			},
+			{
+				"name": "voertuignr",
+				"type": "decimal",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "kenteken",
+				"type": "varchar"
+			},
+			{
+				"name": "kenteken_",
+				"type": "varchar"
+			},
+			{
+				"name": "merkletter_dms",
+				"type": "varchar"
+			},
+			{
+				"name": "model",
+				"type": "varchar"
+			},
+			{
+				"name": "variant",
+				"type": "varchar"
+			},
+			{
+				"name": "omschrijving",
+				"type": "varchar"
+			},
+			{
+				"name": "prospectnummer",
+				"type": "decimal",
+				"precision": 20,
+				"scale": 0
+			},
+			{
+				"name": "bedrijfsnummer",
+				"type": "decimal",
+				"precision": 20,
+				"scale": 0
+			},
+			{
+				"name": "laatste_service",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "laatste_bezoek",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "next_service",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "laatste_km_stand",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "garantie_datum",
+				"type": "date"
+			},
+			{
+				"name": "chassisnummer",
+				"type": "varchar"
+			},
+			{
+				"name": "debiteurennr",
+				"type": "varchar"
+			},
+			{
+				"name": "servicecontract",
+				"type": "varchar"
+			},
+			{
+				"name": "apk_datum_dms",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "datum_deel1_dms",
+				"type": "date"
+			},
+			{
+				"name": "datum_deel2_dms",
+				"type": "date"
+			},
+			{
+				"name": "merk",
+				"type": "varchar"
+			},
+			{
+				"name": "handelsbenaming",
+				"type": "varchar"
+			},
+			{
+				"name": "datumaanvangtenaamstelling",
+				"type": "date"
+			},
+			{
+				"name": "datumeersteafgifteNederland",
+				"type": "date"
+			},
+			{
+				"name": "datumeerstetoelating",
+				"type": "date"
+			},
+			{
+				"name": "vervaldatumAPK",
+				"type": "date"
+			},
+			{
+				"name": "bekend_bij_rdw",
+				"type": "bit"
+			},
+			{
+				"name": "edited",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "verlengde_garantie_datum",
+				"type": "date"
+			},
+			{
+				"name": "verlengde_garantie_code",
+				"type": "varchar"
+			},
+			{
+				"name": "salelocn",
+				"type": "varchar"
+			},
+			{
+				"name": "aftlocn",
+				"type": "varchar"
+			},
+			{
+				"name": "prefferedbranch",
+				"type": "varchar"
+			},
+			{
+				"name": "salespersonid",
+				"type": "varchar"
+			},
+			{
+				"name": "nu",
+				"type": "varchar"
+			},
+			{
+				"name": "versnellingsbak",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"tableName": "[dbo].[voertuigen]"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

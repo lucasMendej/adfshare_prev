@@ -1,0 +1,322 @@
+{
+	"name": "SQL_Doorgangen_idas_dow",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DOORGANGEN_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "OWBRAN",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OWORDN",
+				"type": "decimal",
+				"precision": 7,
+				"scale": 0
+			},
+			{
+				"name": "OWORDL",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OWSTAT",
+				"type": "decimal",
+				"precision": 1,
+				"scale": 0
+			},
+			{
+				"name": "OWWOPN",
+				"type": "varchar"
+			},
+			{
+				"name": "OWMENU",
+				"type": "varchar"
+			},
+			{
+				"name": "OWVOLG",
+				"type": "varchar"
+			},
+			{
+				"name": "OWOPTP",
+				"type": "varchar"
+			},
+			{
+				"name": "OWTEXT",
+				"type": "varchar"
+			},
+			{
+				"name": "OWHOUR",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 2
+			},
+			{
+				"name": "OWAMNT",
+				"type": "decimal",
+				"precision": 9,
+				"scale": 2
+			},
+			{
+				"name": "OWLRAT",
+				"type": "decimal",
+				"precision": 7,
+				"scale": 2
+			},
+			{
+				"name": "OWPFAC",
+				"type": "decimal",
+				"precision": 1,
+				"scale": 0
+			},
+			{
+				"name": "OWVATC",
+				"type": "decimal",
+				"precision": 1,
+				"scale": 0
+			},
+			{
+				"name": "OWPAYC",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OWQUAN",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OWDISC",
+				"type": "decimal",
+				"precision": 9,
+				"scale": 2
+			},
+			{
+				"name": "OWDISP",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 2
+			},
+			{
+				"name": "OWHMEC",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "OWPRYN",
+				"type": "varchar"
+			},
+			{
+				"name": "OWACCD",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OWSORT",
+				"type": "varchar"
+			},
+			{
+				"name": "OWUSTI",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 2
+			},
+			{
+				"name": "OWJOBN",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OWPFCC",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OWPFYY",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OWPFMM",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OWPFDD",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OWMOPC",
+				"type": "varchar"
+			},
+			{
+				"name": "OWPOSC",
+				"type": "decimal",
+				"precision": 1,
+				"scale": 0
+			},
+			{
+				"name": "OWSYMC",
+				"type": "varchar"
+			},
+			{
+				"name": "OWCAUS",
+				"type": "varchar"
+			},
+			{
+				"name": "OWCLTP",
+				"type": "varchar"
+			},
+			{
+				"name": "OWCNPC",
+				"type": "decimal",
+				"precision": 3,
+				"scale": 0
+			},
+			{
+				"name": "OWEXPC",
+				"type": "decimal",
+				"precision": 3,
+				"scale": 0
+			},
+			{
+				"name": "OWPAYI",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OWPAYE",
+				"type": "decimal",
+				"precision": 2,
+				"scale": 0
+			},
+			{
+				"name": "OWFL13",
+				"type": "varchar"
+			},
+			{
+				"name": "OWPRDT",
+				"type": "varchar"
+			},
+			{
+				"name": "OWAVOK",
+				"type": "varchar"
+			},
+			{
+				"name": "OWTEXI",
+				"type": "varchar"
+			},
+			{
+				"name": "OWANCD",
+				"type": "varchar"
+			},
+			{
+				"name": "OWPAPU",
+				"type": "varchar"
+			},
+			{
+				"name": "OWSRTV",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 0
+			},
+			{
+				"name": "OWSRTT",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 0
+			},
+			{
+				"name": "OWTEXE",
+				"type": "varchar"
+			},
+			{
+				"name": "OWUITG",
+				"type": "varchar"
+			},
+			{
+				"name": "OWSFEBD",
+				"type": "varchar"
+			},
+			{
+				"name": "OWNORDN",
+				"type": "decimal",
+				"precision": 7,
+				"scale": 0
+			},
+			{
+				"name": "OWCOMP",
+				"type": "varchar"
+			},
+			{
+				"name": "OWVAST",
+				"type": "decimal",
+				"precision": 9,
+				"scale": 2
+			},
+			{
+				"name": "OWURTF",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 2
+			},
+			{
+				"name": "OWRESV",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 2
+			},
+			{
+				"name": "OWRESA",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 2
+			},
+			{
+				"name": "OWRUIT",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 2
+			},
+			{
+				"name": "OWKLMT",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 2
+			},
+			{
+				"name": "OWMILI",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 2
+			},
+			{
+				"name": "OWEDES",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "idas_dow"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

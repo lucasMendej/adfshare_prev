@@ -1,0 +1,17 @@
+{
+	"name": "SQL_Doorgangen_idas_doh",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DOORGANGEN_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "idas_doh"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

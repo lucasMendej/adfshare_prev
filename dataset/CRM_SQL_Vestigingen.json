@@ -1,0 +1,30 @@
+{
+	"name": "CRM_SQL_Vestigingen",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CRM_PROD_SRV_SQL_00",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "dms",
+				"type": "varchar"
+			},
+			{
+				"name": "bedrijf",
+				"type": "char"
+			},
+			{
+				"name": "naam",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "vestigingen"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

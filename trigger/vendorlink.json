@@ -1,0 +1,35 @@
+{
+	"name": "vendorlink",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "PostAll",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Week",
+				"interval": 1,
+				"startTime": "2023-12-27T20:01:00",
+				"timeZone": "W. Europe Standard Time",
+				"schedule": {
+					"minutes": [
+						1
+					],
+					"hours": [
+						21
+					],
+					"weekDays": [
+						"Wednesday"
+					]
+				}
+			}
+		}
+	}
+}

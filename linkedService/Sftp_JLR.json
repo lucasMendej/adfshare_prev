@@ -1,0 +1,21 @@
+{
+	"name": "Sftp_JLR",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "Connection to JLR Sftp server to upload XML Files ",
+		"annotations": [],
+		"type": "Sftp",
+		"typeProperties": {
+			"host": "185.223.48.75",
+			"port": 22,
+			"skipHostKeyValidation": true,
+			"authenticationType": "SshPublicKey",
+			"userName": "42029",
+			"privateKeyPath": "c:\\JLR\\42029.ssh-1"
+		},
+		"connectVia": {
+			"referenceName": "WRK9011",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
